@@ -5,13 +5,29 @@ import inspect
 import re
 from copy import copy, deepcopy
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Dict, Iterator, List, Optional, Sequence, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Union,
+)
 
 from typing_extensions import Self
 
 from . import context, core, events, helpers, json, storage
 from .awaitable_response import AwaitableResponse, NullResponse
-from .dependencies import Component, Library, register_library, register_resource, register_vue_component
+from .dependencies import (
+    Component,
+    Library,
+    register_library,
+    register_resource,
+    register_vue_component,
+)
 from .elements.mixins.visibility import Visibility
 from .event_listener import EventListener
 from .slot import Slot
@@ -68,8 +84,8 @@ class Element(Visibility):
         This class is the base class for all other UI elements.
         But you can use it to create elements with arbitrary HTML tags.
 
-        :param tag: HTML tag of the element
-        :param _client: client for this element (for internal use only)
+        - tag: HTML tag of the element
+        - _client: client for this element (for internal use only)
         """
         super().__init__()
         self.client = _client or context.get_client()
@@ -142,7 +158,7 @@ class Element(Visibility):
     def add_resource(self, path: Union[str, Path]) -> None:
         """Add a resource to the element.
 
-        :param path: path to the resource (e.g. folder with CSS and JavaScript files)
+        - path: path to the resource (e.g. folder with CSS and JavaScript files)
         """
         resource = register_resource(Path(path))
         self._props['resource_path'] = f'/_nicegui/{__version__}/resources/{resource.key}'
@@ -161,8 +177,8 @@ class Element(Visibility):
         The `parent` field holds a reference to its element.
         Whenever an element is entered via a `with` expression, its default slot is automatically entered as well.
 
-        :param name: name of the slot
-        :param template: Vue template of the slot
+        - name: name of the slot
+        - template: Vue template of the slot
         :return: the slot
         """
         self.slots[name] = Slot(self, name, template)
@@ -226,13 +242,13 @@ class Element(Visibility):
                 replace: Optional[str] = None) -> Self:
         """Apply, remove, or replace HTML classes.
 
-        This allows modifying the look of the element or its layout using `Tailwind <https://tailwindcss.com/>`_ or `Quasar <https://quasar.dev/>`_ classes.
+        This allows modifying the look of the element or its layout using [Tailwind <https://tailwindcss.com/>`_ or `Quasar ](https://quasar.dev/) classes.
 
         Removing or replacing classes can be helpful if predefined classes are not desired.
 
-        :param add: whitespace-delimited string of classes
-        :param remove: whitespace-delimited string of classes to remove from the element
-        :param replace: whitespace-delimited string of classes to use instead of existing ones
+        - add: whitespace-delimited string of classes
+        - remove: whitespace-delimited string of classes to remove from the element
+        - replace: whitespace-delimited string of classes to use instead of existing ones
         """
         new_classes = self._update_classes_list(self._classes, add, remove, replace)
         if self._classes != new_classes:
@@ -247,15 +263,15 @@ class Element(Visibility):
                         replace: Optional[str] = None) -> type[Self]:
         """Apply, remove, or replace default HTML classes.
 
-        This allows modifying the look of the element or its layout using `Tailwind <https://tailwindcss.com/>`_ or `Quasar <https://quasar.dev/>`_ classes.
+        This allows modifying the look of the element or its layout using [Tailwind <https://tailwindcss.com/>`_ or `Quasar ](https://quasar.dev/) classes.
 
         Removing or replacing classes can be helpful if predefined classes are not desired.
         All elements of this class will share these HTML classes.
         These must be defined before element instantiation.
 
-        :param add: whitespace-delimited string of classes
-        :param remove: whitespace-delimited string of classes to remove from the element
-        :param replace: whitespace-delimited string of classes to use instead of existing ones
+        - add: whitespace-delimited string of classes
+        - remove: whitespace-delimited string of classes to remove from the element
+        - replace: whitespace-delimited string of classes to use instead of existing ones
         """
         cls._default_classes = cls._update_classes_list(cls._default_classes, add, remove, replace)
         return cls
@@ -278,9 +294,9 @@ class Element(Visibility):
 
         Removing or replacing styles can be helpful if the predefined style is not desired.
 
-        :param add: semicolon-separated list of styles to add to the element
-        :param remove: semicolon-separated list of styles to remove from the element
-        :param replace: semicolon-separated list of styles to use instead of existing ones
+        - add: semicolon-separated list of styles to add to the element
+        - remove: semicolon-separated list of styles to remove from the element
+        - replace: semicolon-separated list of styles to use instead of existing ones
         """
         style_dict = deepcopy(self._style) if replace is None else {}
         for key in self._parse_style(remove):
@@ -303,9 +319,9 @@ class Element(Visibility):
         All elements of this class will share these CSS definitions.
         These must be defined before element instantiation.
 
-        :param add: semicolon-separated list of styles to add to the element
-        :param remove: semicolon-separated list of styles to remove from the element
-        :param replace: semicolon-separated list of styles to use instead of existing ones
+        - add: semicolon-separated list of styles to add to the element
+        - remove: semicolon-separated list of styles to remove from the element
+        - replace: semicolon-separated list of styles to use instead of existing ones
         """
         if replace is not None:
             cls._default_style.clear()
@@ -334,13 +350,13 @@ class Element(Visibility):
               remove: Optional[str] = None) -> Self:
         """Add or remove props.
 
-        This allows modifying the look of the element or its layout using `Quasar <https://quasar.dev/>`_ props.
+        This allows modifying the look of the element or its layout using [Quasar ](https://quasar.dev/) props.
         Since props are simply applied as HTML attributes, they can be used with any HTML element.
 
         Boolean properties are assumed ``True`` if no value is specified.
 
-        :param add: whitespace-delimited list of either boolean values or key=value pair to add
-        :param remove: whitespace-delimited list of property keys to remove
+        - add: whitespace-delimited list of either boolean values or key=value pair to add
+        - remove: whitespace-delimited list of property keys to remove
         """
         needs_update = False
         for key in self._parse_props(remove):
@@ -361,15 +377,15 @@ class Element(Visibility):
                       remove: Optional[str] = None) -> type[Self]:
         """Add or remove default props.
 
-        This allows modifying the look of the element or its layout using `Quasar <https://quasar.dev/>`_ props.
+        This allows modifying the look of the element or its layout using [Quasar ](https://quasar.dev/) props.
         Since props are simply applied as HTML attributes, they can be used with any HTML element.
         All elements of this class will share these props.
         These must be defined before element instantiation.
 
         Boolean properties are assumed ``True`` if no value is specified.
 
-        :param add: whitespace-delimited list of either boolean values or key=value pair to add
-        :param remove: whitespace-delimited list of property keys to remove
+        - add: whitespace-delimited list of either boolean values or key=value pair to add
+        - remove: whitespace-delimited list of property keys to remove
         """
         for key in cls._parse_props(remove):
             if key in cls._default_props:
@@ -381,7 +397,7 @@ class Element(Visibility):
     def tooltip(self, text: str) -> Self:
         """Add a tooltip to the element.
 
-        :param text: text of the tooltip
+        - text: text of the tooltip
         """
         with self:
             tooltip = Element('q-tooltip')
@@ -398,12 +414,12 @@ class Element(Visibility):
            ) -> Self:
         """Subscribe to an event.
 
-        :param type: name of the event (e.g. "click", "mousedown", or "update:model-value")
-        :param handler: callback that is called upon occurrence of the event
-        :param args: arguments included in the event message sent to the event handler (default: `None` meaning all)
-        :param throttle: minimum time (in seconds) between event occurrences (default: 0.0)
-        :param leading_events: whether to trigger the event handler immediately upon the first event occurrence (default: `True`)
-        :param trailing_events: whether to trigger the event handler after the last event occurrence (default: `True`)
+        - type: name of the event (e.g. "click", "mousedown", or "update:model-value")
+        - handler: callback that is called upon occurrence of the event
+        - args: arguments included in the event message sent to the event handler (default: `None` meaning all)
+        - throttle: minimum time (in seconds) between event occurrences (default: 0.0)
+        - leading_events: whether to trigger the event handler immediately upon the first event occurrence (default: `True`)
+        - trailing_events: whether to trigger the event handler after the last event occurrence (default: `True`)
         """
         if handler:
             listener = EventListener(
@@ -438,10 +454,10 @@ class Element(Visibility):
         If the function is awaited, the result of the method call is returned.
         Otherwise, the method is executed without waiting for a response.
 
-        :param name: name of the method
-        :param args: arguments to pass to the method
-        :param timeout: maximum time to wait for a response (default: 1 second)
-        :param check_interval: time between checks for a response (default: 0.01 seconds)
+        - name: name of the method
+        - args: arguments to pass to the method
+        - timeout: maximum time to wait for a response (default: 1 second)
+        - check_interval: time between checks for a response (default: 0.01 seconds)
         """
         if not core.loop:
             return NullResponse()
@@ -465,8 +481,8 @@ class Element(Visibility):
     def move(self, target_container: Optional[Element] = None, target_index: int = -1):
         """Move the element to another container.
 
-        :param target_container: container to move the element to (default: the parent container)
-        :param target_index: index within the target slot (default: append to the end)
+        - target_container: container to move the element to (default: the parent container)
+        - target_index: index within the target slot (default: append to the end)
         """
         assert self.parent_slot is not None
         self.parent_slot.children.remove(self)
@@ -480,7 +496,7 @@ class Element(Visibility):
     def remove(self, element: Union[Element, int]) -> None:
         """Remove a child element.
 
-        :param element: either the element instance or its ID
+        - element: either the element instance or its ID
         """
         if isinstance(element, int):
             children = list(self)

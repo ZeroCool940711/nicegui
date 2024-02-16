@@ -15,10 +15,10 @@ class Menu(ValueElement):
     def __init__(self, *, value: bool = False) -> None:
         """Menu
 
-        Creates a menu based on Quasar's `QMenu <https://quasar.dev/vue-components/menu>`_ component.
+        Creates a menu based on Quasar's [QMenu ](https://quasar.dev/vue-components/menu) component.
         The menu should be placed inside the element where it should be shown.
 
-        :param value: whether the menu is already opened (default: `False`)
+        - value: whether the menu is already opened (default: `False`)
         """
         super().__init__(tag='q-menu', value=value, on_value_change=None)
 
@@ -54,11 +54,11 @@ class MenuItem(TextElement):
         """Menu Item
 
         A menu item to be added to a menu.
-        This element is based on Quasar's `QItem <https://quasar.dev/vue-components/list-and-list-items#qitem-api>`_ component.
+        This element is based on Quasar's [QItem ](https://quasar.dev/vue-components/list-and-list-items#qitem-api) component.
 
-        :param text: label of the menu item
-        :param on_click: callback to be executed when selecting the menu item
-        :param auto_close: whether the menu should be closed after a click event (default: `True`)
+        - text: label of the menu item
+        - on_click: callback to be executed when selecting the menu item
+        - auto_close: whether the menu should be closed after a click event (default: `True`)
         """
         super().__init__(tag='q-item', text=text)
         self.menu = context.get_slot().parent

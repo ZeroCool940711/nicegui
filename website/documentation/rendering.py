@@ -10,7 +10,13 @@ from .reference import generate_class_doc
 
 
 def render_page(documentation: DocumentationPage, *, with_menu: bool = True) -> None:
-    """Render the documentation."""
+    """
+    Render the documentation page.
+
+    Args:
+        documentation (DocumentationPage): The documentation page to render.
+        with_menu (bool, optional): Whether to include the menu. Defaults to True.
+    """
 
     # menu
     if with_menu:
@@ -39,7 +45,7 @@ def render_page(documentation: DocumentationPage, *, with_menu: bool = True) -> 
                     ui.link_target(part.link_target)
                 subheading(part.title, link=part.link, major=part.reference is not None)
             if part.description:
-                if part.description_format == 'rst':
+                if part.description_format == 'md':
                     description = part.description.replace('param ', '')
                     html = docutils.core.publish_parts(description, writer_name='html5_polyglot')['html_body']
                     ui.html(html).classes('bold-links arrow-links nicegui-markdown')

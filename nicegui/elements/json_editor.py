@@ -2,7 +2,12 @@ from typing import Callable, Dict, Optional
 
 from ..awaitable_response import AwaitableResponse
 from ..element import Element
-from ..events import GenericEventArguments, JsonEditorChangeEventArguments, JsonEditorSelectEventArguments, handle_event
+from ..events import (
+    GenericEventArguments,
+    JsonEditorChangeEventArguments,
+    JsonEditorSelectEventArguments,
+    handle_event,
+)
 
 
 class JsonEditor(Element, component='json_editor.js', exposed_libraries=['lib/vanilla-jsoneditor/index.js']):
@@ -14,13 +19,13 @@ class JsonEditor(Element, component='json_editor.js', exposed_libraries=['lib/va
                  ) -> None:
         """JSONEditor
 
-        An element to create a JSON editor using `JSONEditor <https://github.com/josdejong/svelte-jsoneditor>`_.
+        An element to create a JSON editor using [JSONEditor ](https://github.com/josdejong/svelte-jsoneditor).
         Updates can be pushed to the editor by changing the `properties` property.
         After data has changed, call the `update` method to refresh the editor.
 
-        :param properties: dictionary of JSONEditor properties
-        :param on_select: callback function that is called when some of the content has been selected
-        :param on_change: callback function that is called when the content has changed
+        - properties: dictionary of JSONEditor properties
+        - on_select: callback function that is called when some of the content has been selected
+        - on_change: callback function that is called when the content has changed
         """
         super().__init__()
         self._props['properties'] = properties
@@ -48,15 +53,15 @@ class JsonEditor(Element, component='json_editor.js', exposed_libraries=['lib/va
                           check_interval: float = 0.01) -> AwaitableResponse:
         """Run a method of the JSONEditor instance.
 
-        See the `JSONEditor README <https://github.com/josdejong/svelte-jsoneditor/>`_ for a list of methods.
+        See the [JSONEditor README ](https://github.com/josdejong/svelte-jsoneditor/) for a list of methods.
 
         If the function is awaited, the result of the method call is returned.
         Otherwise, the method is executed without waiting for a response.
 
-        :param name: name of the method (a prefix ":" indicates that the arguments are JavaScript expressions)
-        :param args: arguments to pass to the method (Python objects or JavaScript expressions)
-        :param timeout: timeout in seconds (default: 1 second)
-        :param check_interval: interval in seconds to check for a response (default: 0.01 seconds)
+        - name: name of the method (a prefix ":" indicates that the arguments are JavaScript expressions)
+        - args: arguments to pass to the method (Python objects or JavaScript expressions)
+        - timeout: timeout in seconds (default: 1 second)
+        - check_interval: interval in seconds to check for a response (default: 0.01 seconds)
 
         :return: AwaitableResponse that can be awaited to get the result of the method call
         """

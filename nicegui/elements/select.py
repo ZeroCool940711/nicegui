@@ -22,7 +22,7 @@ class Select(ValidationElement, ChoiceElement, DisableableElement, component='se
                  ) -> None:
         """Dropdown Selection
 
-        This element is based on Quasar's `QSelect <https://quasar.dev/vue-components/select>`_ component.
+        This element is based on Quasar's [QSelect ](https://quasar.dev/vue-components/select) component.
 
         The options can be specified as a list of values, or as a dictionary mapping values to labels.
         After manipulating the options, call `update()` to update the options in the UI.
@@ -30,23 +30,25 @@ class Select(ValidationElement, ChoiceElement, DisableableElement, component='se
         If `with_input` is True, an input field is shown to filter the options.
 
         If `new_value_mode` is not None, it implies `with_input=True` and the user can enter new values in the input field.
-        See `Quasar's documentation <https://quasar.dev/vue-components/select#the-new-value-mode-prop>`_ for details.
+        See [Quasar's documentation ](https://quasar.dev/vue-components/select#the-new-value-mode-prop) for details.
         Note that this mode is ineffective when setting the `value` property programmatically.
 
         You can use the `validation` parameter to define a dictionary of validation rules,
         e.g. ``{'Too long!': lambda value: len(value) < 3}``.
         The key of the first rule that fails will be displayed as an error message.
         Alternatively, you can pass a callable that returns an optional error message.
-
-        :param options: a list ['value1', ...] or dictionary `{'value1':'label1', ...}` specifying the options
-        :param label: the label to display above the selection
-        :param value: the initial value
-        :param on_change: callback to execute when selection changes
-        :param with_input: whether to show an input field to filter the options
-        :param new_value_mode: handle new values from user input (default: None, i.e. no new values)
-        :param multiple: whether to allow multiple selections
-        :param clearable: whether to add a button to clear the selection
-        :param validation: dictionary of validation rules or a callable that returns an optional error message
+        
+        Args:
+        
+        - options: a list ['value1', ...] or dictionary `{'value1':'label1', ...}` specifying the options
+        - label: the label to display above the selection
+        - value: the initial value
+        - on_change: callback to execute when selection changes
+        - with_input: whether to show an input field to filter the options
+        - new_value_mode: handle new values from user input (default: None, i.e. no new values)
+        - multiple: whether to allow multiple selections
+        - clearable: whether to add a button to clear the selection
+        - validation: dictionary of validation rules or a callable that returns an optional error message
         """
         self.multiple = multiple
         if multiple:

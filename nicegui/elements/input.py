@@ -21,7 +21,7 @@ class Input(ValidationElement, DisableableElement, component='input.js'):
                  ) -> None:
         """Text Input
 
-        This element is based on Quasar's `QInput <https://quasar.dev/vue-components/input>`_ component.
+        This element is based on Quasar's [QInput ](https://quasar.dev/vue-components/input) component.
 
         The `on_change` event is called on every keystroke and the value updates accordingly.
         If you want to wait until the user confirms the input, you can register a custom event callback, e.g.
@@ -36,16 +36,16 @@ class Input(ValidationElement, DisableableElement, component='input.js'):
         Quasar's `QInput` component is a wrapper around a native `input` element.
         This means that you cannot style the input directly,
         but you can use the `input-class` and `input-style` props to style the native input element.
-        See the "Style" props section on the `QInput <https://quasar.dev/vue-components/input>`_ documentation for more details.
+        See the "Style" props section on the [QInput ](https://quasar.dev/vue-components/input) documentation for more details.
 
-        :param label: displayed label for the text input
-        :param placeholder: text to show if no value is entered
-        :param value: the current value of the text input
-        :param password: whether to hide the input (default: False)
-        :param password_toggle_button: whether to show a button to toggle the password visibility (default: False)
-        :param on_change: callback to execute when the value changes
-        :param autocomplete: optional list of strings for autocompletion
-        :param validation: dictionary of validation rules or a callable that returns an optional error message
+        - label: displayed label for the text input
+        - placeholder: text to show if no value is entered
+        - value: the current value of the text input
+        - password: whether to hide the input (default: False)
+        - password_toggle_button: whether to show a button to toggle the password visibility (default: False)
+        - on_change: callback to execute when the value changes
+        - autocomplete: optional list of strings for autocompletion
+        - validation: dictionary of validation rules or a callable that returns an optional error message
         """
         super().__init__(value=value, on_value_change=on_change, validation=validation)
         if label is not None:
@@ -65,11 +65,38 @@ class Input(ValidationElement, DisableableElement, component='input.js'):
         self._props['_autocomplete'] = autocomplete or []
 
     def set_autocomplete(self, autocomplete: Optional[List[str]]) -> None:
-        """Set the autocomplete list."""
+        """
+        Set the autocomplete list.
+
+        This method allows you to set the autocomplete list for the input element.
+        Autocomplete provides suggestions to the user as they type in the input field.
+
+        Parameters:
+            autocomplete (Optional[List[str]]): A list of strings representing the autocomplete suggestions.
+
+        Returns:
+            None
+
+        Example:
+            input_element.set_autocomplete(['apple', 'banana', 'cherry'])
+        """
         self._props['_autocomplete'] = autocomplete
         self.update()
 
     def _handle_value_change(self, value: Any) -> None:
+        """
+        Handle the change in value for the input element.
+
+        This method is called when the value of the input element changes. It calls the base class's
+        _handle_value_change method and, if the _send_update_on_value_change flag is set to True, it
+        runs the 'updateValue' method.
+
+        Parameters:
+            value (Any): The new value of the input element.
+
+        Returns:
+            None
+        """
         super()._handle_value_change(value)
         if self._send_update_on_value_change:
             self.run_method('updateValue')
