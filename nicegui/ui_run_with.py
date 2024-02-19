@@ -1,10 +1,11 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Optional, Union
+from typing import Literal, Optional, Union
 
 from fastapi import FastAPI
 
 from . import core, storage
+from .air import Air
 from .language import Language
 from .nicegui import _shutdown, _startup
 
@@ -19,10 +20,12 @@ def run_with(
     language: Language = "en-US",
     binding_refresh_interval: float = 0.1,
     reconnect_timeout: float = 3.0,
-    mount_path: str = "/",
+    mount_path: str = '/',
+    on_air: Optional[Union[str, Literal[True]]] = None,
     tailwind: bool = True,
     prod_js: bool = True,
     storage_secret: Optional[str] = None,
+    show_welcome_message: bool = True,
 ) -> None:
     """Run NiceGUI with FastAPI.
 
@@ -46,6 +49,7 @@ def run_with(
     :type reconnect_timeout: float
     - mount_path: The path at which NiceGUI should be mounted. Default is '/'.
     :type mount_path: str
+    :param on_air: tech preview: `allows temporary remote access <https://nicegui.io/documentation/section_configuration_deployment#nicegui_on_air>`_ if set to `True` (default: disabled)
     - tailwind: Whether to use Tailwind CSS. This is experimental. Default is True.
     :type tailwind: bool
     - prod_js: Whether to use the production version of Vue and Quasar dependencies. Default is True.
@@ -64,7 +68,7 @@ def run_with(
         reconnect_timeout=reconnect_timeout,
         tailwind=tailwind,
         prod_js=prod_js,
-        show_welcome_message=False,
+        show_welcome_message=show_welcome_message,
     )
 
     storage.set_storage_secret(storage_secret)
