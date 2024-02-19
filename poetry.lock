@@ -2062,17 +2062,17 @@ testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "no
 
 [[package]]
 name = "pytest-asyncio"
-version = "0.23.4"
+version = "0.23.5"
 description = "Pytest support for asyncio"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pytest-asyncio-0.23.4.tar.gz", hash = "sha256:2143d9d9375bf372a73260e4114541485e84fca350b0b6b92674ca56ff5f7ea2"},
-    {file = "pytest_asyncio-0.23.4-py3-none-any.whl", hash = "sha256:b0079dfac14b60cd1ce4691fbfb1748fe939db7d0234b5aba97197d10fbe0fef"},
+    {file = "pytest-asyncio-0.23.5.tar.gz", hash = "sha256:3a048872a9c4ba14c3e90cc1aa20cbc2def7d01c7c8db3777ec281ba9c057675"},
+    {file = "pytest_asyncio-0.23.5-py3-none-any.whl", hash = "sha256:4e7093259ba018d58ede7d5315131d21923a60f8a6e9ee266ce1589685c89eac"},
 ]
 
 [package.dependencies]
-pytest = ">=7.0.0,<8"
+pytest = ">=7.0.0,<9"
 
 [package.extras]
 docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1.0)"]
@@ -2933,13 +2933,13 @@ files = [
 
 [[package]]
 name = "webdriver-manager"
-version = "3.9.1"
+version = "4.0.1"
 description = "Library provides the way to automatically manage drivers for different browsers"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "webdriver_manager-3.9.1-py2.py3-none-any.whl", hash = "sha256:1dfc29a786abb97ba28076d4766d931064eeeac71a9685a3e8d46f5d363fcbe3"},
-    {file = "webdriver_manager-3.9.1.tar.gz", hash = "sha256:cd1f49ebb325a98b4dc3c41056f5b645e82fff3f83e346607844ec0bdf561c0b"},
+    {file = "webdriver_manager-4.0.1-py2.py3-none-any.whl", hash = "sha256:d7970052295bb9cda2c1a24cf0b872dd2c41ababcc78f7b6b8dc37a41e979a7e"},
+    {file = "webdriver_manager-4.0.1.tar.gz", hash = "sha256:25ec177c6a2ce9c02fb8046f1b2732701a9418d6a977967bb065d840a3175d87"},
 ]
 
 [package.dependencies]
@@ -3169,4 +3169,4 @@ plotly = ["plotly"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "5be07571ca3f0b99654d49298bdd72bf392f6f930efdb808735e31786dca6b47"
+content-hash = "a80c59584b0e9135cae2b64fd34c3cfb484dafeb4ecba2e679a505d72a364635"
