@@ -97,7 +97,14 @@ class Element(Visibility):
         self.client = _client or context.get_client()
         self.id = self.client.next_element_id
         self.client.next_element_id += 1
-        self.tag = tag if tag else self.component.tag if self.component else "div"
+
+        if tag:
+            self.tag = tag
+        elif self.component:
+            self.tag = self.component.tag
+        else:
+            self.tag = "div"
+
         if not TAG_PATTERN.match(self.tag):
             raise ValueError(f"Invalid HTML tag: {self.tag}")
         self._classes: List[str] = []
