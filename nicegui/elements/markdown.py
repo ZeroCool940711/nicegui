@@ -11,7 +11,7 @@ from .mixins.content_element import ContentElement
 
 class Markdown(ContentElement, component="markdown.js"):
     def __init__(
-        self, content: str = "", *, extras: List[str] = ["fenced-code-blocks", "tables"]
+        self, content: str = None, *, extras: List[str] = None
     ) -> None:
         """Markdown Element
 
@@ -20,8 +20,8 @@ class Markdown(ContentElement, component="markdown.js"):
         - content: the Markdown content to be displayed
         - extras: list of [markdown2 extensions ](https://github.com/trentm/python-markdown2/wiki/Extras#implemented-extras) (default: `['fenced-code-blocks', 'tables']`)
         """
-        self.extras = extras
-        super().__init__(content=content)
+        super().__init__(content=content or "")
+        self.extras = extras or ["fenced-code-blocks", "tables"]
         self._classes.append("nicegui-markdown")
         self._props["codehilite_css"] = HtmlFormatter(nobackground=True).get_style_defs(
             ".codehilite"
