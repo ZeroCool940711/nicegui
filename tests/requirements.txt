@@ -5,3 +5,7 @@ selenium
 autopep8
 icecream
 beautifulsoup4
+isort
+docutils
+ruff
+plotly
