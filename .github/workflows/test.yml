@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: set up Python
         uses: actions/setup-python@v4
         with:
@@ -44,7 +44,7 @@ jobs:
         run: ./test_startup.sh
 
       - name: setup chromedriver
-        uses: nanasess/setup-chromedriver@v2.2.0
+        uses: nanasess/setup-chromedriver@v2.2.2
 
       - name: pytest
         run: pytest --cov=./ --cov-report=xml --cov-report=html
