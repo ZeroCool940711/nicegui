@@ -277,9 +277,9 @@ class Element(Visibility):
 
         Removing or replacing classes can be helpful if predefined classes are not desired.
 
-        - add: whitespace-delimited string of classes
-        - remove: whitespace-delimited string of classes to remove from the element
-        - replace: whitespace-delimited string of classes to use instead of existing ones
+        :param add: whitespace-delimited string of classes
+        :param remove: whitespace-delimited string of classes to remove from the element
+        :param replace: whitespace-delimited string of classes to use instead of existing ones
         """
         new_classes = self._update_classes_list(self._classes, add, remove, replace)
         if self._classes != new_classes:
@@ -303,9 +303,9 @@ class Element(Visibility):
         All elements of this class will share these HTML classes.
         These must be defined before element instantiation.
 
-        - add: whitespace-delimited string of classes
-        - remove: whitespace-delimited string of classes to remove from the element
-        - replace: whitespace-delimited string of classes to use instead of existing ones
+        :param add: whitespace-delimited string of classes
+        :param remove: whitespace-delimited string of classes to remove from the element
+        :param replace: whitespace-delimited string of classes to use instead of existing ones
         """
         cls._default_classes = cls._update_classes_list(
             cls._default_classes, add, remove, replace
@@ -439,11 +439,10 @@ class Element(Visibility):
     def tooltip(self, text: str) -> Self:
         """Add a tooltip to the element.
 
-        - text: text of the tooltip
+        :param text: text of the tooltip
         """
         with self:
-            tooltip = Element("q-tooltip")
-            tooltip._text = text  # pylint: disable=protected-access
+            Tooltip(text)
         return self
 
     def on(
@@ -458,12 +457,12 @@ class Element(Visibility):
     ) -> Self:
         """Subscribe to an event.
 
-        - type: name of the event (e.g. "click", "mousedown", or "update:model-value")
-        - handler: callback that is called upon occurrence of the event
-        - args: arguments included in the event message sent to the event handler (default: `None` meaning all)
-        - throttle: minimum time (in seconds) between event occurrences (default: 0.0)
-        - leading_events: whether to trigger the event handler immediately upon the first event occurrence (default: `True`)
-        - trailing_events: whether to trigger the event handler after the last event occurrence (default: `True`)
+        :param type: name of the event (e.g. "click", "mousedown", or "update:model-value")
+        :param handler: callback that is called upon occurrence of the event
+        :param args: arguments included in the event message sent to the event handler (default: `None` meaning all)
+        :param throttle: minimum time (in seconds) between event occurrences (default: 0.0)
+        :param leading_events: whether to trigger the event handler immediately upon the first event occurrence (default: `True`)
+        :param trailing_events: whether to trigger the event handler after the last event occurrence (default: `True`)
         """
         if handler:
             listener = EventListener(
@@ -502,10 +501,10 @@ class Element(Visibility):
         If the function is awaited, the result of the method call is returned.
         Otherwise, the method is executed without waiting for a response.
 
-        - name: name of the method
-        - args: arguments to pass to the method
-        - timeout: maximum time to wait for a response (default: 1 second)
-        - check_interval: time between checks for a response (default: 0.01 seconds)
+        :param name: name of the method
+        :param args: arguments to pass to the method
+        :param timeout: maximum time to wait for a response (default: 1 second)
+        :param check_interval: time between checks for a response (default: 0.01 seconds)
         """
         if not core.loop:
             return NullResponse()
@@ -532,8 +531,8 @@ class Element(Visibility):
     def move(self, target_container: Optional[Element] = None, target_index: int = -1):
         """Move the element to another container.
 
-        - target_container: container to move the element to (default: the parent container)
-        - target_index: index within the target slot (default: append to the end)
+        :param target_container: container to move the element to (default: the parent container)
+        :param target_index: index within the target slot (default: append to the end)
         """
         assert self.parent_slot is not None
         self.parent_slot.children.remove(self)
@@ -551,7 +550,7 @@ class Element(Visibility):
     def remove(self, element: Union[Element, int]) -> None:
         """Remove a child element.
 
-        - element: either the element instance or its ID
+        :param element: either the element instance or its ID
         """
         if isinstance(element, int):
             children = list(self)
