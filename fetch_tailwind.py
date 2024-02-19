@@ -49,7 +49,7 @@ class Property:
             prefix = prefix[:i]
             if not prefix:
                 break
-        self.short_members = ["-".join(word[len(prefix) :]) for word in words]
+        self.short_members = ["-".join(word[len(prefix):]) for word in words]
         self.common_prefix = "-".join(prefix) + "-" if prefix else ""
         if len(self.short_members) == 1:
             if self.title == "Container":
@@ -307,12 +307,12 @@ def generate_tailwind_file(properties: List[Property]) -> None:
                     )
                 else:
                     f.write(f"        self.element.classes('{prefix}' + value)\n")
-                f.write(f"        return self\n")  # pylint: disable=f-string-without-interpolation
+                f.write("        return self\n")
             else:
                 f.write(f"    def {property_.snake_title}(self) -> Tailwind:\n")
                 f.write(f'        """{property_.description}"""\n')
                 f.write(f"        self.element.classes('{prefix}')\n")
-                f.write(f"        return self\n")  # pylint: disable=f-string-without-interpolation
+                f.write("        return self\n")
 
 
 def main() -> None:
