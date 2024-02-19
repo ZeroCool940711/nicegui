@@ -1,6 +1,7 @@
 FROM python:3.8-slim
 
-RUN apt update && apt install curl build-essential -y && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+RUN apt update && apt install curl build-essential -y \
+    && apt-get clean
 
 
 

@@ -2,7 +2,8 @@ FROM python:3.11.3-slim
 
 LABEL maintainer="Zauberzeug GmbH <nicegui@zauberzeug.com>"
 
-RUN apt update && apt install -y curl procps
+RUN apt update && apt install -y curl procps \
+    && apt-get clean
 
 RUN pip install itsdangerous prometheus_client isort docutils pandas plotly pyecharts matplotlib requests dnspython
 
