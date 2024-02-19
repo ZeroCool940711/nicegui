@@ -57,7 +57,7 @@ class Air:
                     f'const extraHeaders = {{ "fly-force-instance-id" : "{instance_id}" }};'
                 ).encode(),
             )
-            match = re.search(b"const query = ({.*?})", content)
+            match = re.search(b"const query = ({[^}]*})", content)
             if match:
                 new_js_object = (
                     match.group(1).decode().rstrip("}")
