@@ -40,6 +40,10 @@ jobs:
           # try fix issue with importlib_resources
           pip install importlib-resources
 
+      - name: Install NiceGUI
+        run: |
+          pip install -e .
+
       - name: test startup
         run: ./test_startup.sh
 
