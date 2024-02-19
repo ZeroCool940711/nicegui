@@ -1,6 +1,8 @@
 FROM python:3.8-slim
 
-RUN apt update && apt install curl build-essential -y
+RUN apt update && apt install curl build-essential -y && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+
 
 # We use Poetry for dependency management
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
