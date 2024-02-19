@@ -3,6 +3,13 @@ name: Run Tests
 on: [push]
 
 jobs:
+  codespell_and_ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install --user codespell[toml] ruff
+      # TODO: Fix lint issues and remove `--exit-zero` from the line below.
+      - run: ruff --exit-zero --output-format=github --target-version=py38 .
   test:
     strategy:
       matrix:
@@ -16,10 +23,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
+
       - name: set up Poetry
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: "1.6.1"
+
       - name: install dependencies
         run: |
           set -x
@@ -30,12 +39,16 @@ jobs:
           pip install -r tests/requirements.txt
           # try fix issue with importlib_resources
           pip install importlib-resources
+
       - name: test startup
         run: ./test_startup.sh
+
       - name: setup chromedriver
         uses: nanasess/setup-chromedriver@v2.2.0
+
       - name: pytest
-        run: pytest
+        run: pytest --cov=./ --cov-report=xml --cov-report=html
+
       - name: upload screenshots
         uses: actions/upload-artifact@v2
         env:
@@ -44,33 +57,20 @@ jobs:
           name: pytest-screenshots
           path: tests/screenshots
 
-  slack:
-    needs:
-      - test
-    if: always() # also execute when test fail
-    runs-on: ubuntu-latest
-    steps:
-      - name: Determine if we need to notify
-        uses: Jimdo/should-i-notify-action@main
-        id: should_notify
+      - name: Upload HTML coverage report
+        uses: actions/upload-artifact@v4
         with:
-          needs_context: ${{ toJson(needs) }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check if secret exists
-        id: check_secret
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_ROBOTICS_CI_WEBHOOK }}
-        run: |
-          if [[ -z "$SLACK_WEBHOOK" ]]; then
-            echo "slack_webhook_exists=false" >> $GITHUB_ENV
-          else
-            echo "slack_webhook_exists=true" >> $GITHUB_ENV
-          fi
-      - name: Slack workflow notification
-        if: steps.should_notify.outputs.should_send_message == 'yes' && env.slack_webhook_exists == 'true'
-        uses: Gamesight/slack-workflow-status@master
+          name: "HTML Coverage ${{ matrix.python-version }}"
+          path: "htmlcov"
+          retention-days: 7
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v4.0.1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          slack_webhook_url: ${{ secrets.SLACK_ROBOTICS_CI_WEBHOOK }}
-          channel: "robotik-ci"
-          name: "NiceGUI"
+          directory: ./
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
+          files: ./coverage.xml
+          handle_no_reports_found: true
+          token: ${{ secrets.CODECOV_TOKEN }} # required
+          verbose: true # optional (default = false)
