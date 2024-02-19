@@ -14,23 +14,24 @@ from .mixins.filter_element import FilterElement
 
 try:
     import pandas as pd
-    optional_features.register('pandas')
+
+    optional_features.register("pandas")
 except ImportError:
     pass
 
 
-class Table(FilterElement, component='table.js'):
-
-    def __init__(self,
-                 columns: List[Dict],
-                 rows: List[Dict],
-                 row_key: str = 'id',
-                 title: Optional[str] = None,
-                 selection: Optional[Literal['single', 'multiple']] = None,
-                 pagination: Optional[Union[int, dict]] = None,
-                 on_select: Optional[Callable[..., Any]] = None,
-                 on_pagination_change: Optional[Callable[..., Any]] = None,
-                 ) -> None:
+class Table(FilterElement, component="table.js"):
+    def __init__(
+        self,
+        columns: List[Dict],
+        rows: List[Dict],
+        row_key: str = "id",
+        title: Optional[str] = None,
+        selection: Optional[Literal["single", "multiple"]] = None,
+        pagination: Optional[Union[int, dict]] = None,
+        on_select: Optional[Callable[..., Any]] = None,
+        on_pagination_change: Optional[Callable[..., Any]] = None,
+    ) -> None:
         """Table
 
         A table based on Quasar's [QTable ](https://quasar.dev/vue-components/table) component.
@@ -48,43 +49,57 @@ class Table(FilterElement, component='table.js'):
         """
         super().__init__()
 
-        self._props['columns'] = columns
-        self._props['rows'] = rows
-        self._props['row-key'] = row_key
-        self._props['title'] = title
-        self._props['hide-pagination'] = pagination is None
-        self._props['pagination'] = pagination if isinstance(pagination, dict) else {'rowsPerPage': pagination or 0}
-        self._props['selection'] = selection or 'none'
-        self._props['selected'] = []
-        self._props['fullscreen'] = False
+        self._props["columns"] = columns
+        self._props["rows"] = rows
+        self._props["row-key"] = row_key
+        self._props["title"] = title
+        self._props["hide-pagination"] = pagination is None
+        self._props["pagination"] = (
+            pagination
+            if isinstance(pagination, dict)
+            else {"rowsPerPage": pagination or 0}
+        )
+        self._props["selection"] = selection or "none"
+        self._props["selected"] = []
+        self._props["fullscreen"] = False
 
         def handle_selection(e: GenericEventArguments) -> None:
-            if e.args['added']:
-                if selection == 'single':
+            if e.args["added"]:
+                if selection == "single":
                     self.selected.clear()
-                self.selected.extend(e.args['rows'])
+                self.selected.extend(e.args["rows"])
             else:
-                self.selected = [row for row in self.selected if row[row_key] not in e.args['keys']]
+                self.selected = [
+                    row for row in self.selected if row[row_key] not in e.args["keys"]
+                ]
             self.update()
-            arguments = TableSelectionEventArguments(sender=self, client=self.client, selection=self.selected)
+            arguments = TableSelectionEventArguments(
+                sender=self, client=self.client, selection=self.selected
+            )
             handle_event(on_select, arguments)
-        self.on('selection', handle_selection, ['added', 'rows', 'keys'])
+
+        self.on("selection", handle_selection, ["added", "rows", "keys"])
 
         def handle_pagination_change(e: GenericEventArguments) -> None:
             self.pagination = e.args
             self.update()
-            arguments = ValueChangeEventArguments(sender=self, client=self.client, value=self.pagination)
+            arguments = ValueChangeEventArguments(
+                sender=self, client=self.client, value=self.pagination
+            )
             handle_event(on_pagination_change, arguments)
-        self.on('update:pagination', handle_pagination_change)
+
+        self.on("update:pagination", handle_pagination_change)
 
     @classmethod
-    def from_pandas(cls,
-                    df: 'pd.DataFrame',
-                    row_key: str = 'id',
-                    title: Optional[str] = None,
-                    selection: Optional[Literal['single', 'multiple']] = None,
-                    pagination: Optional[Union[int, dict]] = None,
-                    on_select: Optional[Callable[..., Any]] = None) -> Self:
+    def from_pandas(
+        cls,
+        df: "pd.DataFrame",
+        row_key: str = "id",
+        title: Optional[str] = None,
+        selection: Optional[Literal["single", "multiple"]] = None,
+        pagination: Optional[Union[int, dict]] = None,
+        on_select: Optional[Callable[..., Any]] = None,
+    ) -> Self:
         """Create a table from a Pandas DataFrame.
 
         Note:
@@ -101,11 +116,16 @@ class Table(FilterElement, component='table.js'):
         - on_select: callback which is invoked when the selection changes
         :return: table element
         """
-        date_cols = df.columns[df.dtypes == 'datetime64[ns]']
-        time_cols = df.columns[df.dtypes == 'timedelta64[ns]']
-        complex_cols = df.columns[df.dtypes == 'complex128']
-        period_cols = df.columns[df.dtypes == 'period[M]']
-        if len(date_cols) != 0 or len(time_cols) != 0 or len(complex_cols) != 0 or len(period_cols) != 0:
+        date_cols = df.columns[df.dtypes == "datetime64[ns]"]
+        time_cols = df.columns[df.dtypes == "timedelta64[ns]"]
+        complex_cols = df.columns[df.dtypes == "complex128"]
+        period_cols = df.columns[df.dtypes == "period[M]"]
+        if (
+            len(date_cols) != 0
+            or len(time_cols) != 0
+            or len(complex_cols) != 0
+            or len(period_cols) != 0
+        ):
             df = df.copy()
             df[date_cols] = df[date_cols].astype(str)
             df[time_cols] = df[time_cols].astype(str)
@@ -113,78 +133,81 @@ class Table(FilterElement, component='table.js'):
             df[period_cols] = df[period_cols].astype(str)
 
         if isinstance(df.columns, pd.MultiIndex):
-            raise ValueError('MultiIndex columns are not supported. '
-                             'You can convert them to strings using something like '
-                             '`df.columns = ["_".join(col) for col in df.columns.values]`.')
+            raise ValueError(
+                "MultiIndex columns are not supported. "
+                "You can convert them to strings using something like "
+                '`df.columns = ["_".join(col) for col in df.columns.values]`.'
+            )
 
         return cls(
-            columns=[{'name': col, 'label': col, 'field': col} for col in df.columns],
-            rows=df.to_dict('records'),
+            columns=[{"name": col, "label": col, "field": col} for col in df.columns],
+            rows=df.to_dict("records"),
             row_key=row_key,
             title=title,
             selection=selection,
             pagination=pagination,
-            on_select=on_select)
+            on_select=on_select,
+        )
 
     @property
     def rows(self) -> List[Dict]:
         """List of rows."""
-        return self._props['rows']
+        return self._props["rows"]
 
     @rows.setter
     def rows(self, value: List[Dict]) -> None:
-        self._props['rows'][:] = value
+        self._props["rows"][:] = value
         self.update()
 
     @property
     def columns(self) -> List[Dict]:
         """List of columns."""
-        return self._props['columns']
+        return self._props["columns"]
 
     @columns.setter
     def columns(self, value: List[Dict]) -> None:
-        self._props['columns'][:] = value
+        self._props["columns"][:] = value
         self.update()
 
     @property
     def row_key(self) -> str:
         """Name of the column containing unique data identifying the row."""
-        return self._props['row-key']
+        return self._props["row-key"]
 
     @row_key.setter
     def row_key(self, value: str) -> None:
-        self._props['row-key'] = value
+        self._props["row-key"] = value
         self.update()
 
     @property
     def selected(self) -> List[Dict]:
         """List of selected rows."""
-        return self._props['selected']
+        return self._props["selected"]
 
     @selected.setter
     def selected(self, value: List[Dict]) -> None:
-        self._props['selected'][:] = value
+        self._props["selected"][:] = value
         self.update()
 
     @property
     def pagination(self) -> dict:
         """Pagination object."""
-        return self._props['pagination']
+        return self._props["pagination"]
 
     @pagination.setter
     def pagination(self, value: dict) -> None:
-        self._props['pagination'] = value
+        self._props["pagination"] = value
         self.update()
 
     @property
     def is_fullscreen(self) -> bool:
         """Whether the table is in fullscreen mode."""
-        return self._props['fullscreen']
+        return self._props["fullscreen"]
 
     @is_fullscreen.setter
     def is_fullscreen(self, value: bool) -> None:
         """Set fullscreen mode."""
-        self._props['fullscreen'] = value
+        self._props["fullscreen"] = value
         self.update()
 
     def set_fullscreen(self, value: bool) -> None:
@@ -204,7 +227,9 @@ class Table(FilterElement, component='table.js'):
         """Remove rows from the table."""
         keys = [row[self.row_key] for row in rows]
         self.rows[:] = [row for row in self.rows if row[self.row_key] not in keys]
-        self.selected[:] = [row for row in self.selected if row[self.row_key] not in keys]
+        self.selected[:] = [
+            row for row in self.selected if row[self.row_key] not in keys
+        ]
         self.update()
 
     def update_rows(self, rows: List[Dict], *, clear_selection: bool = True) -> None:
@@ -219,28 +244,25 @@ class Table(FilterElement, component='table.js'):
         self.update()
 
     class row(Element):
-
         def __init__(self) -> None:
             """Row Element
 
             This element is based on Quasar's [QTr ](https://quasar.dev/vue-components/table#qtr-api) component.
             """
-            super().__init__('q-tr')
+            super().__init__("q-tr")
 
     class header(Element):
-
         def __init__(self) -> None:
             """Header Element
 
             This element is based on Quasar's [QTh ](https://quasar.dev/vue-components/table#qth-api) component.
             """
-            super().__init__('q-th')
+            super().__init__("q-th")
 
     class cell(Element):
-
         def __init__(self) -> None:
             """Cell Element
 
             This element is based on Quasar's [QTd ](https://quasar.dev/vue-components/table#qtd-api) component.
             """
-            super().__init__('q-td')
+            super().__init__("q-td")

@@ -36,9 +36,9 @@ class Lightbox:
     """
 
     def __init__(self) -> None:
-        with ui.dialog().props('maximized').classes('bg-black') as self.dialog:
+        with ui.dialog().props("maximized").classes("bg-black") as self.dialog:
             ui.keyboard(self._handle_key)
-            self.large_image = ui.image().props('no-spinner fit=scale-down')
+            self.large_image = ui.image().props("no-spinner fit=scale-down")
         self.image_list: List[str] = []
 
     def add_image(self, thumb_url: str, orig_url: str) -> ui.image:
@@ -62,38 +62,40 @@ class Lightbox:
             thumb = add_image('https://example.com/thumbnail.jpg', 'https://example.com/original.jpg')
         """
         self.image_list.append(orig_url)
-        with ui.button(on_click=lambda: self._open(orig_url)).props('flat dense square'):
+        with ui.button(on_click=lambda: self._open(orig_url)).props(
+            "flat dense square"
+        ):
             return ui.image(thumb_url)
 
     def _handle_key(self, event_args: events.KeyEventArguments) -> None:
-            """
-            Handles key events for the lightbox dialog.
+        """
+        Handles key events for the lightbox dialog.
 
-            Args:
-                event_args (events.KeyEventArguments): The event arguments containing information about the key event.
+        Args:
+            event_args (events.KeyEventArguments): The event arguments containing information about the key event.
 
-            Returns:
-                None
+        Returns:
+            None
 
-            Raises:
-                None
+        Raises:
+            None
 
-            Usage:
-                This method is called internally by the lightbox dialog to handle key events. It performs the following actions:
-                - If the key event is not a keydown event, the method returns without performing any action.
-                - If the Escape key is pressed, the dialog is closed.
-                - If the left arrow key is pressed and there is a previous image in the image list, the method opens the previous image.
-                - If the right arrow key is pressed and there is a next image in the image list, the method opens the next image.
-            """
-            if not event_args.action.keydown:
-                return
-            if event_args.key.escape:
-                self.dialog.close()
-            image_index = self.image_list.index(self.large_image.source)
-            if event_args.key.arrow_left and image_index > 0:
-                self._open(self.image_list[image_index - 1])
-            if event_args.key.arrow_right and image_index < len(self.image_list) - 1:
-                self._open(self.image_list[image_index + 1])
+        Usage:
+            This method is called internally by the lightbox dialog to handle key events. It performs the following actions:
+            - If the key event is not a keydown event, the method returns without performing any action.
+            - If the Escape key is pressed, the dialog is closed.
+            - If the left arrow key is pressed and there is a previous image in the image list, the method opens the previous image.
+            - If the right arrow key is pressed and there is a next image in the image list, the method opens the next image.
+        """
+        if not event_args.action.keydown:
+            return
+        if event_args.key.escape:
+            self.dialog.close()
+        image_index = self.image_list.index(self.large_image.source)
+        if event_args.key.arrow_left and image_index > 0:
+            self._open(self.image_list[image_index - 1])
+        if event_args.key.arrow_right and image_index < len(self.image_list) - 1:
+            self._open(self.image_list[image_index + 1])
 
     def _open(self, url: str) -> None:
         """
@@ -117,7 +119,7 @@ class Lightbox:
         self.dialog.open()
 
 
-@ui.page('/')
+@ui.page("/")
 async def page():
     """
     This function creates a web page that displays a collection of images in a lightbox.
@@ -148,15 +150,16 @@ async def page():
     """
     lightbox = Lightbox()
     async with httpx.AsyncClient() as client:  # using async httpx instead of sync requests to avoid blocking the event loop
-        images = await client.get('https://picsum.photos/v2/list?page=4&limit=30')
-    with ui.row().classes('w-full'):
+        images = await client.get("https://picsum.photos/v2/list?page=4&limit=30")
+    with ui.row().classes("w-full"):
         for image in images.json():  # picsum returns a list of images as json data
             # we can use the image ID to construct the image URLs
             image_base_url = f'https://picsum.photos/id/{image["id"]}'
             # the lightbox allows us to add images which can be opened in a full screen dialog
             lightbox.add_image(
-                thumb_url=f'{image_base_url}/300/200',
+                thumb_url=f"{image_base_url}/300/200",
                 orig_url=f'{image_base_url}/{image["width"]}/{image["height"]}',
-            ).classes('w-[300px] h-[200px]')
+            ).classes("w-[300px] h-[200px]")
+
 
 ui.run()

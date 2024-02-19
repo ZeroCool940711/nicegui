@@ -56,8 +56,12 @@ class SourceElement(Element):
         _handle_delete() -> None:
             Handles the deletion of the element, removing the auto-generated route if necessary.
     """
+
     source = BindableProperty(
-        on_change=lambda sender, source: cast(Self, sender)._handle_source_change(source))  # pylint: disable=protected-access
+        on_change=lambda sender, source: cast(Self, sender)._handle_source_change(
+            source
+        )
+    )  # pylint: disable=protected-access
 
     SOURCE_IS_MEDIA_FILE: bool = False
 
@@ -67,11 +71,12 @@ class SourceElement(Element):
         self.source = source
         self._set_props(source)
 
-    def bind_source_to(self,
-                       target_object: Any,
-                       target_name: str = 'source',
-                       forward: Callable[..., Any] = lambda x: x,
-                       ) -> Self:
+    def bind_source_to(
+        self,
+        target_object: Any,
+        target_name: str = "source",
+        forward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Bind the source of this element to the target object's target_name property.
 
@@ -86,14 +91,15 @@ class SourceElement(Element):
         Returns:
             Self: The current instance of the SourceElement.
         """
-        bind_to(self, 'source', target_object, target_name, forward)
+        bind_to(self, "source", target_object, target_name, forward)
         return self
 
-    def bind_source_from(self,
-                         target_object: Any,
-                         target_name: str = 'source',
-                         backward: Callable[..., Any] = lambda x: x,
-                         ) -> Self:
+    def bind_source_from(
+        self,
+        target_object: Any,
+        target_name: str = "source",
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Bind the source of this element from the target object's target_name property.
 
@@ -108,15 +114,17 @@ class SourceElement(Element):
         Returns:
             Self: The current instance of the SourceElement.
         """
-        bind_from(self, 'source', target_object, target_name, backward)
+        bind_from(self, "source", target_object, target_name, backward)
         return self
 
-    def bind_source(self,
-                    target_object: Any,
-                    target_name: str = 'source', *,
-                    forward: Callable[..., Any] = lambda x: x,
-                    backward: Callable[..., Any] = lambda x: x,
-                    ) -> Self:
+    def bind_source(
+        self,
+        target_object: Any,
+        target_name: str = "source",
+        *,
+        forward: Callable[..., Any] = lambda x: x,
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Bind the source of this element to the target object's target_name property.
 
@@ -133,7 +141,14 @@ class SourceElement(Element):
         Returns:
             Self: The current instance of the SourceElement.
         """
-        bind(self, 'source', target_object, target_name, forward=forward, backward=backward)
+        bind(
+            self,
+            "source",
+            target_object,
+            target_name,
+            forward=forward,
+            backward=backward,
+        )
         return self
 
     def set_source(self, source: Union[str, Path]) -> None:
@@ -170,7 +185,7 @@ class SourceElement(Element):
             else:
                 source = core.app.add_static_file(local_file=source)
             self.auto_route = source
-        self._props['src'] = source
+        self._props["src"] = source
 
     def _handle_delete(self) -> None:
         """

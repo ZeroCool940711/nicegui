@@ -7,16 +7,16 @@ from .tailwind import Tailwind
 from .version import __version__
 
 __all__ = [
-    'APIRouter',
-    'app',
-    'App',
-    'Client',
-    'context',
-    'color',
-    'elements',
-    'icon',
-    'run',
-    'Tailwind',
-    'ui',
-    '__version__',
+    "APIRouter",
+    "app",
+    "App",
+    "Client",
+    "context",
+    "color",
+    "elements",
+    "icon",
+    "run",
+    "Tailwind",
+    "ui",
+    "__version__",
 ]

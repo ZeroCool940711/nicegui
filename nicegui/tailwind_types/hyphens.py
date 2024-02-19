@@ -1,7 +1,7 @@
 from typing import Literal
 
 Hyphens = Literal[
-    'none',
-    'manual',
-    'auto',
+    "none",
+    "manual",
+    "auto",
 ]

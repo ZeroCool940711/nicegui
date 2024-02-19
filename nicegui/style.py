@@ -1,4 +1,3 @@
-
 class Style:
     """
     Represents the style properties for a GUI element.
@@ -66,17 +65,39 @@ class Style:
         self.size = size
         self.width = "width: " + width if width and "width" not in width else ""
         self.height = "height: " + height if height and "height" not in height else ""
-        self.display = "display: " + display if display and "display" not in display else ""
-        self.position = "position: " + position if position and "position" not in position else ""
+        self.display = (
+            "display: " + display if display and "display" not in display else ""
+        )
+        self.position = (
+            "position: " + position if position and "position" not in position else ""
+        )
         self.margin = "margin: " + margin if margin and "margin" not in margin else ""
-        self.padding = "padding: " + padding if padding and "padding" not in padding else ""
+        self.padding = (
+            "padding: " + padding if padding and "padding" not in padding else ""
+        )
         self.border = "border: " + border if border and "border" not in border else ""
-        self.border_radius = "border-radius: " + border_radius if border_radius and "border-radius" not in border_radius else ""
-        self.box_shadow = "box-shadow: " + box_shadow if box_shadow and "box-shadow" not in box_shadow else ""
-        self.bgcolor = "background: " + bgcolor if bgcolor and "background" not in bgcolor else ""
-        self.text_color = "color: " + text_color if text_color and "color" not in text_color else ""
+        self.border_radius = (
+            "border-radius: " + border_radius
+            if border_radius and "border-radius" not in border_radius
+            else ""
+        )
+        self.box_shadow = (
+            "box-shadow: " + box_shadow
+            if box_shadow and "box-shadow" not in box_shadow
+            else ""
+        )
+        self.bgcolor = (
+            "background: " + bgcolor if bgcolor and "background" not in bgcolor else ""
+        )
+        self.text_color = (
+            "color: " + text_color if text_color and "color" not in text_color else ""
+        )
         self.font = "font: " + font if font and "font" not in font else ""
-        self.text_align = "text-align: " + text_align if text_align and "text-align" not in text_align else ""
+        self.text_align = (
+            "text-align: " + text_align
+            if text_align and "text-align" not in text_align
+            else ""
+        )
         self.gap = "gap: " + gap if gap and "gap" not in gap else ""
 
     def __repr__(self):

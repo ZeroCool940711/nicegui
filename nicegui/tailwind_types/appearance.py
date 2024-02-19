@@ -1,5 +1,3 @@
 from typing import Literal
 
-Appearance = Literal[
-    'none',
-]
+Appearance = Literal["none",]

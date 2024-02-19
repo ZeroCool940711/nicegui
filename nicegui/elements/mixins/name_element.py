@@ -43,7 +43,8 @@ class NameElement(Element):
     """
 
     name = BindableProperty(
-        on_change=lambda sender, name: cast(Self, sender)._handle_name_change(name))  # pylint: disable=protected-access
+        on_change=lambda sender, name: cast(Self, sender)._handle_name_change(name)
+    )  # pylint: disable=protected-access
 
     def __init__(self, *, name: str, **kwargs: Any) -> None:
         """
@@ -55,13 +56,14 @@ class NameElement(Element):
         """
         super().__init__(**kwargs)
         self.name = name
-        self._props['name'] = name
+        self._props["name"] = name
 
-    def bind_name_to(self,
-                     target_object: Any,
-                     target_name: str = 'name',
-                     forward: Callable[..., Any] = lambda x: x,
-                     ) -> Self:
+    def bind_name_to(
+        self,
+        target_object: Any,
+        target_name: str = "name",
+        forward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Bind the name of this element to the target object's target_name property.
 
@@ -76,14 +78,15 @@ class NameElement(Element):
         Returns:
         - self: The NameElement instance.
         """
-        bind_to(self, 'name', target_object, target_name, forward)
+        bind_to(self, "name", target_object, target_name, forward)
         return self
 
-    def bind_name_from(self,
-                       target_object: Any,
-                       target_name: str = 'name',
-                       backward: Callable[..., Any] = lambda x: x,
-                       ) -> Self:
+    def bind_name_from(
+        self,
+        target_object: Any,
+        target_name: str = "name",
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Bind the name of this element from the target object's target_name property.
 
@@ -98,15 +101,17 @@ class NameElement(Element):
         Returns:
         - self: The NameElement instance.
         """
-        bind_from(self, 'name', target_object, target_name, backward)
+        bind_from(self, "name", target_object, target_name, backward)
         return self
 
-    def bind_name(self,
-                  target_object: Any,
-                  target_name: str = 'name', *,
-                  forward: Callable[..., Any] = lambda x: x,
-                  backward: Callable[..., Any] = lambda x: x,
-                  ) -> Self:
+    def bind_name(
+        self,
+        target_object: Any,
+        target_name: str = "name",
+        *,
+        forward: Callable[..., Any] = lambda x: x,
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Bind the name of this element to the target object's target_name property.
 
@@ -123,7 +128,9 @@ class NameElement(Element):
         Returns:
         - self: The NameElement instance.
         """
-        bind(self, 'name', target_object, target_name, forward=forward, backward=backward)
+        bind(
+            self, "name", target_object, target_name, forward=forward, backward=backward
+        )
         return self
 
     def set_name(self, name: str) -> None:
@@ -157,5 +164,5 @@ class NameElement(Element):
         Args:
         - name: The new name.
         """
-        self._props['name'] = name
+        self._props["name"] = name
         self.update()

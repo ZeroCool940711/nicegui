@@ -34,9 +34,7 @@ class AsyncRealtimeEnvironment(RealtimeEnvironment):
             # Events scheduled for time *t* may take just up to *t+1*
             # for their computation, before an error is raised.
             delta = monotonic() - real_time
-            raise RuntimeError(
-                f'Simulation too slow for real time ({delta:.3f}s).'
-            )
+            raise RuntimeError(f"Simulation too slow for real time ({delta:.3f}s).")
 
         # Sleep in a loop to fix inaccuracies of windows (see
         # http://stackoverflow.com/a/15967564 for details) and to ignore
@@ -49,9 +47,7 @@ class AsyncRealtimeEnvironment(RealtimeEnvironment):
 
         Environment.step(self)
 
-    async def run(
-        self, until: Optional[Union[SimTime, Event]] = None
-    ) -> Optional[Any]:
+    async def run(self, until: Optional[Union[SimTime, Event]] = None) -> Optional[Any]:
         """Executes :meth:`step()` until the given criterion *until* is met.
 
         - If it is ``None`` (which is the default), this method will return
@@ -78,7 +74,7 @@ class AsyncRealtimeEnvironment(RealtimeEnvironment):
 
                 if at <= self.now:
                     raise ValueError(
-                        f'until(={at}) must be > the current simulation time.'
+                        f"until(={at}) must be > the current simulation time."
                     )
 
                 # Schedule the event before all regular timeouts.
@@ -103,6 +99,6 @@ class AsyncRealtimeEnvironment(RealtimeEnvironment):
                 assert not until.triggered
                 raise RuntimeError(
                     f'No scheduled events left but "until" event was not '
-                    f'triggered: {until}'
+                    f"triggered: {until}"
                 )
         return None

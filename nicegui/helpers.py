@@ -21,7 +21,7 @@ def is_pytest() -> bool:
         >>> is_pytest()
         False
     """
-    return 'pytest' in sys.modules
+    return "pytest" in sys.modules
 
 
 def is_coroutine_function(obj: Any) -> bool:
@@ -78,7 +78,7 @@ def is_file(path: Optional[Union[str, Path]]) -> bool:
     """
     if not path:
         return False
-    if isinstance(path, str) and path.strip().startswith('data:'):
+    if isinstance(path, str) and path.strip().startswith("data:"):
         return False  # NOTE: avoid passing data URLs to Path
     try:
         return Path(path).is_file()
@@ -154,9 +154,9 @@ def schedule_browser(host: str, port: int) -> Tuple[threading.Thread, threading.
             if cancel.is_set():
                 return
             time.sleep(0.1)
-        webbrowser.open(f'http://{host}:{port}/')
+        webbrowser.open(f"http://{host}:{port}/")
 
-    host = host if host != '0.0.0.0' else '127.0.0.1'
+    host = host if host != "0.0.0.0" else "127.0.0.1"
     thread = threading.Thread(target=in_thread, args=(host, port), daemon=True)
     thread.start()
     return thread, cancel
@@ -178,4 +178,6 @@ def kebab_to_camel_case(string: str) -> str:
         >>> kebab_to_camel_case("my-name-is-john")
         'myNameIsJohn'
     """
-    return ''.join(word.capitalize() if i else word for i, word in enumerate(string.split('-')))
+    return "".join(
+        word.capitalize() if i else word for i, word in enumerate(string.split("-"))
+    )

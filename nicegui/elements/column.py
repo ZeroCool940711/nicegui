@@ -8,11 +8,11 @@ class Column(Element):
     It inherits from the `Element` class.
 
     Attributes:
-    
+
          - _classes (List[str]): A list of CSS classes applied to the column element.
 
     Args:
-    
+
         - wrap (bool, optional): Whether to wrap the content within the column. Defaults to False.
 
     Example:
@@ -27,15 +27,15 @@ class Column(Element):
         It inherits from the `Element` class.
 
         Attributes:
-        
+
             _classes (List[str]): A list of CSS classes applied to the column element.
 
         Args:
-        
+
             wrap (bool, optional): Whether to wrap the content within the column. Defaults to False.
-    """
-        super().__init__('div')
-        self._classes.append('nicegui-column')
+        """
+        super().__init__("div")
+        self._classes.append("nicegui-column")
 
         if wrap:
-            self._classes.append('wrap')
+            self._classes.append("wrap")

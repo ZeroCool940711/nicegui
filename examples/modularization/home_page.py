@@ -10,4 +10,4 @@ def content() -> None:
     Usage:
         content()
     """
-    message('This is the home page.').classes('font-bold')
+    message("This is the home page.").classes("font-bold")

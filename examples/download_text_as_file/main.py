@@ -7,7 +7,7 @@ from fastapi.responses import StreamingResponse
 from nicegui import Client, app, ui
 
 
-@ui.page('/')
+@ui.page("/")
 async def index(client: Client):
     """
     This function defines the index route of the web application.
@@ -26,7 +26,7 @@ async def index(client: Client):
     4. Clicking the "Download" button will trigger the download of a text file containing the textarea content.
     5. The download route is cleaned up after the client disconnects.
     """
-    download_path = f'/download/{uuid.uuid4()}.txt'
+    download_path = f"/download/{uuid.uuid4()}.txt"
 
     @app.get(download_path)
     def download():
@@ -41,15 +41,18 @@ async def index(client: Client):
         - It creates a file-like object from the content of the textarea.
         - The file is returned as a streaming response with the appropriate headers.
         """
-        string_io = io.StringIO(textarea.value)  # create a file-like object from the string
-        headers = {'Content-Disposition': 'attachment; filename=download.txt'}
-        return StreamingResponse(string_io, media_type='text/plain', headers=headers)
+        string_io = io.StringIO(
+            textarea.value
+        )  # create a file-like object from the string
+        headers = {"Content-Disposition": "attachment; filename=download.txt"}
+        return StreamingResponse(string_io, media_type="text/plain", headers=headers)
 
-    textarea = ui.textarea(value='Hello World!')
-    ui.button('Download', on_click=lambda: ui.download(download_path))
+    textarea = ui.textarea(value="Hello World!")
+    ui.button("Download", on_click=lambda: ui.download(download_path))
 
     # cleanup the download route after the client disconnected
     await client.disconnected()
     app.routes[:] = [route for route in app.routes if route.path != download_path]
+
 
 ui.run()

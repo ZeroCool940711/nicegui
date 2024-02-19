@@ -46,21 +46,23 @@ class Editor(ValueElement, DisableableElement):
     Note:
     The `Editor` class inherits from the `ValueElement` and `DisableableElement` classes, which provide common functionality for elements with a value and disable state.
     """
-    def __init__(self,
-                 *,
-                 placeholder: Optional[str] = None,
-                 value: str = '',
-                 on_change: Optional[Callable[..., Any]] = None,
-                 ) -> None:
+
+    def __init__(
+        self,
+        *,
+        placeholder: Optional[str] = None,
+        value: str = "",
+        on_change: Optional[Callable[..., Any]] = None,
+    ) -> None:
         """Editor
         A WYSIWYG editor based on [Quasar's QEditor](https://quasar.dev/vue-components/editor).
         The value is a string containing the formatted text as HTML code.
         Args:
-            
+
             - value: initial value
             - on_change: callback to be invoked when the value changes
         """
-        super().__init__(tag='q-editor', value=value, on_value_change=on_change)
-        self._classes.append('nicegui-editor')
+        super().__init__(tag="q-editor", value=value, on_value_change=on_change)
+        self._classes.append("nicegui-editor")
         if placeholder is not None:
-            self._props['placeholder'] = placeholder
+            self._props["placeholder"] = placeholder

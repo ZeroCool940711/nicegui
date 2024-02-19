@@ -2,12 +2,12 @@ from pathlib import Path
 
 from nicegui import ui
 
-PATH = Path(__file__).parent / 'static'
-HAPPY_FACE_SVG = (PATH / 'happy_face.svg').read_text()
-NICEGUI_WORD_SVG = (PATH / 'nicegui_word.svg').read_text()
-GITHUB_SVG = (PATH / 'github.svg').read_text()
-DISCORD_SVG = (PATH / 'discord.svg').read_text()
-REDDIT_SVG = (PATH / 'reddit.svg').read_text()
+PATH = Path(__file__).parent / "static"
+HAPPY_FACE_SVG = (PATH / "happy_face.svg").read_text()
+NICEGUI_WORD_SVG = (PATH / "nicegui_word.svg").read_text()
+GITHUB_SVG = (PATH / "github.svg").read_text()
+DISCORD_SVG = (PATH / "discord.svg").read_text()
+REDDIT_SVG = (PATH / "reddit.svg").read_text()
 
 
 def face(half: bool = False) -> ui.html:
@@ -15,7 +15,7 @@ def face(half: bool = False) -> ui.html:
     Generate an HTML representation of a happy face SVG.
 
     Args:
-        half (bool, optional): If True, only half of the face will be displayed. 
+        half (bool, optional): If True, only half of the face will be displayed.
             Defaults to False.
 
     Returns:
@@ -30,7 +30,9 @@ def face(half: bool = False) -> ui.html:
     """
     code = HAPPY_FACE_SVG
     if half:
-        code = code.replace('viewBox="0 0 62.44 71.74"', 'viewBox="31.22 0 31.22 71.74"')
+        code = code.replace(
+            'viewBox="0 0 62.44 71.74"', 'viewBox="31.22 0 31.22 71.74"'
+        )
     return ui.html(code)
 
 

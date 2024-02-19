@@ -58,16 +58,23 @@ class ColorPicker(Menu):
         """
         super().__init__(value=value)
         with self:
+
             def handle_change(e: GenericEventArguments):
-                handle_event(on_pick, ColorPickEventArguments(sender=self, client=self.client, color=e.args))
-            self.q_color = Element('q-color').on('change', handle_change)
+                handle_event(
+                    on_pick,
+                    ColorPickEventArguments(
+                        sender=self, client=self.client, color=e.args
+                    ),
+                )
+
+            self.q_color = Element("q-color").on("change", handle_change)
 
     def set_color(self, color: str) -> None:
         """
         Set the color of the picker.
 
         Args:
-        
+
         - color : str
             The color to set.
         """

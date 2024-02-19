@@ -3,7 +3,7 @@ from typing import Any, Callable, Optional
 from .mixins.value_element import ValueElement
 
 
-class DarkMode(ValueElement, component='dark_mode.js'):
+class DarkMode(ValueElement, component="dark_mode.js"):
     """
     A class representing a dark mode element.
 
@@ -31,9 +31,14 @@ class DarkMode(ValueElement, component='dark_mode.js'):
         dark_mode.toggle()
     """
 
-    VALUE_PROP = 'value'
+    VALUE_PROP = "value"
 
-    def __init__(self, value: Optional[bool] = False, *, on_change: Optional[Callable[..., Any]] = None) -> None:
+    def __init__(
+        self,
+        value: Optional[bool] = False,
+        *,
+        on_change: Optional[Callable[..., Any]] = None,
+    ) -> None:
         """
         Initialize a DarkMode instance.
 
@@ -59,7 +64,7 @@ class DarkMode(ValueElement, component='dark_mode.js'):
             ValueError: If dark mode is set to auto.
         """
         if self.value is None:
-            raise ValueError('Cannot toggle dark mode when it is set to auto.')
+            raise ValueError("Cannot toggle dark mode when it is set to auto.")
         self.value = not self.value
 
     def auto(self) -> None:

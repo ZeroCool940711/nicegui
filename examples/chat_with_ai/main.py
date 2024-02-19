@@ -7,10 +7,10 @@ from log_callback_handler import NiceGuiLogElementCallbackHandler
 
 from nicegui import context, ui
 
-OPENAI_API_KEY = 'not-set'  # TODO: set your OpenAI API key here
+OPENAI_API_KEY = "not-set"  # TODO: set your OpenAI API key here
 
 
-@ui.page('/')
+@ui.page("/")
 def main():
     """
     Entry point function for the chat application.
@@ -44,7 +44,9 @@ def main():
     - Set the OPENAI_API_KEY variable with your OpenAI API key.
     - Run the `main` function to start the chat application.
     """
-    llm = ConversationChain(llm=ChatOpenAI(model_name='gpt-3.5-turbo', openai_api_key=OPENAI_API_KEY))
+    llm = ConversationChain(
+        llm=ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=OPENAI_API_KEY)
+    )
 
     messages: List[Tuple[str, str]] = []
     thinking: bool = False
@@ -52,49 +54,63 @@ def main():
     @ui.refreshable
     def chat_messages() -> None:
         for name, text in messages:
-            ui.chat_message(text=text, name=name, sent=name == 'You')
+            ui.chat_message(text=text, name=name, sent=name == "You")
         if thinking:
-            ui.spinner(size='3rem').classes('self-center')
+            ui.spinner(size="3rem").classes("self-center")
         if context.get_client().has_socket_connection:
-            ui.run_javascript('window.scrollTo(0, document.body.scrollHeight)')
+            ui.run_javascript("window.scrollTo(0, document.body.scrollHeight)")
 
     async def send() -> None:
         nonlocal thinking
         message = text.value
-        messages.append(('You', text.value))
+        messages.append(("You", text.value))
         thinking = True
-        text.value = ''
+        text.value = ""
         chat_messages.refresh()
 
-        response = await llm.arun(message, callbacks=[NiceGuiLogElementCallbackHandler(log)])
-        messages.append(('Bot', response))
+        response = await llm.arun(
+            message, callbacks=[NiceGuiLogElementCallbackHandler(log)]
+        )
+        messages.append(("Bot", response))
         thinking = False
         chat_messages.refresh()
 
-    anchor_style = r'a:link, a:visited {color: inherit !important; text-decoration: none; font-weight: 500}'
-    ui.add_head_html(f'<style>{anchor_style}</style>')
+    anchor_style = r"a:link, a:visited {color: inherit !important; text-decoration: none; font-weight: 500}"
+    ui.add_head_html(f"<style>{anchor_style}</style>")
 
     # the queries below are used to expand the contend down to the footer (content can then use flex-grow to expand)
-    ui.query('.q-page').classes('flex')
-    ui.query('.nicegui-content').classes('w-full')
+    ui.query(".q-page").classes("flex")
+    ui.query(".nicegui-content").classes("w-full")
 
-    with ui.tabs().classes('w-full') as tabs:
-        chat_tab = ui.tab('Chat')
-        logs_tab = ui.tab('Logs')
-    with ui.tab_panels(tabs, value=chat_tab).classes('w-full max-w-2xl mx-auto flex-grow items-stretch'):
-        with ui.tab_panel(chat_tab).classes('items-stretch'):
+    with ui.tabs().classes("w-full") as tabs:
+        chat_tab = ui.tab("Chat")
+        logs_tab = ui.tab("Logs")
+    with ui.tab_panels(tabs, value=chat_tab).classes(
+        "w-full max-w-2xl mx-auto flex-grow items-stretch"
+    ):
+        with ui.tab_panel(chat_tab).classes("items-stretch"):
             chat_messages()
         with ui.tab_panel(logs_tab):
-            log = ui.log().classes('w-full h-full')
+            log = ui.log().classes("w-full h-full")
 
-    with ui.footer().classes('bg-white'), ui.column().classes('w-full max-w-3xl mx-auto my-6'):
-        with ui.row().classes('w-full no-wrap items-center'):
-            placeholder = 'message' if OPENAI_API_KEY != 'not-set' else \
-                'Please provide your OPENAI key in the Python script first!'
-            text = ui.input(placeholder=placeholder).props('rounded outlined input-class=mx-3') \
-                .classes('w-full self-center').on('keydown.enter', send)
-        ui.markdown('simple chat app built with [NiceGUI](https://nicegui.io)') \
-            .classes('text-xs self-end mr-8 m-[-1em] text-primary')
+    with ui.footer().classes("bg-white"), ui.column().classes(
+        "w-full max-w-3xl mx-auto my-6"
+    ):
+        with ui.row().classes("w-full no-wrap items-center"):
+            placeholder = (
+                "message"
+                if OPENAI_API_KEY != "not-set"
+                else "Please provide your OPENAI key in the Python script first!"
+            )
+            text = (
+                ui.input(placeholder=placeholder)
+                .props("rounded outlined input-class=mx-3")
+                .classes("w-full self-center")
+                .on("keydown.enter", send)
+            )
+        ui.markdown("simple chat app built with [NiceGUI](https://nicegui.io)").classes(
+            "text-xs self-end mr-8 m-[-1em] text-primary"
+        )
 
 
-ui.run(title='Chat with GPT-3 (example)')
+ui.run(title="Chat with GPT-3 (example)")

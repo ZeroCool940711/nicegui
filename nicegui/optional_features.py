@@ -3,13 +3,13 @@ from typing import Literal, Set
 _optional_features: Set[str] = set()
 
 FEATURE = Literal[
-    'highcharts',
-    'matplotlib',
-    'pandas',
-    'pillow',
-    'plotly',
-    'pyecharts',
-    'webview',
+    "highcharts",
+    "matplotlib",
+    "pandas",
+    "pillow",
+    "plotly",
+    "pyecharts",
+    "webview",
 ]
 
 

@@ -10,16 +10,18 @@ from ..element import Element
 from ..logging import log
 
 
-class Timer(Element, component='timer.js'):
+class Timer(Element, component="timer.js"):
     active = BindableProperty()
     interval = BindableProperty()
 
-    def __init__(self,
-                 interval: float,
-                 callback: Callable[..., Any], *,
-                 active: bool = True,
-                 once: bool = False,
-                 ) -> None:
+    def __init__(
+        self,
+        interval: float,
+        callback: Callable[..., Any],
+        *,
+        active: bool = True,
+        once: bool = False,
+    ) -> None:
         """Timer
 
         One major drive behind the creation of NiceGUI was the necessity to have a simple approach to update the interface in regular intervals,
@@ -45,7 +47,7 @@ class Timer(Element, component='timer.js'):
 
     def activate(self) -> None:
         """Activate the timer."""
-        assert not self._is_canceled, 'Cannot activate a canceled timer'
+        assert not self._is_canceled, "Cannot activate a canceled timer"
         self.active = True
 
     def deactivate(self) -> None:
@@ -110,16 +112,18 @@ class Timer(Element, component='timer.js'):
             await self.client.connected(timeout=timeout)
             return True
         except TimeoutError:
-            log.error(f'Timer cancelled because client is not connected after {timeout} seconds')
+            log.error(
+                f"Timer cancelled because client is not connected after {timeout} seconds"
+            )
             return False
 
     def _should_stop(self) -> bool:
         return (
-            self.is_deleted or
-            self.client.id not in Client.instances or
-            self._is_canceled or
-            core.app.is_stopping or
-            core.app.is_stopped
+            self.is_deleted
+            or self.client.id not in Client.instances
+            or self._is_canceled
+            or core.app.is_stopping
+            or core.app.is_stopped
         )
 
     def _cleanup(self) -> None:

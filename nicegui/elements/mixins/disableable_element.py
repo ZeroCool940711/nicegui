@@ -34,7 +34,8 @@ class DisableableElement(Element):
     """
 
     enabled = BindableProperty(
-        on_change=lambda sender, value: cast(Self, sender)._handle_enabled_change(value))  # pylint: disable=protected-access
+        on_change=lambda sender, value: cast(Self, sender)._handle_enabled_change(value)
+    )  # pylint: disable=protected-access
 
     def __init__(self, **kwargs: Any) -> None:
         """
@@ -46,6 +47,7 @@ class DisableableElement(Element):
         super().__init__(**kwargs)
         self.enabled = True
         self.ignores_events_when_disabled = True
+
     @property
     def is_ignoring_events(self) -> bool:
         """
@@ -70,11 +72,12 @@ class DisableableElement(Element):
         """
         self.enabled = False
 
-    def bind_enabled_to(self,
-                        target_object: Any,
-                        target_name: str = 'enabled',
-                        forward: Callable[..., Any] = lambda x: x,
-                        ) -> Self:
+    def bind_enabled_to(
+        self,
+        target_object: Any,
+        target_name: str = "enabled",
+        forward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the enabled state of this element to the target object's target_name property.
 
@@ -89,14 +92,15 @@ class DisableableElement(Element):
         Returns:
             Self: The DisableableElement instance.
         """
-        bind_to(self, 'enabled', target_object, target_name, forward)
+        bind_to(self, "enabled", target_object, target_name, forward)
         return self
 
-    def bind_enabled_from(self,
-                          target_object: Any,
-                          target_name: str = 'enabled',
-                          backward: Callable[..., Any] = lambda x: x,
-                          ) -> Self:
+    def bind_enabled_from(
+        self,
+        target_object: Any,
+        target_name: str = "enabled",
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the enabled state of this element from the target object's target_name property.
 
@@ -111,15 +115,17 @@ class DisableableElement(Element):
         Returns:
             Self: The DisableableElement instance.
         """
-        bind_from(self, 'enabled', target_object, target_name, backward)
+        bind_from(self, "enabled", target_object, target_name, backward)
         return self
 
-    def bind_enabled(self,
-                     target_object: Any,
-                     target_name: str = 'enabled', *,
-                     forward: Callable[..., Any] = lambda x: x,
-                     backward: Callable[..., Any] = lambda x: x,
-                     ) -> Self:
+    def bind_enabled(
+        self,
+        target_object: Any,
+        target_name: str = "enabled",
+        *,
+        forward: Callable[..., Any] = lambda x: x,
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the enabled state of this element to the target object's target_name property.
 
@@ -136,7 +142,14 @@ class DisableableElement(Element):
         Returns:
             Self: The DisableableElement instance.
         """
-        bind(self, 'enabled', target_object, target_name, forward=forward, backward=backward)
+        bind(
+            self,
+            "enabled",
+            target_object,
+            target_name,
+            forward=forward,
+            backward=backward,
+        )
         return self
 
     def set_enabled(self, value: bool) -> None:
@@ -155,5 +168,5 @@ class DisableableElement(Element):
         Args:
             enabled (bool): The new state.
         """
-        self._props['disable'] = not enabled
+        self._props["disable"] = not enabled
         self.update()

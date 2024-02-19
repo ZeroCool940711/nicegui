@@ -5,12 +5,13 @@ from .mixins.value_element import ValueElement
 
 
 class Date(ValueElement, DisableableElement):
-
-    def __init__(self,
-                 value: Optional[str] = None,
-                 *,
-                 mask: str = 'YYYY-MM-DD',
-                 on_change: Optional[Callable[..., Any]] = None) -> None:
+    def __init__(
+        self,
+        value: Optional[str] = None,
+        *,
+        mask: str = "YYYY-MM-DD",
+        on_change: Optional[Callable[..., Any]] = None,
+    ) -> None:
         """Date Input
 
         This element is based on Quasar's [QDate ](https://quasar.dev/vue-components/date) component.
@@ -26,5 +27,5 @@ class Date(ValueElement, DisableableElement):
         - mask: the format of the date string (default: 'YYYY-MM-DD')
         - on_change: callback to execute when changing the date
         """
-        super().__init__(tag='q-date', value=value, on_value_change=on_change)
-        self._props['mask'] = mask
+        super().__init__(tag="q-date", value=value, on_value_change=on_change)
+        self._props["mask"] = mask

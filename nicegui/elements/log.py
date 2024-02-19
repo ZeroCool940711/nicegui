@@ -5,8 +5,7 @@ from typing import Any, Optional
 from ..element import Element
 
 
-class Log(Element, component='log.js'):
-
+class Log(Element, component="log.js"):
     def __init__(self, max_lines: Optional[int] = None) -> None:
         """Log View
 
@@ -15,9 +14,9 @@ class Log(Element, component='log.js'):
         - max_lines: maximum number of lines before dropping oldest ones (default: `None`)
         """
         super().__init__()
-        self._props['max_lines'] = max_lines
-        self._props['lines'] = ''
-        self._classes.append('nicegui-log')
+        self._props["max_lines"] = max_lines
+        self._props["lines"] = ""
+        self._classes.append("nicegui-log")
         self.lines: deque[str] = deque(maxlen=max_lines)
         self.total_count: int = 0
 
@@ -28,13 +27,13 @@ class Log(Element, component='log.js'):
         """
         new_lines = [urllib.parse.quote(line) for line in str(line).splitlines()]
         self.lines.extend(new_lines)
-        self._props['lines'] = '\n'.join(self.lines)
+        self._props["lines"] = "\n".join(self.lines)
         self.total_count += len(new_lines)
-        self.run_method('push', urllib.parse.quote(str(line)), self.total_count)
+        self.run_method("push", urllib.parse.quote(str(line)), self.total_count)
 
     def clear(self) -> None:
         """Clear the log."""
         super().clear()
-        self._props['lines'] = ''
+        self._props["lines"] = ""
         self.lines.clear()
-        self.run_method('clear')
+        self.run_method("clear")

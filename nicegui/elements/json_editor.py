@@ -10,13 +10,18 @@ from ..events import (
 )
 
 
-class JsonEditor(Element, component='json_editor.js', exposed_libraries=['lib/vanilla-jsoneditor/index.js']):
-
-    def __init__(self,
-                 properties: Dict, *,
-                 on_select: Optional[Callable] = None,
-                 on_change: Optional[Callable] = None,
-                 ) -> None:
+class JsonEditor(
+    Element,
+    component="json_editor.js",
+    exposed_libraries=["lib/vanilla-jsoneditor/index.js"],
+):
+    def __init__(
+        self,
+        properties: Dict,
+        *,
+        on_select: Optional[Callable] = None,
+        on_change: Optional[Callable] = None,
+    ) -> None:
         """JSONEditor
 
         An element to create a JSON editor using [JSONEditor ](https://github.com/josdejong/svelte-jsoneditor).
@@ -28,29 +33,44 @@ class JsonEditor(Element, component='json_editor.js', exposed_libraries=['lib/va
         - on_change: callback function that is called when the content has changed
         """
         super().__init__()
-        self._props['properties'] = properties
+        self._props["properties"] = properties
 
         if on_select:
+
             def handle_on_select(e: GenericEventArguments) -> None:
-                handle_event(on_select, JsonEditorSelectEventArguments(sender=self, client=self.client, **e.args))
-            self.on('select', handle_on_select, ['selection'])
+                handle_event(
+                    on_select,
+                    JsonEditorSelectEventArguments(
+                        sender=self, client=self.client, **e.args
+                    ),
+                )
+
+            self.on("select", handle_on_select, ["selection"])
 
         if on_change:
+
             def handle_on_change(e: GenericEventArguments) -> None:
-                handle_event(on_change, JsonEditorChangeEventArguments(sender=self, client=self.client, **e.args))
-            self.on('change', handle_on_change, ['content', 'errors'])
+                handle_event(
+                    on_change,
+                    JsonEditorChangeEventArguments(
+                        sender=self, client=self.client, **e.args
+                    ),
+                )
+
+            self.on("change", handle_on_change, ["content", "errors"])
 
     @property
     def properties(self) -> Dict:
         """The property dictionary."""
-        return self._props['properties']
+        return self._props["properties"]
 
     def update(self) -> None:
         super().update()
-        self.run_method('update_editor')
+        self.run_method("update_editor")
 
-    def run_editor_method(self, name: str, *args, timeout: float = 1,
-                          check_interval: float = 0.01) -> AwaitableResponse:
+    def run_editor_method(
+        self, name: str, *args, timeout: float = 1, check_interval: float = 0.01
+    ) -> AwaitableResponse:
         """Run a method of the JSONEditor instance.
 
         See the [JSONEditor README ](https://github.com/josdejong/svelte-jsoneditor/) for a list of methods.
@@ -65,4 +85,10 @@ class JsonEditor(Element, component='json_editor.js', exposed_libraries=['lib/va
 
         :return: AwaitableResponse that can be awaited to get the result of the method call
         """
-        return self.run_method('run_editor_method', name, *args, timeout=timeout, check_interval=check_interval)
+        return self.run_method(
+            "run_editor_method",
+            name,
+            *args,
+            timeout=timeout,
+            check_interval=check_interval,
+        )

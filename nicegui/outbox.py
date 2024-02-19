@@ -50,7 +50,7 @@ class Outbox:
         self.messages: Deque[Message] = deque()
         self._should_stop = False
         if core.app.is_started:
-            background_tasks.create(self.loop(), name=f'outbox loop {client.id}')
+            background_tasks.create(self.loop(), name=f"outbox loop {client.id}")
         else:
             core.app.on_startup(self.loop)
 
@@ -72,7 +72,9 @@ class Outbox:
         """
         self.updates[element.id] = None
 
-    def enqueue_message(self, message_type: MessageType, data: Any, target_id: ClientId) -> None:
+    def enqueue_message(
+        self, message_type: MessageType, data: Any, target_id: ClientId
+    ) -> None:
         """
         Enqueues a message for the given client.
 
@@ -102,7 +104,7 @@ class Outbox:
                     element_id: None if element is None else element._to_dict()  # pylint: disable=protected-access
                     for element_id, element in self.updates.items()
                 }
-                coros.append(self._emit('update', data, self.client.id))
+                coros.append(self._emit("update", data, self.client.id))
                 self.updates.clear()
 
                 for target_id, message_type, data in self.messages:
@@ -119,7 +121,9 @@ class Outbox:
                 core.app.handle_exception(e)
                 await asyncio.sleep(0.1)
 
-    async def _emit(self, message_type: MessageType, data: Any, target_id: ClientId) -> None:
+    async def _emit(
+        self, message_type: MessageType, data: Any, target_id: ClientId
+    ) -> None:
         """
         Emits a message to the specified client.
 

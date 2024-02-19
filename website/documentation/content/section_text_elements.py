@@ -10,7 +10,7 @@ from . import (
     rst_documentation,
 )
 
-doc.title('*Text* Elements')
+doc.title("*Text* Elements")
 
 doc.intro(label_documentation)
 doc.intro(link_documentation)

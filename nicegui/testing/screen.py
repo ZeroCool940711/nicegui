@@ -8,8 +8,11 @@ from typing import Generator, List, Optional, Union
 
 import pytest
 from selenium import webdriver
-from selenium.common.exceptions import (ElementNotInteractableException, NoSuchElementException,
-                                        StaleElementReferenceException)
+from selenium.common.exceptions import (
+    ElementNotInteractableException,
+    NoSuchElementException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -21,13 +24,15 @@ from nicegui.server import Server
 class Screen:
     PORT = 3392
     IMPLICIT_WAIT = 4
-    SCREENSHOT_DIR = Path('screenshots')
+    SCREENSHOT_DIR = Path("screenshots")
 
-    def __init__(self, selenium: webdriver.Chrome, caplog: pytest.LogCaptureFixture) -> None:
+    def __init__(
+        self, selenium: webdriver.Chrome, caplog: pytest.LogCaptureFixture
+    ) -> None:
         self.selenium = selenium
         self.caplog = caplog
         self.server_thread: Optional[threading.Thread] = None
-        self.ui_run_kwargs = {'port': self.PORT, 'show': False, 'reload': False}
+        self.ui_run_kwargs = {"port": self.PORT, "show": False, "reload": False}
         self.connected = threading.Event()
         app.on_connect(self.connected.set)
 
@@ -66,9 +71,13 @@ class Screen:
         self.connected.clear()
         while True:
             try:
-                self.selenium.get(f'http://localhost:{self.PORT}{path}')
-                self.selenium.find_element(By.XPATH, '//body')  # ensure page and JS are loaded
-                self.connected.wait(1)  # Ensure that the client has connected to the API
+                self.selenium.get(f"http://localhost:{self.PORT}{path}")
+                self.selenium.find_element(
+                    By.XPATH, "//body"
+                )  # ensure page and JS are loaded
+                self.connected.wait(
+                    1
+                )  # Ensure that the client has connected to the API
                 break
             except Exception as e:
                 if time.time() > deadline:
@@ -76,7 +85,7 @@ class Screen:
                 time.sleep(0.1)
                 assert self.server_thread is not None
                 if not self.server_thread.is_alive():
-                    raise RuntimeError('The NiceGUI server has stopped running') from e
+                    raise RuntimeError("The NiceGUI server has stopped running") from e
 
     def close(self) -> None:
         """Close the browser."""
@@ -87,9 +96,11 @@ class Screen:
         """Switch to the tab with the given index, or create it if it does not exist."""
         window_count = len(self.selenium.window_handles)
         if tab_id > window_count:
-            raise IndexError(f'Could not go to or create tab {tab_id}, there are only {window_count} tabs')
+            raise IndexError(
+                f"Could not go to or create tab {tab_id}, there are only {window_count} tabs"
+            )
         if tab_id == window_count:
-            self.selenium.switch_to.new_window('tab')
+            self.selenium.switch_to.new_window("tab")
         else:
             self.selenium.switch_to.window(self.selenium.window_handles[tab_id])
 
@@ -115,8 +126,8 @@ class Screen:
         """Assert that the page contains an input with the given value."""
         deadline = time.time() + self.IMPLICIT_WAIT
         while time.time() < deadline:
-            for input_element in self.find_all_by_tag('input'):
-                if input_element.get_attribute('value') == text:
+            for input_element in self.find_all_by_tag("input"):
+                if input_element.get_attribute("value") == text:
                     return
             self.wait(0.1)
         raise AssertionError(f'Could not find input with value "{text}"')
@@ -125,7 +136,9 @@ class Screen:
         """Assert that the given image has loaded."""
         deadline = time.time() + timeout
         while time.time() < deadline:
-            js = 'return arguments[0].naturalWidth > 0 && arguments[0].naturalHeight > 0'
+            js = (
+                "return arguments[0].naturalWidth > 0 && arguments[0].naturalHeight > 0"
+            )
             if self.selenium.execute_script(js, image):
                 return
         raise AssertionError(f'Image not loaded: {image.get_attribute("outerHTML")}')
@@ -136,7 +149,9 @@ class Screen:
         try:
             element.click()
         except ElementNotInteractableException as e:
-            raise AssertionError(f'Could not click on "{target_text}" on:\n{element.get_attribute("outerHTML")}') from e
+            raise AssertionError(
+                f'Could not click on "{target_text}" on:\n{element.get_attribute("outerHTML")}'
+            ) from e
         return element
 
     def context_click(self, target_text: str) -> WebElement:
@@ -164,7 +179,9 @@ class Screen:
             element = self.selenium.find_element(By.XPATH, query)
             try:
                 if not element.is_displayed():
-                    self.wait(0.1)  # HACK: repeat check after a short delay to avoid timing issue on fast machines
+                    self.wait(
+                        0.1
+                    )  # HACK: repeat check after a short delay to avoid timing issue on fast machines
                     if not element.is_displayed():
                         raise AssertionError(f'Found "{text}" but it is hidden')
             except StaleElementReferenceException as e:
@@ -180,7 +197,7 @@ class Screen:
 
     def find_element(self, element: ui.element) -> WebElement:
         """Find the given NiceGUI element."""
-        return self.selenium.find_element(By.ID, f'c{element.id}')
+        return self.selenium.find_element(By.ID, f"c{element.id}")
 
     def find_by_class(self, name: str) -> WebElement:
         """Find the element with the given CSS class."""
@@ -200,8 +217,8 @@ class Screen:
 
     def render_js_logs(self) -> str:
         """Render the browser console logs as a string."""
-        console = '\n'.join(l['message'] for l in self.selenium.get_log('browser'))
-        return f'-- console logs ---\n{console}\n---------------------'
+        console = "\n".join(l["message"] for l in self.selenium.get_log("browser"))
+        return f"-- console logs ---\n{console}\n---------------------"
 
     def wait(self, t: float) -> None:
         """Wait for the given number of seconds."""
@@ -210,22 +227,28 @@ class Screen:
     def shot(self, name: str) -> None:
         """Take a screenshot and store it in the screenshots directory."""
         os.makedirs(self.SCREENSHOT_DIR, exist_ok=True)
-        filename = f'{self.SCREENSHOT_DIR}/{name}.png'
-        print(f'Storing screenshot to {filename}')
+        filename = f"{self.SCREENSHOT_DIR}/{name}.png"
+        print(f"Storing screenshot to {filename}")
         self.selenium.get_screenshot_as_file(filename)
 
     def assert_py_logger(self, level: str, message: Union[str, re.Pattern]) -> None:
         """Assert that the Python logger has received a message with the given level and text or regex pattern."""
         try:
-            assert self.caplog.records, 'Expected a log message'
+            assert self.caplog.records, "Expected a log message"
             record = self.caplog.records[0]
             print(record.levelname, record.message)
-            assert record.levelname.strip() == level, f'Expected "{level}" but got "{record.levelname}"'
+            assert (
+                record.levelname.strip() == level
+            ), f'Expected "{level}" but got "{record.levelname}"'
 
             if isinstance(message, re.Pattern):
-                assert message.search(record.message), f'Expected regex "{message}" but got "{record.message}"'
+                assert message.search(
+                    record.message
+                ), f'Expected regex "{message}" but got "{record.message}"'
             else:
-                assert record.message.strip() == message, f'Expected "{message}" but got "{record.message}"'
+                assert (
+                    record.message.strip() == message
+                ), f'Expected "{message}" but got "{record.message}"'
         finally:
             self.caplog.records.clear()
 

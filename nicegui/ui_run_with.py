@@ -10,15 +10,16 @@ from .nicegui import _shutdown, _startup
 
 
 def run_with(
-    app: FastAPI, *,
-    title: str = 'NiceGUI',
-    viewport: str = 'width=device-width, initial-scale=1',
+    app: FastAPI,
+    *,
+    title: str = "NiceGUI",
+    viewport: str = "width=device-width, initial-scale=1",
     favicon: Optional[Union[str, Path]] = None,
     dark: Optional[bool] = False,
-    language: Language = 'en-US',
+    language: Language = "en-US",
     binding_refresh_interval: float = 0.1,
     reconnect_timeout: float = 3.0,
-    mount_path: str = '/',
+    mount_path: str = "/",
     tailwind: bool = True,
     prod_js: bool = True,
     storage_secret: Optional[str] = None,

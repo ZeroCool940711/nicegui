@@ -16,7 +16,7 @@ class ColorInput(ValueElement, DisableableElement):
         LOOPBACK (bool): Indicates whether the color input supports loopback. Default is False.
 
     Args:
-    
+
         - label (str, optional): Displayed label for the color input.
         - placeholder (str, optional): Text to show if no color is selected.
         - value (str, optional): The current color value.
@@ -31,34 +31,39 @@ class ColorInput(ValueElement, DisableableElement):
 
     LOOPBACK = False
 
-    def __init__(self,
-                 label: Optional[str] = None, *,
-                 placeholder: Optional[str] = None,
-                 value: str = '',
-                 on_change: Optional[Callable[..., Any]] = None,
-                 preview: bool = False,
-                 ) -> None:
+    def __init__(
+        self,
+        label: Optional[str] = None,
+        *,
+        placeholder: Optional[str] = None,
+        value: str = "",
+        on_change: Optional[Callable[..., Any]] = None,
+        preview: bool = False,
+    ) -> None:
         """
         Color Input
 
         Args:
-        
+
             - label (str, optional): Displayed label for the color input.
             - placeholder (str, optional): Text to show if no color is selected.
             - value (str, optional): The current color value.
             - on_change (callable, optional): Callback to execute when the value changes.
             - preview (bool, optional): Change button background to selected color (default: False).
         """
-        super().__init__(tag='q-input', value=value, on_value_change=on_change)
+        super().__init__(tag="q-input", value=value, on_value_change=on_change)
         if label is not None:
-            self._props['label'] = label
+            self._props["label"] = label
         if placeholder is not None:
-            self._props['placeholder'] = placeholder
+            self._props["placeholder"] = placeholder
 
-        with self.add_slot('append'):
+        with self.add_slot("append"):
             self.picker = color_picker(on_pick=lambda e: self.set_value(e.color))
-            self.button = button(on_click=self.open_picker, icon='colorize') \
-                .props('flat round', remove='color').classes('cursor-pointer')
+            self.button = (
+                button(on_click=self.open_picker, icon="colorize")
+                .props("flat round", remove="color")
+                .classes("cursor-pointer")
+            )
 
         self.preview = preview
         self._update_preview()
@@ -118,7 +123,9 @@ class ColorInput(ValueElement, DisableableElement):
         """
         if not self.preview:
             return
-        self.button.style(f'''
+        self.button.style(
+            f"""
             background-color: {(self.value or "#fff").split(";", 1)[0]};
             text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff, 1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
-        ''')
+        """
+        )

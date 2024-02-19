@@ -3,10 +3,10 @@ from message import message
 
 from nicegui import APIRouter, ui
 
-router = APIRouter(prefix='/c')
+router = APIRouter(prefix="/c")
 
 
-@router.page('/')
+@router.page("/")
 def example_page():
     """
     Renders an example page with a frame, a message, and multiple links.
@@ -18,13 +18,13 @@ def example_page():
     Returns:
         None
     """
-    with theme.frame('- Example C -'):
-        message('Example C')
+    with theme.frame("- Example C -"):
+        message("Example C")
         for i in range(1, 4):
-            ui.link(f'Item {i}', f'/c/items/{i}').classes('text-xl text-grey-8')
+            ui.link(f"Item {i}", f"/c/items/{i}").classes("text-xl text-grey-8")
 
 
-@router.page('/items/{id}', dark=True)
+@router.page("/items/{id}", dark=True)
 def item(id: str):
     """
     Display an item with the given ID.
@@ -41,6 +41,6 @@ def item(id: str):
     Example:
     >>> item('123')
     """
-    with theme.frame(f'- Example C{id} -'):
-        message(f'Item  #{id}')
-        ui.link('go back', router.prefix).classes('text-xl text-grey-8')
+    with theme.frame(f"- Example C{id} -"):
+        message(f"Item  #{id}")
+        ui.link("go back", router.prefix).classes("text-xl text-grey-8")

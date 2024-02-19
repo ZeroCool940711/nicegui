@@ -5,20 +5,24 @@ from .mixins.disableable_element import DisableableElement
 from .mixins.validation_element import ValidationElement
 
 
-class Input(ValidationElement, DisableableElement, component='input.js'):
-    VALUE_PROP: str = 'value'
+class Input(ValidationElement, DisableableElement, component="input.js"):
+    VALUE_PROP: str = "value"
     LOOPBACK = False
 
-    def __init__(self,
-                 label: Optional[str] = None, *,
-                 placeholder: Optional[str] = None,
-                 value: str = '',
-                 password: bool = False,
-                 password_toggle_button: bool = False,
-                 on_change: Optional[Callable[..., Any]] = None,
-                 autocomplete: Optional[List[str]] = None,
-                 validation: Optional[Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]] = None,
-                 ) -> None:
+    def __init__(
+        self,
+        label: Optional[str] = None,
+        *,
+        placeholder: Optional[str] = None,
+        value: str = "",
+        password: bool = False,
+        password_toggle_button: bool = False,
+        on_change: Optional[Callable[..., Any]] = None,
+        autocomplete: Optional[List[str]] = None,
+        validation: Optional[
+            Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]
+        ] = None,
+    ) -> None:
         """Text Input
 
         This element is based on Quasar's [QInput ](https://quasar.dev/vue-components/input) component.
@@ -49,20 +53,28 @@ class Input(ValidationElement, DisableableElement, component='input.js'):
         """
         super().__init__(value=value, on_value_change=on_change, validation=validation)
         if label is not None:
-            self._props['label'] = label
+            self._props["label"] = label
         if placeholder is not None:
-            self._props['placeholder'] = placeholder
-        self._props['type'] = 'password' if password else 'text'
+            self._props["placeholder"] = placeholder
+        self._props["type"] = "password" if password else "text"
 
         if password_toggle_button:
-            with self.add_slot('append'):
-                def toggle_type(_):
-                    is_hidden = self._props.get('type') == 'password'
-                    icon.props(f'name={"visibility" if is_hidden else "visibility_off"}')
-                    self.props(f'type={"text" if is_hidden else "password"}')
-                icon = Icon('visibility_off').classes('cursor-pointer').on('click', toggle_type)
+            with self.add_slot("append"):
 
-        self._props['_autocomplete'] = autocomplete or []
+                def toggle_type(_):
+                    is_hidden = self._props.get("type") == "password"
+                    icon.props(
+                        f'name={"visibility" if is_hidden else "visibility_off"}'
+                    )
+                    self.props(f'type={"text" if is_hidden else "password"}')
+
+                icon = (
+                    Icon("visibility_off")
+                    .classes("cursor-pointer")
+                    .on("click", toggle_type)
+                )
+
+        self._props["_autocomplete"] = autocomplete or []
 
     def set_autocomplete(self, autocomplete: Optional[List[str]]) -> None:
         """
@@ -80,7 +92,7 @@ class Input(ValidationElement, DisableableElement, component='input.js'):
         Example:
             input_element.set_autocomplete(['apple', 'banana', 'cherry'])
         """
-        self._props['_autocomplete'] = autocomplete
+        self._props["_autocomplete"] = autocomplete
         self.update()
 
     def _handle_value_change(self, value: Any) -> None:
@@ -99,4 +111,4 @@ class Input(ValidationElement, DisableableElement, component='input.js'):
         """
         super()._handle_value_change(value)
         if self._send_update_on_value_change:
-            self.run_method('updateValue')
+            self.run_method("updateValue")

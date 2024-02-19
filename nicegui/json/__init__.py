@@ -11,6 +11,7 @@ to override Python's default json module.
 try:
     # orjson not available on all platforms, fallback to Python's json module if not available
     import orjson
+
     has_orjson = True
 except ImportError:
     has_orjson = False
@@ -19,11 +20,11 @@ except ImportError:
 if has_orjson:
     from nicegui.json.orjson_wrapper import NiceGUIJSONResponse, dumps, loads
 else:
-    from nicegui.json.builtin_wrapper import NiceGUIJSONResponse, dumps, loads  # type: ignore
+    from nicegui.json.builtin_wrapper import (  # type: ignore
+        NiceGUIJSONResponse,
+        dumps,
+        loads,
+    )
 
 
-__all__ = [
-    'dumps',
-    'loads',
-    'NiceGUIJSONResponse'
-]
+__all__ = ["dumps", "loads", "NiceGUIJSONResponse"]

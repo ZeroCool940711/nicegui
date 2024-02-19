@@ -18,64 +18,65 @@ from .language import Language
 from .logging import log
 from .server import CustomServerConfig, Server
 
-APP_IMPORT_STRING = 'nicegui:app'
+APP_IMPORT_STRING = "nicegui:app"
 
 
-def run(*,
-        host: Optional[str] = None,
-        port: Optional[int] = None,
-        title: str = 'NiceGUI',
-        viewport: str = 'width=device-width, initial-scale=1',
-        favicon: Optional[Union[str, Path]] = None,
-        dark: Optional[bool] = False,
-        language: Language = 'en-US',
-        binding_refresh_interval: float = 0.1,
-        reconnect_timeout: float = 3.0,
-        show: bool = True,
-        on_air: Optional[Union[str, Literal[True]]] = None,
-        native: bool = False,
-        window_size: Optional[Tuple[int, int]] = None,
-        fullscreen: bool = False,
-        frameless: bool = False,
-        reload: bool = True,
-        uvicorn_logging_level: str = 'warning',
-        uvicorn_reload_dirs: str = '.',
-        uvicorn_reload_includes: str = '*.py',
-        uvicorn_reload_excludes: str = '.*, .py[cod], .sw.*, ~*',
-        tailwind: bool = True,
-        prod_js: bool = True,
-        endpoint_documentation: Literal['none', 'internal', 'page', 'all'] = 'none',
-        storage_secret: Optional[str] = None,
-        show_welcome_message: bool = True,
-        **kwargs: Any,
-        ) -> None:
+def run(
+    *,
+    host: Optional[str] = None,
+    port: Optional[int] = None,
+    title: str = "NiceGUI",
+    viewport: str = "width=device-width, initial-scale=1",
+    favicon: Optional[Union[str, Path]] = None,
+    dark: Optional[bool] = False,
+    language: Language = "en-US",
+    binding_refresh_interval: float = 0.1,
+    reconnect_timeout: float = 3.0,
+    show: bool = True,
+    on_air: Optional[Union[str, Literal[True]]] = None,
+    native: bool = False,
+    window_size: Optional[Tuple[int, int]] = None,
+    fullscreen: bool = False,
+    frameless: bool = False,
+    reload: bool = True,
+    uvicorn_logging_level: str = "warning",
+    uvicorn_reload_dirs: str = ".",
+    uvicorn_reload_includes: str = "*.py",
+    uvicorn_reload_excludes: str = ".*, .py[cod], .sw.*, ~*",
+    tailwind: bool = True,
+    prod_js: bool = True,
+    endpoint_documentation: Literal["none", "internal", "page", "all"] = "none",
+    storage_secret: Optional[str] = None,
+    show_welcome_message: bool = True,
+    **kwargs: Any,
+) -> None:
     """
     ui.run
-    
+
     You can call `ui.run()` with optional arguments.
     Most of them only apply after stopping and fully restarting the app and do not apply with auto-reloading.
-    
-    
+
+
     Arguments:
-    
+
     - host: start server with this host (defaults to `'127.0.0.1` in native mode, otherwise `'0.0.0.0'`)
     - port: use this port (default: 8080 in normal mode, and an automatically determined open port in native mode)
     - title: page title (default: `'NiceGUI'`, can be overwritten per page)
-    
+
     - viewport: page meta viewport content (default: `'width=device-width, initial-scale=1'`, can be overwritten per page)
     - favicon: relative filepath, absolute URL to a favicon (default: `None`, NiceGUI icon will be used) or emoji (e.g. `'🚀'`, works for most browsers)
     - dark: whether to use Quasar's dark mode (default: `False`, use `None` for "auto" mode)
-    
+
     - language: language for Quasar elements (default: `'en-US'`)
     - binding_refresh_interval: time between binding updates (default: `0.1` seconds, bigger is more CPU friendly)
     - reconnect_timeout: maximum time the server waits for the browser to reconnect (default: 3.0 seconds)
     - show: automatically open the UI in a browser tab (default: `True`)
-    
+
     - on_air: tech preview: `allows temporary remote access <https://nicegui.io/documentation/section_configuration_deployment#nicegui_on_air>`_ if set to `True` (default: disabled)
     - native: open the UI in a native window of size 800x600 (default: `False`, deactivates `show`, automatically finds an open port)
     - window_size: open the UI in a native window with the provided size (e.g. `(1024, 786)`, default: `None`, also activates `native`)
     - fullscreen: open the UI in a fullscreen window (default: `False`, also activates `native`)
-    
+
     - frameless: open the UI in a frameless window (default: `False`, also activates `native`)
     - reload: automatically reload the UI on file changes (default: `True`)
     - uvicorn_logging_level: logging level for uvicorn server (default: `'warning'`)
@@ -83,12 +84,12 @@ def run(*,
     - uvicorn_reload_includes: string with comma-separated list of glob-patterns which trigger reload on modification (default: `'*.py'`)
     - uvicorn_reload_excludes: string with comma-separated list of glob-patterns which should be ignored for reload (default: `'.*, .py[cod], .sw.*, ~*'`)
     - tailwind: whether to use Tailwind (experimental, default: `True`)
-    
+
     - prod_js: whether to use the production version of Vue and Quasar dependencies (default: `True`)
     - endpoint_documentation: control what endpoints appear in the autogenerated OpenAPI docs (default: 'none', options: 'none', 'internal', 'page', 'all')
     - storage_secret: secret key for browser-based storage (default: `None`, a value is required to enable ui.storage.individual and ui.storage.browser)
     - show_welcome_message: whether to show the welcome message (default: `True`)
-    
+
     - kwargs: additional keyword arguments are passed to `uvicorn.run`
 
     Returns:
@@ -116,19 +117,19 @@ def run(*,
     for route in core.app.routes:
         if not isinstance(route, Route):
             continue
-        if route.path.startswith('/_nicegui') and hasattr(route, 'methods'):
-            route.include_in_schema = endpoint_documentation in {'internal', 'all'}
-        if route.path == '/' or route.path in Client.page_routes.values():
-            route.include_in_schema = endpoint_documentation in {'page', 'all'}
+        if route.path.startswith("/_nicegui") and hasattr(route, "methods"):
+            route.include_in_schema = endpoint_documentation in {"internal", "all"}
+        if route.path == "/" or route.path in Client.page_routes.values():
+            route.include_in_schema = endpoint_documentation in {"page", "all"}
 
     if on_air:
-        core.air = Air('' if on_air is True else on_air)
+        core.air = Air("" if on_air is True else on_air)
 
-    if multiprocessing.current_process().name != 'MainProcess':
+    if multiprocessing.current_process().name != "MainProcess":
         return
 
-    if reload and not hasattr(__main__, '__file__'):
-        log.warning('auto-reloading is only supported when running from a file')
+    if reload and not hasattr(__main__, "__file__"):
+        log.warning("auto-reloading is only supported when running from a file")
         core.app.config.reload = reload = False
 
     if fullscreen:
@@ -139,28 +140,28 @@ def run(*,
         native = True
     if native:
         show = False
-        host = host or '127.0.0.1'
+        host = host or "127.0.0.1"
         port = port or native_module.find_open_port()
         width, height = window_size or (800, 600)
         native_module.activate(host, port, title, width, height, fullscreen, frameless)
     else:
         port = port or 8080
-        host = host or '0.0.0.0'
+        host = host or "0.0.0.0"
     assert host is not None
     assert port is not None
 
     # NOTE: We save host and port in environment variables so the subprocess started in reload mode can access them.
-    os.environ['NICEGUI_HOST'] = host
-    os.environ['NICEGUI_PORT'] = str(port)
+    os.environ["NICEGUI_HOST"] = host
+    os.environ["NICEGUI_PORT"] = str(port)
 
     if show:
         helpers.schedule_browser(host, port)
 
     def split_args(args: str) -> List[str]:
-        return [a.strip() for a in args.split(',')]
+        return [a.strip() for a in args.split(",")]
 
-    if kwargs.get('workers', 1) > 1:
-        raise ValueError('NiceGUI does not support multiple workers yet.')
+    if kwargs.get("workers", 1) > 1:
+        raise ValueError("NiceGUI does not support multiple workers yet.")
 
     # NOTE: The following lines are basically a copy of `uvicorn.run`, but keep a reference to the `server`.
 
@@ -181,7 +182,9 @@ def run(*,
     Server.create_singleton(config)
 
     if (reload or config.workers > 1) and not isinstance(config.app, str):
-        log.warning('You must pass the application as an import string to enable "reload" or "workers".')
+        log.warning(
+            'You must pass the application as an import string to enable "reload" or "workers".'
+        )
         sys.exit(1)
 
     if config.should_reload:

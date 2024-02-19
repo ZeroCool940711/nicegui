@@ -14,9 +14,12 @@ class ContentElement(Element):
     The content can be bound to another object's property, allowing for automatic updates.
     """
 
-    CONTENT_PROP = 'innerHTML'
+    CONTENT_PROP = "innerHTML"
     content = BindableProperty(
-        on_change=lambda sender, content: cast(Self, sender)._handle_content_change(content))  # pylint: disable=protected-access
+        on_change=lambda sender, content: cast(Self, sender)._handle_content_change(
+            content
+        )
+    )  # pylint: disable=protected-access
 
     def __init__(self, *, content: str, **kwargs: Any) -> None:
         """
@@ -30,11 +33,12 @@ class ContentElement(Element):
         self.content = content
         self._handle_content_change(content)
 
-    def bind_content_to(self,
-                        target_object: Any,
-                        target_name: str = 'content',
-                        forward: Callable[..., Any] = lambda x: x,
-                        ) -> Self:
+    def bind_content_to(
+        self,
+        target_object: Any,
+        target_name: str = "content",
+        forward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the content of this element to the target object's target_name property.
 
@@ -49,14 +53,15 @@ class ContentElement(Element):
         Returns:
             - The current instance of the ContentElement class.
         """
-        bind_to(self, 'content', target_object, target_name, forward)
+        bind_to(self, "content", target_object, target_name, forward)
         return self
 
-    def bind_content_from(self,
-                          target_object: Any,
-                          target_name: str = 'content',
-                          backward: Callable[..., Any] = lambda x: x,
-                          ) -> Self:
+    def bind_content_from(
+        self,
+        target_object: Any,
+        target_name: str = "content",
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the content of this element from the target object's target_name property.
 
@@ -71,15 +76,17 @@ class ContentElement(Element):
         Returns:
             - The current instance of the ContentElement class.
         """
-        bind_from(self, 'content', target_object, target_name, backward)
+        bind_from(self, "content", target_object, target_name, backward)
         return self
 
-    def bind_content(self,
-                     target_object: Any,
-                     target_name: str = 'content', *,
-                     forward: Callable[..., Any] = lambda x: x,
-                     backward: Callable[..., Any] = lambda x: x,
-                     ) -> Self:
+    def bind_content(
+        self,
+        target_object: Any,
+        target_name: str = "content",
+        *,
+        forward: Callable[..., Any] = lambda x: x,
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the content of this element to the target object's target_name property.
 
@@ -96,7 +103,14 @@ class ContentElement(Element):
         Returns:
             - The current instance of the ContentElement class.
         """
-        bind(self, 'content', target_object, target_name, forward=forward, backward=backward)
+        bind(
+            self,
+            "content",
+            target_object,
+            target_name,
+            forward=forward,
+            backward=backward,
+        )
         return self
 
     def set_content(self, content: str) -> None:
@@ -118,7 +132,9 @@ class ContentElement(Element):
         Raises:
             - ValueError: If the content contains a <script> tag.
         """
-        if self.CONTENT_PROP == 'innerHTML' and '</script>' in content:
-            raise ValueError('HTML elements must not contain <script> tags. Use ui.add_body_html() instead.')
+        if self.CONTENT_PROP == "innerHTML" and "</script>" in content:
+            raise ValueError(
+                "HTML elements must not contain <script> tags. Use ui.add_body_html() instead."
+            )
         self._props[self.CONTENT_PROP] = content
         self.update()

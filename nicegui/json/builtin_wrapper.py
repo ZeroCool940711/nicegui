@@ -6,18 +6,21 @@ from fastapi import Response
 
 try:
     import numpy as np
+
     has_numpy = True
 except ImportError:
     has_numpy = False
 
 
-def dumps(obj: Any, sort_keys: bool = False, separators: Optional[Tuple[str, str]] = None):
+def dumps(
+    obj: Any, sort_keys: bool = False, separators: Optional[Tuple[str, str]] = None
+):
     """Serializes a Python object to a JSON-encoded string.
 
     This implementation uses Python's default json module, but extends it in order to support NumPy arrays.
     """
     if separators is None:
-        separators = (',', ':')
+        separators = (",", ":")
     return json.dumps(
         obj,
         sort_keys=sort_keys,
@@ -25,7 +28,8 @@ def dumps(obj: Any, sort_keys: bool = False, separators: Optional[Tuple[str, str
         indent=None,
         allow_nan=False,
         ensure_ascii=False,
-        cls=NumpyJsonEncoder)
+        cls=NumpyJsonEncoder,
+    )
 
 
 def loads(value: str) -> Any:
@@ -38,10 +42,11 @@ def loads(value: str) -> Any:
 
 class NiceGUIJSONResponse(Response):
     """FastAPI response class to support our custom json serializer implementation."""
-    media_type = 'application/json'
+
+    media_type = "application/json"
 
     def render(self, content: Any) -> bytes:
-        return dumps(content).encode('utf-8')
+        return dumps(content).encode("utf-8")
 
 
 class NumpyJsonEncoder(json.JSONEncoder):

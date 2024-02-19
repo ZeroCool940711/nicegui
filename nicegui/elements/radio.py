@@ -6,12 +6,13 @@ from .mixins.disableable_element import DisableableElement
 
 
 class Radio(ChoiceElement, DisableableElement):
-
-    def __init__(self,
-                 options: Union[List, Dict], *,
-                 value: Any = None,
-                 on_change: Optional[Callable[..., Any]] = None,
-                 ) -> None:
+    def __init__(
+        self,
+        options: Union[List, Dict],
+        *,
+        value: Any = None,
+        on_change: Optional[Callable[..., Any]] = None,
+    ) -> None:
         """Radio Selection
 
         This element is based on Quasar's [QRadio ](https://quasar.dev/vue-components/radio) component.
@@ -23,7 +24,9 @@ class Radio(ChoiceElement, DisableableElement):
         - value: the initial value
         - on_change: callback to execute when selection changes
         """
-        super().__init__(tag='q-option-group', options=options, value=value, on_change=on_change)
+        super().__init__(
+            tag="q-option-group", options=options, value=value, on_change=on_change
+        )
 
     def _event_args_to_value(self, e: GenericEventArguments) -> Any:
         return self._values[e.args]

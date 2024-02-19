@@ -4,14 +4,15 @@ from .pyplot import Pyplot
 
 
 class LinePlot(Pyplot):
-
-    def __init__(self, *,
-                 n: int = 1,
-                 limit: int = 100,
-                 update_every: int = 1,
-                 close: bool = True,
-                 **kwargs: Any,
-                 ) -> None:
+    def __init__(
+        self,
+        *,
+        n: int = 1,
+        limit: int = 100,
+        update_every: int = 1,
+        close: bool = True,
+        **kwargs: Any,
+    ) -> None:
         """Line Plot
 
         Create a line plot using pyplot.

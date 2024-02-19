@@ -18,4 +18,4 @@ class DocumentationPage:
     @property
     def heading(self) -> str:
         """Return the heading of the page."""
-        return self.title or self.parts[0].title or ''
+        return self.title or self.parts[0].title or ""

@@ -15,7 +15,9 @@ from starlette.responses import Response
 from . import background_tasks, context, core, json, observables
 from .logging import log
 
-request_contextvar: contextvars.ContextVar[Optional[Request]] = contextvars.ContextVar('request_var', default=None)
+request_contextvar: contextvars.ContextVar[Optional[Request]] = contextvars.ContextVar(
+    "request_var", default=None
+)
 
 
 class ReadOnlyDict(MutableMapping):
@@ -34,7 +36,9 @@ class ReadOnlyDict(MutableMapping):
         TypeError: If any modification operation (set, delete) is attempted.
     """
 
-    def __init__(self, data: Dict[Any, Any], write_error_message: str = 'Read-only dict') -> None:
+    def __init__(
+        self, data: Dict[Any, Any], write_error_message: str = "Read-only dict"
+    ) -> None:
         self._data: Dict[Any, Any] = data
         self._write_error_message: str = write_error_message
 
@@ -84,7 +88,7 @@ class PersistentDict(observables.ObservableDict):
         try:
             data = json.loads(filepath.read_text(encoding)) if filepath.exists() else {}
         except Exception:
-            log.warning(f'Could not load storage file {filepath}')
+            log.warning(f"Could not load storage file {filepath}")
             data = {}
         super().__init__(data, on_change=self.backup)
 
@@ -110,8 +114,9 @@ class PersistentDict(observables.ObservableDict):
             self.filepath.parent.mkdir(exist_ok=True)
 
         async def backup() -> None:
-            async with aiofiles.open(self.filepath, 'w', encoding=self.encoding) as f:
+            async with aiofiles.open(self.filepath, "w", encoding=self.encoding) as f:
                 await f.write(json.dumps(self))
+
         if core.loop:
             background_tasks.create_lazy(backup(), name=self.filepath.stem)
         else:
@@ -132,7 +137,9 @@ class RequestTrackingMiddleware(BaseHTTPMiddleware):
     4. Check the responded flag in the request state to determine if a response has been sent.
     """
 
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
         """
         Dispatch method called for each incoming request.
 
@@ -147,8 +154,8 @@ class RequestTrackingMiddleware(BaseHTTPMiddleware):
         None.
         """
         request_contextvar.set(request)
-        if 'id' not in request.session:
-            request.session['id'] = str(uuid.uuid4())
+        if "id" not in request.session:
+            request.session["id"] = str(uuid.uuid4())
         request.state.responded = False
         response = await call_next(request)
         request.state.responded = True
@@ -192,75 +199,87 @@ class Storage:
     """
 
     def __init__(self) -> None:
-        self.path = Path(os.environ.get('NICEGUI_STORAGE_PATH', '.nicegui')).resolve()
+        self.path = Path(os.environ.get("NICEGUI_STORAGE_PATH", ".nicegui")).resolve()
         self.migrate_to_utf8()
-        self._general = PersistentDict(self.path / 'storage-general.json', encoding='utf-8')
+        self._general = PersistentDict(
+            self.path / "storage-general.json", encoding="utf-8"
+        )
         self._users: Dict[str, PersistentDict] = {}
 
     @property
     def browser(self) -> Union[ReadOnlyDict, Dict]:
-            """Return a small storage that is saved directly within the user's browser (encrypted cookie).
+        """Return a small storage that is saved directly within the user's browser (encrypted cookie).
 
-            This storage is shared between all browser tabs and can only be modified before the initial request has been submitted.
-            It is recommended to use `app.storage.user` instead, which can be modified anytime, has a larger storage capacity,
-            and provides better security by reducing overall payload.
+        This storage is shared between all browser tabs and can only be modified before the initial request has been submitted.
+        It is recommended to use `app.storage.user` instead, which can be modified anytime, has a larger storage capacity,
+        and provides better security by reducing overall payload.
 
-            Returns:
-                Union[ReadOnlyDict, Dict]: The storage object that can be used to store data.
+        Returns:
+            Union[ReadOnlyDict, Dict]: The storage object that can be used to store data.
 
-            Raises:
-                RuntimeError: If `app.storage.browser` is used outside of page builder functions or without a storage_secret passed in `ui.run()`.
+        Raises:
+            RuntimeError: If `app.storage.browser` is used outside of page builder functions or without a storage_secret passed in `ui.run()`.
 
-            Notes:
-                - The `app.storage.browser` storage is limited in capacity and should only be used for small amounts of data.
-                - Modifications made to the storage after the initial request has been submitted will not be sent back to the browser.
-            """
-            request: Optional[Request] = request_contextvar.get()
-            if request is None:
-                if self._is_in_auto_index_context():
-                    raise RuntimeError('app.storage.browser can only be used with page builder functions '
-                                       '(https://nicegui.io/documentation/page)')
-                raise RuntimeError('app.storage.browser needs a storage_secret passed in ui.run()')
-            if request.state.responded:
-                return ReadOnlyDict(
-                    request.session,
-                    'the response to the browser has already been built, so modifications cannot be sent back anymore'
+        Notes:
+            - The `app.storage.browser` storage is limited in capacity and should only be used for small amounts of data.
+            - Modifications made to the storage after the initial request has been submitted will not be sent back to the browser.
+        """
+        request: Optional[Request] = request_contextvar.get()
+        if request is None:
+            if self._is_in_auto_index_context():
+                raise RuntimeError(
+                    "app.storage.browser can only be used with page builder functions "
+                    "(https://nicegui.io/documentation/page)"
                 )
-            return request.session
+            raise RuntimeError(
+                "app.storage.browser needs a storage_secret passed in ui.run()"
+            )
+        if request.state.responded:
+            return ReadOnlyDict(
+                request.session,
+                "the response to the browser has already been built, so modifications cannot be sent back anymore",
+            )
+        return request.session
 
     @property
     def user(self) -> Dict:
-            """Returns the individual user storage that is persisted on the server.
+        """Returns the individual user storage that is persisted on the server.
 
-            This method retrieves the user storage for the current session. The data is stored in a file on the server,
-            and it is shared between all browser tabs by identifying the user via session cookie ID.
+        This method retrieves the user storage for the current session. The data is stored in a file on the server,
+        and it is shared between all browser tabs by identifying the user via session cookie ID.
 
-            Returns:
-                A dictionary representing the user storage.
+        Returns:
+            A dictionary representing the user storage.
 
-            Raises:
-                RuntimeError: If the method is called outside of a page builder function or without a storage_secret passed in ui.run().
+        Raises:
+            RuntimeError: If the method is called outside of a page builder function or without a storage_secret passed in ui.run().
 
-            Example:
-                To access and modify the user storage, you can use the following code:
+        Example:
+            To access and modify the user storage, you can use the following code:
 
-                >>> storage = Storage()
-                >>> user_storage = storage.user()
-                >>> user_storage['name'] = 'John Doe'
-                >>> user_storage['age'] = 30
-                >>> print(user_storage['name'])
-                John Doe
-            """
-            request: Optional[Request] = request_contextvar.get()
-            if request is None:
-                if self._is_in_auto_index_context():
-                    raise RuntimeError('app.storage.user can only be used with page builder functions '
-                                       '(https://nicegui.io/documentation/page)')
-                raise RuntimeError('app.storage.user needs a storage_secret passed in ui.run()')
-            session_id = request.session['id']
-            if session_id not in self._users:
-                self._users[session_id] = PersistentDict(self.path / f'storage-user-{session_id}.json', encoding='utf-8')
-            return self._users[session_id]
+            >>> storage = Storage()
+            >>> user_storage = storage.user()
+            >>> user_storage['name'] = 'John Doe'
+            >>> user_storage['age'] = 30
+            >>> print(user_storage['name'])
+            John Doe
+        """
+        request: Optional[Request] = request_contextvar.get()
+        if request is None:
+            if self._is_in_auto_index_context():
+                raise RuntimeError(
+                    "app.storage.user can only be used with page builder functions "
+                    "(https://nicegui.io/documentation/page)"
+                )
+            raise RuntimeError(
+                "app.storage.user needs a storage_secret passed in ui.run()"
+            )
+        session_id = request.session["id"]
+        if session_id not in self._users:
+            self._users[session_id] = PersistentDict(
+                self.path / f"storage-user-{session_id}.json", encoding="utf-8"
+            )
+        return self._users[session_id]
 
     @staticmethod
     def _is_in_auto_index_context() -> bool:
@@ -277,42 +296,42 @@ class Storage:
 
     @property
     def general(self) -> Dict:
-            """
-            Returns the general storage shared between all users that is persisted on the server (where NiceGUI is executed).
+        """
+        Returns the general storage shared between all users that is persisted on the server (where NiceGUI is executed).
 
-            This method returns a dictionary object representing the general storage. The general storage is a shared storage
-            that is accessible to all users of NiceGUI and is persisted on the server where NiceGUI is executed.
+        This method returns a dictionary object representing the general storage. The general storage is a shared storage
+        that is accessible to all users of NiceGUI and is persisted on the server where NiceGUI is executed.
 
-            Returns:
-                dict: A dictionary object representing the general storage.
+        Returns:
+            dict: A dictionary object representing the general storage.
 
-            Example:
-                >>> storage = Storage()
-                >>> general_storage = storage.general()
-                >>> general_storage['key'] = 'value'
-                >>> print(general_storage)
-                {'key': 'value'}
-            """
-            return self._general
+        Example:
+            >>> storage = Storage()
+            >>> general_storage = storage.general()
+            >>> general_storage['key'] = 'value'
+            >>> print(general_storage)
+            {'key': 'value'}
+        """
+        return self._general
 
     def clear(self) -> None:
-            """
-            Clears all storage.
+        """
+        Clears all storage.
 
-            This method clears all the data stored in the storage object. It removes all the data from the
-            `_general` and `_users` dictionaries, and also deletes any storage files present in the `path`
-            directory that match the pattern 'storage-*.json'.
+        This method clears all the data stored in the storage object. It removes all the data from the
+        `_general` and `_users` dictionaries, and also deletes any storage files present in the `path`
+        directory that match the pattern 'storage-*.json'.
 
-            Usage:
-                storage.clear()
+        Usage:
+            storage.clear()
 
-            Returns:
-                None
-            """
-            self._general.clear()
-            self._users.clear()
-            for filepath in self.path.glob('storage-*.json'):
-                filepath.unlink()
+        Returns:
+            None
+        """
+        self._general.clear()
+        self._users.clear()
+        for filepath in self.path.glob("storage-*.json"):
+            filepath.unlink()
 
     def migrate_to_utf8(self) -> None:
         """Migrates storage files from system's default encoding to UTF-8.
@@ -328,12 +347,12 @@ class Storage:
             OSError: If there is an error while reading or writing the storage files.
             JSONDecodeError: If there is an error while decoding the JSON data.
         """
-        for filepath in self.path.glob('storage_*.json'):
-            new_filepath = filepath.with_name(filepath.name.replace('_', '-'))
+        for filepath in self.path.glob("storage_*.json"):
+            new_filepath = filepath.with_name(filepath.name.replace("_", "-"))
             try:
                 data = json.loads(filepath.read_text())
             except Exception:
-                log.warning(f'Could not load storage file {filepath}')
+                log.warning(f"Could not load storage file {filepath}")
                 data = {}
             filepath.rename(new_filepath)
-            new_filepath.write_text(json.dumps(data), encoding='utf-8')
+            new_filepath.write_text(json.dumps(data), encoding="utf-8")

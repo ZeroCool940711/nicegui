@@ -2,7 +2,7 @@
 from nicegui import ui
 
 
-@ui.page('/')
+@ui.page("/")
 def main_page() -> None:
     """
     This function displays a main page with a markdown message and a button.
@@ -17,9 +17,9 @@ def main_page() -> None:
     >>> main_page()
     """
 
-    ui.markdown('Try running `pytest` on this project!')
-    ui.button('Click me', on_click=lambda: ui.notify('Button clicked!'))
+    ui.markdown("Try running `pytest` on this project!")
+    ui.button("Click me", on_click=lambda: ui.notify("Button clicked!"))
 
 
-if __name__ in {'__main__', '__mp_main__'}:
+if __name__ in {"__main__", "__mp_main__"}:
     ui.run()

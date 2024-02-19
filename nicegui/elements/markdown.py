@@ -9,9 +9,10 @@ from .mermaid import Mermaid
 from .mixins.content_element import ContentElement
 
 
-class Markdown(ContentElement, component='markdown.js'):
-
-    def __init__(self, content: str = '', *, extras: List[str] = ['fenced-code-blocks', 'tables']) -> None:
+class Markdown(ContentElement, component="markdown.js"):
+    def __init__(
+        self, content: str = "", *, extras: List[str] = ["fenced-code-blocks", "tables"]
+    ) -> None:
         """Markdown Element
 
         Renders Markdown onto the page.
@@ -21,23 +22,24 @@ class Markdown(ContentElement, component='markdown.js'):
         """
         self.extras = extras
         super().__init__(content=content)
-        self._classes.append('nicegui-markdown')
-        self._props['codehilite_css'] = (
-            HtmlFormatter(nobackground=True).get_style_defs('.codehilite') +
-            HtmlFormatter(nobackground=True, style='github-dark').get_style_defs('.body--dark .codehilite')
+        self._classes.append("nicegui-markdown")
+        self._props["codehilite_css"] = HtmlFormatter(nobackground=True).get_style_defs(
+            ".codehilite"
+        ) + HtmlFormatter(nobackground=True, style="github-dark").get_style_defs(
+            ".body--dark .codehilite"
         )
-        if 'mermaid' in extras:
-            self._props['use_mermaid'] = True
+        if "mermaid" in extras:
+            self._props["use_mermaid"] = True
             self.libraries.append(Mermaid.exposed_libraries[0])
 
     def _handle_content_change(self, content: str) -> None:
-        html = prepare_content(content, extras=' '.join(self.extras))
-        if self._props.get('innerHTML') != html:
-            self._props['innerHTML'] = html
-            self.run_method('update', html)
+        html = prepare_content(content, extras=" ".join(self.extras))
+        if self._props.get("innerHTML") != html:
+            self._props["innerHTML"] = html
+            self.run_method("update", html)
 
 
-@lru_cache(maxsize=int(os.environ.get('MARKDOWN_CONTENT_CACHE_SIZE', '1000')))
+@lru_cache(maxsize=int(os.environ.get("MARKDOWN_CONTENT_CACHE_SIZE", "1000")))
 def prepare_content(content: str, extras: str) -> str:
     """Render Markdown content to HTML."""
     return markdown2.markdown(remove_indentation(content), extras=extras.split())
@@ -49,6 +51,6 @@ def remove_indentation(text: str) -> str:
     while lines and not lines[0].strip():
         lines.pop(0)
     if not lines:
-        return ''
+        return ""
     indentation = len(lines[0]) - len(lines[0].lstrip())
-    return '\n'.join(line[indentation:] for line in lines)
+    return "\n".join(line[indentation:] for line in lines)

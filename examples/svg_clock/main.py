@@ -7,10 +7,10 @@ from nicegui import ui
 def build_svg() -> str:
     """Returns an SVG showing the current time.
 
-        Original was borrowed from https://de.m.wikipedia.org/wiki/Datei:Station_Clock.svg.
+    Original was borrowed from https://de.m.wikipedia.org/wiki/Datei:Station_Clock.svg.
     """
     now = datetime.now()
-    return f'''
+    return f"""
         <svg width="800" height="800" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <circle cx="400" cy="400" r="400" fill="#fff"/>
             <use transform="matrix(-1,0,0,1,800,0)" xlink:href="#c"/>
@@ -40,10 +40,10 @@ def build_svg() -> str:
                 <path d="m410.21 301.98-43.314 242.68a41.963 41.963 0 0 0-2.8605-0.091 41.963 41.963 0 0 0-41.865 42.059 41.963 41.963 0 0 0 30.073 40.144l-18.417 103.18 1.9709 3.9629 3.2997-2.9496 21.156-102.65a41.963 41.963 0 0 0 3.9771 0.1799 41.963 41.963 0 0 0 41.865-42.059 41.963 41.963 0 0 0-29.003-39.815l49.762-241.44zm-42.448 265.56a19.336 19.336 0 0 1 15.703 18.948 19.336 19.336 0 0 1-19.291 19.38 19.336 19.336 0 0 1-19.38-19.291 19.336 19.336 0 0 1 19.291-19.38 19.336 19.336 0 0 1 3.6752 0.3426z" fill="#a40000"/>
             </g>
         </svg>
-    '''
+    """
 
 
-clock = ui.html().classes('self-center')
+clock = ui.html().classes("self-center")
 ui.timer(1, lambda: clock.set_content(build_svg()))
 
 ui.run()

@@ -7,13 +7,13 @@ from ..element import Element
 
 try:
     import plotly.graph_objects as go
-    optional_features.register('plotly')
+
+    optional_features.register("plotly")
 except ImportError:
     pass
 
 
-class Plotly(Element, component='plotly.vue', libraries=['lib/plotly/plotly.min.js']):
-
+class Plotly(Element, component="plotly.vue", libraries=["lib/plotly/plotly.min.js"]):
     def __init__(self, figure: Union[Dict, go.Figure]) -> None:
         """Plotly Element
 
@@ -29,14 +29,16 @@ class Plotly(Element, component='plotly.vue', libraries=['lib/plotly/plotly.min.
         - figure: Plotly figure to be rendered. Can be either a `go.Figure` instance, or
                        a `dict` object with keys `data`, `layout`, `config` (optional).
         """
-        if not optional_features.has('plotly'):
-            raise ImportError('Plotly is not installed. Please run "pip install nicegui[plotly]".')
+        if not optional_features.has("plotly"):
+            raise ImportError(
+                'Plotly is not installed. Please run "pip install nicegui[plotly]".'
+            )
 
         super().__init__()
 
         self.figure = figure
         self.update()
-        self._classes.append('js-plotly-plot')
+        self._classes.append("js-plotly-plot")
 
     def update_figure(self, figure: Union[Dict, go.Figure]):
         """Overrides figure instance of this Plotly chart and updates chart on client side."""
@@ -44,7 +46,7 @@ class Plotly(Element, component='plotly.vue', libraries=['lib/plotly/plotly.min.
         self.update()
 
     def update(self) -> None:
-        self._props['options'] = self._get_figure_json()
+        self._props["options"] = self._get_figure_json()
         super().update()
 
     def _get_figure_json(self) -> Dict:
@@ -57,4 +59,6 @@ class Plotly(Element, component='plotly.vue', libraries=['lib/plotly/plotly.min.
             # already a dict object with keys: data, layout, config (optional)
             return self.figure
 
-        raise ValueError(f'Plotly figure is of unknown type "{self.figure.__class__.__name__}".')
+        raise ValueError(
+            f'Plotly figure is of unknown type "{self.figure.__class__.__name__}".'
+        )

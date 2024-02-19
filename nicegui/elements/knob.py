@@ -7,20 +7,20 @@ from .mixins.value_element import ValueElement
 
 
 class Knob(ValueElement, DisableableElement, TextColorElement):
-
-    def __init__(self,
-                 value: float = 0.0,
-                 *,
-                 min: float = 0.0,  # pylint: disable=redefined-builtin
-                 max: float = 1.0,  # pylint: disable=redefined-builtin
-                 step: float = 0.01,
-                 color: Optional[str] = 'primary',
-                 center_color: Optional[str] = None,
-                 track_color: Optional[str] = None,
-                 size: Optional[str] = None,
-                 show_value: bool = False,
-                 on_change: Optional[Callable[..., Any]] = None,
-                 ) -> None:
+    def __init__(
+        self,
+        value: float = 0.0,
+        *,
+        min: float = 0.0,  # pylint: disable=redefined-builtin
+        max: float = 1.0,  # pylint: disable=redefined-builtin
+        step: float = 0.01,
+        color: Optional[str] = "primary",
+        center_color: Optional[str] = None,
+        track_color: Optional[str] = None,
+        size: Optional[str] = None,
+        show_value: bool = False,
+        on_change: Optional[Callable[..., Any]] = None,
+    ) -> None:
         """Knob
 
         This element is based on Quasar's [QKnob ](https://quasar.dev/vue-components/knob) component.
@@ -37,23 +37,31 @@ class Knob(ValueElement, DisableableElement, TextColorElement):
         - show_value: whether to show the value as text
         - on_change: callback to execute when the value changes
         """
-        super().__init__(tag='q-knob', value=value, on_value_change=on_change, throttle=0.05, text_color=color)
+        super().__init__(
+            tag="q-knob",
+            value=value,
+            on_value_change=on_change,
+            throttle=0.05,
+            text_color=color,
+        )
 
-        self._props['min'] = min
-        self._props['max'] = max
-        self._props['step'] = step
-        self._props['show-value'] = True  # NOTE: enable default slot, e.g. for nested icon
+        self._props["min"] = min
+        self._props["max"] = max
+        self._props["step"] = step
+        self._props[
+            "show-value"
+        ] = True  # NOTE: enable default slot, e.g. for nested icon
 
         if center_color:
-            self._props['center-color'] = center_color
+            self._props["center-color"] = center_color
 
         if track_color:
-            self._props['track-color'] = track_color
+            self._props["track-color"] = track_color
 
         if size:
-            self._props['size'] = size
+            self._props["size"] = size
 
         self.label: Optional[Label] = None
         if show_value:
             with self:
-                self.label = Label().bind_text_from(self, 'value')
+                self.label = Label().bind_text_from(self, "value")

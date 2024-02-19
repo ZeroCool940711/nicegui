@@ -22,9 +22,11 @@ class Simulator(Node):
         Returns:
             None
         """
-        super().__init__('simulator')
-        self.pose_publisher_ = self.create_publisher(Pose, 'pose', 1)
-        self.subscription = self.create_subscription(Twist, 'cmd_vel', self.handle_velocity_command, 1)
+        super().__init__("simulator")
+        self.pose_publisher_ = self.create_publisher(Pose, "pose", 1)
+        self.subscription = self.create_subscription(
+            Twist, "cmd_vel", self.handle_velocity_command, 1
+        )
         self.pose = Pose()
         self.linear_velocity = 0.0
         self.angular_velocity = 0.0
@@ -85,5 +87,5 @@ def main(args=None) -> None:
     rclpy.shutdown()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

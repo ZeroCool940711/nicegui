@@ -66,31 +66,36 @@ async def handle_upload(args: events.UploadEventArguments):
         # Register the event handler
         upload.on_event('upload', handle_upload)
     """
-    if 'video' in args.type:
-        shutil.rmtree('data', ignore_errors=True)
-        os.makedirs('data', exist_ok=True)
-        os.chdir('data')
-        with open(args.name, 'wb') as f:
+    if "video" in args.type:
+        shutil.rmtree("data", ignore_errors=True)
+        os.makedirs("data", exist_ok=True)
+        os.chdir("data")
+        with open(args.name, "wb") as f:
             f.write(args.content.read())
             results.clear()
             with results:
-                ui.spinner('dots', size='xl')
+                ui.spinner("dots", size="xl")
             await asyncio.to_thread(extract, args.name)
             results.clear()
             with results:
-                for path in pathlib.Path('.').glob('*.jpg'):
-                    ui.image(f'/data/{path.name}').classes('w-96 drop-shadow-md rounded')
-        os.chdir('..')
+                for path in pathlib.Path(".").glob("*.jpg"):
+                    ui.image(f"/data/{path.name}").classes(
+                        "w-96 drop-shadow-md rounded"
+                    )
+        os.chdir("..")
     else:
-        ui.notify('Please upload a video file')
-    upload.run_method('reset')
+        ui.notify("Please upload a video file")
+    upload.run_method("reset")
 
-os.makedirs('data', exist_ok=True)
-app.add_static_files('/data', 'data')
 
-with ui.column().classes('w-full items-center'):
-    ui.label('Extract images from video').classes('text-3xl m-3')
-    upload = ui.upload(label='pick a video file', auto_upload=True, on_upload=handle_upload)
-    results = ui.row().classes('w-full justify-center mt-6')
+os.makedirs("data", exist_ok=True)
+app.add_static_files("/data", "data")
+
+with ui.column().classes("w-full items-center"):
+    ui.label("Extract images from video").classes("text-3xl m-3")
+    upload = ui.upload(
+        label="pick a video file", auto_upload=True, on_upload=handle_upload
+    )
+    results = ui.row().classes("w-full justify-center mt-6")
 
 ui.run()

@@ -8,20 +8,24 @@ from .mixins.validation_element import ValidationElement
 class Number(ValidationElement, DisableableElement):
     LOOPBACK = False
 
-    def __init__(self,
-                 label: Optional[str] = None, *,
-                 placeholder: Optional[str] = None,
-                 value: Optional[float] = None,
-                 min: Optional[float] = None,  # pylint: disable=redefined-builtin
-                 max: Optional[float] = None,  # pylint: disable=redefined-builtin
-                 precision: Optional[int] = None,
-                 step: Optional[float] = None,
-                 prefix: Optional[str] = None,
-                 suffix: Optional[str] = None,
-                 format: Optional[str] = None,  # pylint: disable=redefined-builtin
-                 on_change: Optional[Callable[..., Any]] = None,
-                 validation: Optional[Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]] = None,
-                 ) -> None:
+    def __init__(
+        self,
+        label: Optional[str] = None,
+        *,
+        placeholder: Optional[str] = None,
+        value: Optional[float] = None,
+        min: Optional[float] = None,  # pylint: disable=redefined-builtin
+        max: Optional[float] = None,  # pylint: disable=redefined-builtin
+        precision: Optional[int] = None,
+        step: Optional[float] = None,
+        prefix: Optional[str] = None,
+        suffix: Optional[str] = None,
+        format: Optional[str] = None,  # pylint: disable=redefined-builtin
+        on_change: Optional[Callable[..., Any]] = None,
+        validation: Optional[
+            Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]
+        ] = None,
+    ) -> None:
         """Number Input
 
         This element is based on Quasar's [QInput ](https://quasar.dev/vue-components/input) component.
@@ -45,43 +49,45 @@ class Number(ValidationElement, DisableableElement):
         - validation: dictionary of validation rules or a callable that returns an optional error message
         """
         self.format = format
-        super().__init__(tag='q-input', value=value, on_value_change=on_change, validation=validation)
-        self._props['type'] = 'number'
+        super().__init__(
+            tag="q-input", value=value, on_value_change=on_change, validation=validation
+        )
+        self._props["type"] = "number"
         if label is not None:
-            self._props['label'] = label
+            self._props["label"] = label
         if placeholder is not None:
-            self._props['placeholder'] = placeholder
+            self._props["placeholder"] = placeholder
         if min is not None:
-            self._props['min'] = min
+            self._props["min"] = min
         if max is not None:
-            self._props['max'] = max
+            self._props["max"] = max
         self._precision = precision
         if step is not None:
-            self._props['step'] = step
+            self._props["step"] = step
         if prefix is not None:
-            self._props['prefix'] = prefix
+            self._props["prefix"] = prefix
         if suffix is not None:
-            self._props['suffix'] = suffix
-        self.on('blur', self.sanitize, [])
+            self._props["suffix"] = suffix
+        self.on("blur", self.sanitize, [])
 
     @property
     def min(self) -> float:
         """The minimum value allowed."""
-        return self._props.get('min', -float('inf'))
+        return self._props.get("min", -float("inf"))
 
     @min.setter
     def min(self, value: float) -> None:
-        self._props['min'] = value
+        self._props["min"] = value
         self.sanitize()
 
     @property
     def max(self) -> float:
         """The maximum value allowed."""
-        return self._props.get('max', float('inf'))
+        return self._props.get("max", float("inf"))
 
     @max.setter
     def max(self, value: float) -> None:
-        self._props['max'] = value
+        self._props["max"] = value
         self.sanitize()
 
     @property
@@ -123,7 +129,7 @@ class Number(ValidationElement, DisableableElement):
             if old_value == int(old_value) and value == int(value):
                 return str(int(value))  # preserve integer representation
             return str(value)
-        if value == '':
+        if value == "":
             return 0
         return self.format % float(value)
 

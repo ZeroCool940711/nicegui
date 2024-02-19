@@ -38,34 +38,36 @@ class SocketIoApp(socketio.ASGIApp):
     """
 
     async def __call__(self, scope, receive, send):
-        root_path = scope.get('root_path')
-        if root_path and scope['path'].startswith(root_path):
-            scope['path'] = scope['path'][len(root_path):]
+        root_path = scope.get("root_path")
+        if root_path and scope["path"].startswith(root_path):
+            scope["path"] = scope["path"][len(root_path) :]
         return await super().__call__(scope, receive, send)
 
 
 core.app = app = App(default_response_class=NiceGUIJSONResponse, lifespan=_lifespan)
 # NOTE we use custom json module which wraps orjson
-core.sio = sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*', json=json)
-sio_app = SocketIoApp(socketio_server=sio, socketio_path='/socket.io')
-app.mount('/_nicegui_ws/', sio_app)
+core.sio = sio = socketio.AsyncServer(
+    async_mode="asgi", cors_allowed_origins="*", json=json
+)
+sio_app = SocketIoApp(socketio_server=sio, socketio_path="/socket.io")
+app.mount("/_nicegui_ws/", sio_app)
 
 
-mimetypes.add_type('text/javascript', '.js')
-mimetypes.add_type('text/css', '.css')
+mimetypes.add_type("text/javascript", ".js")
+mimetypes.add_type("text/css", ".css")
 
 app.add_middleware(GZipMiddleware)
 app.add_middleware(RedirectWithPrefixMiddleware)
 static_files = StaticFiles(
-    directory=(Path(__file__).parent / 'static').resolve(),
+    directory=(Path(__file__).parent / "static").resolve(),
     follow_symlink=True,
 )
-app.mount(f'/_nicegui/{__version__}/static', static_files, name='static')
+app.mount(f"/_nicegui/{__version__}/static", static_files, name="static")
 
-Client.auto_index_client = Client(page('/'), shared=True).__enter__()  # pylint: disable=unnecessary-dunder-call
+Client.auto_index_client = Client(page("/"), shared=True).__enter__()  # pylint: disable=unnecessary-dunder-call
 
 
-@app.get('/')
+@app.get("/")
 def _get_index(request: Request) -> Response:
     """
     Retrieves the index page for the NiceGUI application.
@@ -84,7 +86,7 @@ def _get_index(request: Request) -> Response:
     return Client.auto_index_client.build_response(request)
 
 
-@app.get(f'/_nicegui/{__version__}' + '/libraries/{key:path}')
+@app.get(f"/_nicegui/{__version__}" + "/libraries/{key:path}")
 def _get_library(key: str) -> FileResponse:
     """
     Retrieves a library file based on the provided key.
@@ -105,19 +107,19 @@ def _get_library(key: str) -> FileResponse:
         - If the library file is found, a FileResponse object is returned with the appropriate media type and headers.
         - If the library file is not found, an HTTPException with status code 404 is raised.
     """
-    is_map = key.endswith('.map')
+    is_map = key.endswith(".map")
     dict_key = key[:-4] if is_map else key
     if dict_key in libraries:
         path = libraries[dict_key].path
         if is_map:
-            path = path.with_name(path.name + '.map')
+            path = path.with_name(path.name + ".map")
         if path.exists():
-            headers = {'Cache-Control': 'public, max-age=3600'}
-            return FileResponse(path, media_type='text/javascript', headers=headers)
+            headers = {"Cache-Control": "public, max-age=3600"}
+            return FileResponse(path, media_type="text/javascript", headers=headers)
     raise HTTPException(status_code=404, detail=f'library "{key}" not found')
 
 
-@app.get(f'/_nicegui/{__version__}' + '/components/{key:path}')
+@app.get(f"/_nicegui/{__version__}" + "/components/{key:path}")
 def _get_component(key: str) -> FileResponse:
     """
     Retrieve a component file based on the provided key.
@@ -133,12 +135,14 @@ def _get_component(key: str) -> FileResponse:
 
     """
     if key in js_components and js_components[key].path.exists():
-        headers = {'Cache-Control': 'public, max-age=3600'}
-        return FileResponse(js_components[key].path, media_type='text/javascript', headers=headers)
+        headers = {"Cache-Control": "public, max-age=3600"}
+        return FileResponse(
+            js_components[key].path, media_type="text/javascript", headers=headers
+        )
     raise HTTPException(status_code=404, detail=f'component "{key}" not found')
 
 
-@app.get(f'/_nicegui/{__version__}' + '/resources/{key}/{path:path}')
+@app.get(f"/_nicegui/{__version__}" + "/resources/{key}/{path:path}")
 def _get_resource(key: str, path: str) -> FileResponse:
     """
     Retrieves a resource file based on the given key and path.
@@ -162,7 +166,7 @@ def _get_resource(key: str, path: str) -> FileResponse:
     if key in resources:
         filepath = resources[key].path / path
         if filepath.exists():
-            headers = {'Cache-Control': 'public, max-age=3600'}
+            headers = {"Cache-Control": "public, max-age=3600"}
             media_type, _ = mimetypes.guess_type(filepath)
             return FileResponse(filepath, media_type=media_type, headers=headers)
     raise HTTPException(status_code=404, detail=f'resource "{key}" not found')
@@ -186,29 +190,36 @@ async def _startup() -> None:
 
     """
     if not app.config.has_run_config:
-        raise RuntimeError('\n\n'
-                           'You must call ui.run() to start the server.\n'
-                           'If ui.run() is behind a main guard\n'
-                           '   if __name__ == "__main__":\n'
-                           'remove the guard or replace it with\n'
-                           '   if __name__ in {"__main__", "__mp_main__"}:\n'
-                           'to allow for multiprocessing.')
+        raise RuntimeError(
+            "\n\n"
+            "You must call ui.run() to start the server.\n"
+            "If ui.run() is behind a main guard\n"
+            '   if __name__ == "__main__":\n'
+            "remove the guard or replace it with\n"
+            '   if __name__ in {"__main__", "__mp_main__"}:\n'
+            "to allow for multiprocessing."
+        )
     await welcome.collect_urls()
     # NOTE ping interval and timeout need to be lower than the reconnect timeout, but can't be too low
     sio.eio.ping_interval = max(app.config.reconnect_timeout * 0.8, 4)
     sio.eio.ping_timeout = max(app.config.reconnect_timeout * 0.4, 2)
     if core.app.config.favicon:
         if helpers.is_file(core.app.config.favicon):
-            app.add_route('/favicon.ico', lambda _: FileResponse(core.app.config.favicon))  # type: ignore
+            app.add_route(
+                "/favicon.ico", lambda _: FileResponse(core.app.config.favicon)
+            )  # type: ignore
         else:
-            app.add_route('/favicon.ico', lambda _: favicon.get_favicon_response())
+            app.add_route("/favicon.ico", lambda _: favicon.get_favicon_response())
     else:
-        app.add_route('/favicon.ico', lambda _: FileResponse(Path(__file__).parent / 'static' / 'favicon.ico'))
+        app.add_route(
+            "/favicon.ico",
+            lambda _: FileResponse(Path(__file__).parent / "static" / "favicon.ico"),
+        )
     core.loop = asyncio.get_running_loop()
     app.start()
-    background_tasks.create(binding.refresh_loop(), name='refresh bindings')
-    background_tasks.create(Client.prune_instances(), name='prune clients')
-    background_tasks.create(Slot.prune_stacks(), name='prune slot stacks')
+    background_tasks.create(binding.refresh_loop(), name="refresh bindings")
+    background_tasks.create(Client.prune_instances(), name="prune clients")
+    background_tasks.create(Slot.prune_stacks(), name="prune slot stacks")
     air.connect()
 
 
@@ -257,8 +268,8 @@ async def _exception_handler_404(request: Request, exception: Exception) -> Resp
         It can be registered as a handler for 404 exceptions to ensure that appropriate
         error responses are returned when a resource is not found.
     """
-    log.warning(f'{request.url} not found')
-    with Client(page('')) as client:
+    log.warning(f"{request.url} not found")
+    with Client(page("")) as client:
         error_content(404, exception)
     return client.build_response(request, 404)
 
@@ -285,12 +296,12 @@ async def _exception_handler_500(request: Request, exception: Exception) -> Resp
         app.add_exception_handler(500, _exception_handler_500)
     """
     log.exception(exception)
-    with Client(page('')) as client:
+    with Client(page("")) as client:
         error_content(500, exception)
     return client.build_response(request, 500)
 
 
-@sio.on('handshake')
+@sio.on("handshake")
 async def _on_handshake(sid: str, client_id: str) -> bool:
     """
     Handles the handshake process for a client.
@@ -311,7 +322,7 @@ async def _on_handshake(sid: str, client_id: str) -> bool:
     return True
 
 
-@sio.on('disconnect')
+@sio.on("disconnect")
 def _on_disconnect(sid: str) -> None:
     """
     Handle the disconnection of a client.
@@ -326,15 +337,15 @@ def _on_disconnect(sid: str) -> None:
     Returns:
         None
     """
-    query_bytes: bytearray = sio.get_environ(sid)['asgi.scope']['query_string']
+    query_bytes: bytearray = sio.get_environ(sid)["asgi.scope"]["query_string"]
     query = urllib.parse.parse_qs(query_bytes.decode())
-    client_id = query['client_id'][0]
+    client_id = query["client_id"][0]
     client = Client.instances.get(client_id)
     if client:
         client.handle_disconnect()
 
 
-@sio.on('event')
+@sio.on("event")
 def _on_event(_: str, msg: Dict) -> None:
     """
     Handle an event received from a client.
@@ -355,13 +366,13 @@ def _on_event(_: str, msg: Dict) -> None:
         - The 'client_id' is used to retrieve the client instance from the Client.instances dictionary.
         - The client instance's 'handle_event' method is called to process the event.
     """
-    client = Client.instances.get(msg['client_id'])
+    client = Client.instances.get(msg["client_id"])
     if not client or not client.has_socket_connection:
         return
     client.handle_event(msg)
 
 
-@sio.on('javascript_response')
+@sio.on("javascript_response")
 def _on_javascript_response(_: str, msg: Dict) -> None:
     """
     Handle the JavaScript response received from the client.
@@ -381,7 +392,7 @@ def _on_javascript_response(_: str, msg: Dict) -> None:
     This function is typically called as a callback when a JavaScript response is received.
     It should be registered as an event handler for the corresponding event.
     """
-    client = Client.instances.get(msg['client_id'])
+    client = Client.instances.get(msg["client_id"])
     if not client:
         return
     client.handle_javascript_response(msg)

@@ -19,5 +19,7 @@ def chart(*args, **kwargs) -> None:
     RuntimeError: `ui.chart` is now `ui.highchart`. Please install `nicegui[highcharts]` and use `ui.highchart` instead.
     """
     # DEPRECATED
-    raise RuntimeError('`ui.chart` is now `ui.highchart`. '
-                       'Please install `nicegui[highcharts]` and use `ui.highchart` instead.')
+    raise RuntimeError(
+        "`ui.chart` is now `ui.highchart`. "
+        "Please install `nicegui[highcharts]` and use `ui.highchart` instead."
+    )

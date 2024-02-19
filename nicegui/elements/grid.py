@@ -16,11 +16,12 @@ class Grid(Element):
 
     """
 
-    def __init__(self,
-                 *,
-                 rows: Optional[int] = None,
-                 columns: Optional[int] = None,
-                 ) -> None:
+    def __init__(
+        self,
+        *,
+        rows: Optional[int] = None,
+        columns: Optional[int] = None,
+    ) -> None:
         """Grid
 
         A container element that arranges its child elements in a grid.
@@ -30,13 +31,13 @@ class Grid(Element):
         automatically adjusts the size of each cell to fit its content.
 
         Args:
-        
+
             - rows (Optional[int]): The number of rows in the grid.
             - columns (Optional[int]): The number of columns in the grid.
         """
-        super().__init__('div')
-        self._classes.append('nicegui-grid')
+        super().__init__("div")
+        self._classes.append("nicegui-grid")
         if rows is not None:
-            self._style['grid-template-rows'] = f'repeat({rows}, minmax(0, 1fr))'
+            self._style["grid-template-rows"] = f"repeat({rows}, minmax(0, 1fr))"
         if columns is not None:
-            self._style['grid-template-columns'] = f'repeat({columns}, minmax(0, 1fr))'
+            self._style["grid-template-columns"] = f"repeat({columns}, minmax(0, 1fr))"

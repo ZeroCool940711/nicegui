@@ -1,7 +1,7 @@
 from typing import Literal
 
 StrokeWidth = Literal[
-    '0',
-    '1',
-    '2',
+    "0",
+    "1",
+    "2",
 ]

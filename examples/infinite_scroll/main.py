@@ -4,7 +4,7 @@ import time
 from nicegui import Client, ui
 
 
-@ui.page('/')
+@ui.page("/")
 async def page(client: Client):
     """
     This function represents a page in a web application that implements infinite scrolling.
@@ -35,9 +35,13 @@ async def page(client: Client):
         ```
 
     """
+
     async def check():
-        if await ui.run_javascript('window.pageYOffset >= document.body.offsetHeight - 2 * window.innerHeight'):
-            ui.image(f'https://picsum.photos/640/360?{time.time()}')
+        if await ui.run_javascript(
+            "window.pageYOffset >= document.body.offsetHeight - 2 * window.innerHeight"
+        ):
+            ui.image(f"https://picsum.photos/640/360?{time.time()}")
+
     await client.connected()
     ui.timer(0.1, check)
 

@@ -6,13 +6,14 @@ from .mixins.disableable_element import DisableableElement
 
 
 class Toggle(ChoiceElement, DisableableElement):
-
-    def __init__(self,
-                 options: Union[List, Dict], *,
-                 value: Any = None,
-                 on_change: Optional[Callable[..., Any]] = None,
-                 clearable: bool = False,
-                 ) -> None:
+    def __init__(
+        self,
+        options: Union[List, Dict],
+        *,
+        value: Any = None,
+        on_change: Optional[Callable[..., Any]] = None,
+        clearable: bool = False,
+    ) -> None:
         """Toggle
 
         This element is based on Quasar's [QBtnToggle ](https://quasar.dev/vue-components/button-toggle) component.
@@ -25,8 +26,10 @@ class Toggle(ChoiceElement, DisableableElement):
         - on_change: callback to execute when selection changes
         - clearable: whether the toggle can be cleared by clicking the selected option
         """
-        super().__init__(tag='q-btn-toggle', options=options, value=value, on_change=on_change)
-        self._props['clearable'] = clearable
+        super().__init__(
+            tag="q-btn-toggle", options=options, value=value, on_change=on_change
+        )
+        self._props["clearable"] = clearable
 
     def _event_args_to_value(self, e: GenericEventArguments) -> Any:
         return self._values[e.args] if e.args is not None else None

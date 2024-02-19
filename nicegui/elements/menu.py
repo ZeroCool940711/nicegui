@@ -11,7 +11,6 @@ from .mixins.value_element import ValueElement
 
 
 class Menu(ValueElement):
-
     def __init__(self, *, value: bool = False) -> None:
         """Menu
 
@@ -20,7 +19,7 @@ class Menu(ValueElement):
 
         - value: whether the menu is already opened (default: `False`)
         """
-        super().__init__(tag='q-menu', value=value, on_value_change=None)
+        super().__init__(tag="q-menu", value=value, on_value_change=None)
 
     def open(self) -> None:
         """Open the menu."""
@@ -36,21 +35,24 @@ class Menu(ValueElement):
 
     def props(self, add: Optional[str] = None, *, remove: Optional[str] = None) -> Self:
         super().props(add, remove=remove)
-        if 'touch-position' in self._props:
+        if "touch-position" in self._props:
             # https://github.com/zauberzeug/nicegui/issues/1738
-            del self._props['touch-position']
-            log.warning('The prop "touch-position" is not supported by `ui.menu`.\n'
-                        'Use "ui.context_menu()" instead.')
+            del self._props["touch-position"]
+            log.warning(
+                'The prop "touch-position" is not supported by `ui.menu`.\n'
+                'Use "ui.context_menu()" instead.'
+            )
         return self
 
 
 class MenuItem(TextElement):
-
-    def __init__(self,
-                 text: str = '',
-                 on_click: Optional[Callable[..., Any]] = None, *,
-                 auto_close: bool = True,
-                 ) -> None:
+    def __init__(
+        self,
+        text: str = "",
+        on_click: Optional[Callable[..., Any]] = None,
+        *,
+        auto_close: bool = True,
+    ) -> None:
         """Menu Item
 
         A menu item to be added to a menu.
@@ -60,13 +62,14 @@ class MenuItem(TextElement):
         - on_click: callback to be executed when selecting the menu item
         - auto_close: whether the menu should be closed after a click event (default: `True`)
         """
-        super().__init__(tag='q-item', text=text)
+        super().__init__(tag="q-item", text=text)
         self.menu = context.get_slot().parent
-        self._props['clickable'] = True
+        self._props["clickable"] = True
 
         def handle_click(_) -> None:
             handle_event(on_click, ClickEventArguments(sender=self, client=self.client))
             if auto_close:
                 assert isinstance(self.menu, (Menu, ContextMenu))
                 self.menu.close()
-        self.on('click', handle_click, [])
+
+        self.on("click", handle_click, [])

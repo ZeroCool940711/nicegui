@@ -10,7 +10,7 @@ class Expansion(TextElement, ValueElement, DisableableElement):
     Represents an expandable container based on Quasar's QExpansionItem component.
 
     Args:
-    
+
         - text (str): The title text of the expansion.
         - caption (str, optional): The optional caption (or sub-label) text. Defaults to None.
         - icon (str, optional): The optional icon. Defaults to None.
@@ -40,20 +40,22 @@ class Expansion(TextElement, ValueElement, DisableableElement):
         expansion.close()
     """
 
-    def __init__(self,
-                 text: str = '', *,
-                 caption: Optional[str] = None,
-                 icon: Optional[str] = None,
-                 group: Optional[str] = None,
-                 value: bool = False,
-                 on_value_change: Optional[Callable[..., Any]] = None
-                 ) -> None:
+    def __init__(
+        self,
+        text: str = "",
+        *,
+        caption: Optional[str] = None,
+        icon: Optional[str] = None,
+        group: Optional[str] = None,
+        value: bool = False,
+        on_value_change: Optional[Callable[..., Any]] = None,
+    ) -> None:
         """Expansion
 
         Provides an expandable container based on Quasar's QExpansionItem component.
 
         Args:
-        
+
             - text (str): The title text of the expansion.
             - caption (str, optional): The optional caption (or sub-label) text. Defaults to None.
             - icon (str, optional): The optional icon. Defaults to None.
@@ -61,58 +63,63 @@ class Expansion(TextElement, ValueElement, DisableableElement):
             - value (bool, optional): Whether the expansion should be opened on creation. Defaults to False.
             - on_value_change (callable, optional): The callback to execute when the value changes. Defaults to None.
         """
-        super().__init__(tag='q-expansion-item', text=text, value=value, on_value_change=on_value_change)
+        super().__init__(
+            tag="q-expansion-item",
+            text=text,
+            value=value,
+            on_value_change=on_value_change,
+        )
         if caption is not None:
-            self._props['caption'] = caption
+            self._props["caption"] = caption
         if group is not None:
-            self._props['group'] = group
-        self._props['icon'] = icon
-        self._classes.append('nicegui-expansion')
+            self._props["group"] = group
+        self._props["icon"] = icon
+        self._classes.append("nicegui-expansion")
 
     def open(self) -> None:
-            """
-            Open the expansion.
+        """
+        Open the expansion.
 
-            This method sets the value of the expansion to True, indicating that it should be open.
-            The expansion can be used to display additional content or options to the user.
+        This method sets the value of the expansion to True, indicating that it should be open.
+        The expansion can be used to display additional content or options to the user.
 
-            Usage:
-                expansion = Expansion()
-                expansion.open()
+        Usage:
+            expansion = Expansion()
+            expansion.open()
 
-            Returns:
-                None
-            """
-            self.value = True
+        Returns:
+            None
+        """
+        self.value = True
 
     def close(self) -> None:
-            """Close the expansion.
+        """Close the expansion.
 
-            This method sets the value of the expansion to False, effectively closing it.
+        This method sets the value of the expansion to False, effectively closing it.
 
-            Usage:
-                expansion.close()
+        Usage:
+            expansion.close()
 
-            Returns:
-                None
-            """
-            self.value = False
+        Returns:
+            None
+        """
+        self.value = False
 
     def _text_to_model_text(self, text: str) -> None:
-            """
-            Converts the given text to the model text.
+        """
+        Converts the given text to the model text.
 
-            Parameters:
-                text (str): The text to be converted.
+        Parameters:
+            text (str): The text to be converted.
 
-            Returns:
-                None
+        Returns:
+            None
 
-            Description:
-                This method is responsible for converting the given text to the model text.
-                It updates the 'label' property of the element with the provided text.
+        Description:
+            This method is responsible for converting the given text to the model text.
+            It updates the 'label' property of the element with the provided text.
 
-            Usage:
-                Call this method to update the label of the element with the desired text.
-            """
-            self._props['label'] = text
+        Usage:
+            Call this method to update the label of the element with the desired text.
+        """
+        self._props["label"] = text

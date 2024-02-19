@@ -23,8 +23,7 @@ class Space(Element):
 
     """
 
-    
-    def __init__(self, tag: str = 'q-space') -> None:
+    def __init__(self, tag: str = "q-space") -> None:
         """Space
 
         Args:
@@ -43,4 +42,4 @@ class Space(Element):
                 By default, it is set to 'q-space', but you can change it to any valid HTML tag.
 
         """
-        super().__init__('q-space')
+        super().__init__("q-space")

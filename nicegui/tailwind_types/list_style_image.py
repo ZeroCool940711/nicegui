@@ -1,5 +1,3 @@
 from typing import Literal
 
-ListStyleImage = Literal[
-    'none',
-]
+ListStyleImage = Literal["none",]

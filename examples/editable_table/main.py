@@ -2,13 +2,13 @@
 from nicegui import events, ui
 
 columns = [
-    {'name': 'name', 'label': 'Name', 'field': 'name', 'align': 'left'},
-    {'name': 'age', 'label': 'Age', 'field': 'age'},
+    {"name": "name", "label": "Name", "field": "name", "align": "left"},
+    {"name": "age", "label": "Age", "field": "age"},
 ]
 rows = [
-    {'id': 0, 'name': 'Alice', 'age': 18},
-    {'id': 1, 'name': 'Bob', 'age': 21},
-    {'id': 2, 'name': 'Carol', 'age': 20},
+    {"id": 0, "name": "Alice", "age": 18},
+    {"id": 1, "name": "Bob", "age": 21},
+    {"id": 2, "name": "Carol", "age": 20},
 ]
 
 
@@ -24,9 +24,9 @@ def add_row() -> None:
     Returns:
         None
     """
-    new_id = max((dx['id'] for dx in rows), default=-1) + 1
-    rows.append({'id': new_id, 'name': 'New guy', 'age': 21})
-    ui.notify(f'Added new row with ID {new_id}')
+    new_id = max((dx["id"] for dx in rows), default=-1) + 1
+    rows.append({"id": new_id, "name": "New guy", "age": 21})
+    ui.notify(f"Added new row with ID {new_id}")
     table.update()
 
 
@@ -55,9 +55,9 @@ def rename(e: events.GenericEventArguments) -> None:
     After updating the rows, it notifies the user with the updated rows and updates the table UI.
     """
     for row in rows:
-        if row['id'] == e.args['id']:
+        if row["id"] == e.args["id"]:
             row.update(e.args)
-    ui.notify(f'Updated rows to: {table.rows}')
+    ui.notify(f"Updated rows to: {table.rows}")
     table.update()
 
 
@@ -78,21 +78,26 @@ def delete(e: events.GenericEventArguments) -> None:
         To delete a row with ID 5, you can call the delete function as follows:
         delete(events.GenericEventArguments(args={'id': 5}))
     """
-    rows[:] = [row for row in rows if row['id'] != e.args['id']]
+    rows[:] = [row for row in rows if row["id"] != e.args["id"]]
     ui.notify(f'Deleted row with ID {e.args["id"]}')
     table.update()
 
 
-table = ui.table(columns=columns, rows=rows, row_key='name').classes('w-60')
-table.add_slot('header', r'''
+table = ui.table(columns=columns, rows=rows, row_key="name").classes("w-60")
+table.add_slot(
+    "header",
+    r"""
     <q-tr :props="props">
         <q-th auto-width />
         <q-th v-for="col in props.cols" :key="col.name" :props="props">
             {{ col.label }}
         </q-th>
     </q-tr>
-''')
-table.add_slot('body', r'''
+""",
+)
+table.add_slot(
+    "body",
+    r"""
     <q-tr :props="props">
         <q-td auto-width >
             <q-btn size="sm" color="warning" round dense icon="delete"
@@ -116,11 +121,14 @@ table.add_slot('body', r'''
             </q-popup-edit>
         </q-td>
     </q-tr>
-''')
-with table.add_slot('bottom-row'):
-    with table.cell().props('colspan=3'):
-        ui.button('Add row', icon='add', color='accent', on_click=add_row).classes('w-full')
-table.on('rename', rename)
-table.on('delete', delete)
+""",
+)
+with table.add_slot("bottom-row"):
+    with table.cell().props("colspan=3"):
+        ui.button("Add row", icon="add", color="accent", on_click=add_row).classes(
+            "w-full"
+        )
+table.on("rename", rename)
+table.on("delete", delete)
 
 ui.run()

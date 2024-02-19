@@ -5,9 +5,11 @@ from .markdown import Markdown
 
 try:
     from nicegui_highcharts import highchart
-    optional_features.register('highcharts')
-    __all__ = ['highchart']
+
+    optional_features.register("highcharts")
+    __all__ = ["highchart"]
 except ImportError:
+
     class highchart(Element):  # type: ignore
         def __init__(self, *args, **kwargs) -> None:  # pylint: disable=unused-argument
             """Highcharts chart
@@ -50,5 +52,9 @@ except ImportError:
 
             """
             super().__init__()
-            Markdown('Highcharts is not installed. Please run `pip install nicegui[highcharts]`.')
-            log.warning('Highcharts is not installed. Please run "pip install nicegui[highcharts]".')
+            Markdown(
+                "Highcharts is not installed. Please run `pip install nicegui[highcharts]`."
+            )
+            log.warning(
+                'Highcharts is not installed. Please run "pip install nicegui[highcharts]".'
+            )

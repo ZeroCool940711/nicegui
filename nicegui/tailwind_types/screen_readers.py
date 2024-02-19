@@ -1,6 +1,6 @@
 from typing import Literal
 
 ScreenReaders = Literal[
-    'sr-only',
-    'not-sr-only',
+    "sr-only",
+    "not-sr-only",
 ]

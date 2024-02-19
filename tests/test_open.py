@@ -4,15 +4,16 @@ from nicegui import ui
 from nicegui.testing import Screen
 
 
-@pytest.mark.parametrize('new_tab', [False, True])
+@pytest.mark.parametrize("new_tab", [False, True])
 def test_open_page(screen: Screen, new_tab: bool):
-    @ui.page('/test_page')
+    @ui.page("/test_page")
     def page():
-        ui.label('Test page')
-    ui.button('Open test page', on_click=lambda: ui.open('/test_page', new_tab=new_tab))
+        ui.label("Test page")
 
-    screen.open('/')
-    screen.click('Open test page')
+    ui.button("Open test page", on_click=lambda: ui.open("/test_page", new_tab=new_tab))
+
+    screen.open("/")
+    screen.click("Open test page")
     screen.wait(0.5)
     screen.switch_to(1 if new_tab else 0)
-    screen.should_contain('Test page')
+    screen.should_contain("Test page")

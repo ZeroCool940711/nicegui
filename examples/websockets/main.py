@@ -14,16 +14,18 @@ from nicegui import app, ui
 
 CONNECTIONS: Set[WebSocketServerProtocol] = set()
 
-ui.label('Websockets demo').classes('text-2xl')
-ui.label('Run this in the console to connect:')
-ui.code('python -m websockets ws://localhost:8765/').classes('pr-8 pt-1 h-12')
-with ui.row().classes('items-center'):
-    connections_label = ui.label('0')
-    ui.label('connections')
-    ui.button('send hello', on_click=lambda: websockets.broadcast(CONNECTIONS, 'Hello!')).props('flat')
-ui.separator().classes('mt-6')
-ui.label('incoming messages:')
-messages = ui.column().classes('ml-4')
+ui.label("Websockets demo").classes("text-2xl")
+ui.label("Run this in the console to connect:")
+ui.code("python -m websockets ws://localhost:8765/").classes("pr-8 pt-1 h-12")
+with ui.row().classes("items-center"):
+    connections_label = ui.label("0")
+    ui.label("connections")
+    ui.button(
+        "send hello", on_click=lambda: websockets.broadcast(CONNECTIONS, "Hello!")
+    ).props("flat")
+ui.separator().classes("mt-6")
+ui.label("incoming messages:")
+messages = ui.column().classes("ml-4")
 
 
 async def handle_connect(websocket: WebSocketServerProtocol):
@@ -83,8 +85,9 @@ async def start_websocket_server():
 
         asyncio.run(main())
     """
-    async with websockets.serve(handle_connect, 'localhost', 8765):
+    async with websockets.serve(handle_connect, "localhost", 8765):
         await asyncio.Future()
+
 
 # start the websocket server when NiceGUI server starts
 app.on_startup(start_websocket_server)

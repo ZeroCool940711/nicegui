@@ -59,15 +59,22 @@ def _refresh_step() -> None:
         (source_obj, source_name, target_obj, target_name, transform) = link
         if _has_attribute(source_obj, source_name):
             value = transform(_get_attribute(source_obj, source_name))
-            if not _has_attribute(target_obj, target_name) or _get_attribute(target_obj, target_name) != value:
+            if (
+                not _has_attribute(target_obj, target_name)
+                or _get_attribute(target_obj, target_name) != value
+            ):
                 _set_attribute(target_obj, target_name, value)
                 _propagate(target_obj, target_name, visited)
         del link, source_obj, target_obj  # pylint: disable=modified-iterating-list
     if time.time() - t > MAX_PROPAGATION_TIME:
-        log.warning(f'binding propagation for {len(active_links)} active links took {time.time() - t:.3f} s')
+        log.warning(
+            f"binding propagation for {len(active_links)} active links took {time.time() - t:.3f} s"
+        )
 
 
-def _propagate(source_obj: Any, source_name: str, visited: Optional[Set[Tuple[int, str]]] = None) -> None:
+def _propagate(
+    source_obj: Any, source_name: str, visited: Optional[Set[Tuple[int, str]]] = None
+) -> None:
     if visited is None:
         visited = set()
     source_obj_id = id(source_obj)
@@ -79,17 +86,28 @@ def _propagate(source_obj: Any, source_name: str, visited: Optional[Set[Tuple[in
         return
     source_value = _get_attribute(source_obj, source_name)
 
-    for _, target_obj, target_name, transform in bindings.get((source_obj_id, source_name), []):
+    for _, target_obj, target_name, transform in bindings.get(
+        (source_obj_id, source_name), []
+    ):
         if (id(target_obj), target_name) in visited:
             continue
 
         target_value = transform(source_value)
-        if not _has_attribute(target_obj, target_name) or _get_attribute(target_obj, target_name) != target_value:
+        if (
+            not _has_attribute(target_obj, target_name)
+            or _get_attribute(target_obj, target_name) != target_value
+        ):
             _set_attribute(target_obj, target_name, target_value)
             _propagate(target_obj, target_name, visited)
 
 
-def bind_to(self_obj: Any, self_name: str, other_obj: Any, other_name: str, forward: Callable[[Any], Any]) -> None:
+def bind_to(
+    self_obj: Any,
+    self_name: str,
+    other_obj: Any,
+    other_name: str,
+    forward: Callable[[Any], Any],
+) -> None:
     """Bind the property of one object to the property of another object.
 
     The binding works one way only, from the first object to the second.
@@ -101,13 +119,21 @@ def bind_to(self_obj: Any, self_name: str, other_obj: Any, other_name: str, forw
     - other_name: The name of the property to bind to.
     - forward: A function to apply to the value before applying it.
     """
-    bindings[(id(self_obj), self_name)].append((self_obj, other_obj, other_name, forward))
+    bindings[(id(self_obj), self_name)].append(
+        (self_obj, other_obj, other_name, forward)
+    )
     if (id(self_obj), self_name) not in bindable_properties:
         active_links.append((self_obj, self_name, other_obj, other_name, forward))
     _propagate(self_obj, self_name)
 
 
-def bind_from(self_obj: Any, self_name: str, other_obj: Any, other_name: str, backward: Callable[[Any], Any]) -> None:
+def bind_from(
+    self_obj: Any,
+    self_name: str,
+    other_obj: Any,
+    other_name: str,
+    backward: Callable[[Any], Any],
+) -> None:
     """Bind the property of one object from the property of another object.
 
     The binding works one way only, from the second object to the first.
@@ -119,14 +145,23 @@ def bind_from(self_obj: Any, self_name: str, other_obj: Any, other_name: str, ba
     - other_name: The name of the property to bind from.
     - backward: A function to apply to the value before applying it.
     """
-    bindings[(id(other_obj), other_name)].append((other_obj, self_obj, self_name, backward))
+    bindings[(id(other_obj), other_name)].append(
+        (other_obj, self_obj, self_name, backward)
+    )
     if (id(other_obj), other_name) not in bindable_properties:
         active_links.append((other_obj, other_name, self_obj, self_name, backward))
     _propagate(other_obj, other_name)
 
 
-def bind(self_obj: Any, self_name: str, other_obj: Any, other_name: str, *,
-         forward: Callable[[Any], Any] = lambda x: x, backward: Callable[[Any], Any] = lambda x: x) -> None:
+def bind(
+    self_obj: Any,
+    self_name: str,
+    other_obj: Any,
+    other_name: str,
+    *,
+    forward: Callable[[Any], Any] = lambda x: x,
+    backward: Callable[[Any], Any] = lambda x: x,
+) -> None:
     """Bind the property of one object to the property of another object.
 
     The binding works both ways, from the first object to the second and from the second to the first.
@@ -145,7 +180,6 @@ def bind(self_obj: Any, self_name: str, other_obj: Any, other_name: str, *,
 
 
 class BindableProperty:
-
     def __init__(self, on_change: Optional[Callable[..., Any]] = None) -> None:
         self._change_handler = on_change
 
@@ -153,14 +187,14 @@ class BindableProperty:
         self.name = name  # pylint: disable=attribute-defined-outside-init
 
     def __get__(self, owner: Any, _=None) -> Any:
-        return getattr(owner, '___' + self.name)
+        return getattr(owner, "___" + self.name)
 
     def __set__(self, owner: Any, value: Any) -> None:
-        has_attr = hasattr(owner, '___' + self.name)
-        value_changed = has_attr and getattr(owner, '___' + self.name) != value
+        has_attr = hasattr(owner, "___" + self.name)
+        value_changed = has_attr and getattr(owner, "___" + self.name) != value
         if has_attr and not value_changed:
             return
-        setattr(owner, '___' + self.name, value)
+        setattr(owner, "___" + self.name, value)
         bindable_properties[(id(owner), self.name)] = owner
         _propagate(owner, self.name)
         if value_changed and self._change_handler is not None:

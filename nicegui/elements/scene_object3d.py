@@ -22,9 +22,9 @@ class Object3D:
         self.scene.objects[self.id] = self
         self.parent: Union[Object3D, SceneObject] = self.scene.stack[-1]
         self.args: List = list(args)
-        self.color: str = '#ffffff'
+        self.color: str = "#ffffff"
         self.opacity: float = 1.0
-        self.side_: str = 'front'
+        self.side_: str = "front"
         self.visible_: bool = True
         self.draggable_: bool = False
         self.x: float = 0
@@ -61,33 +61,38 @@ class Object3D:
         self.scene.stack.pop()
 
     def _create(self) -> None:
-        self.scene.run_method('create', self.type, self.id, self.parent.id, *self.args)
+        self.scene.run_method("create", self.type, self.id, self.parent.id, *self.args)
 
     def _name(self) -> None:
-        self.scene.run_method('name', self.id, self.name)
+        self.scene.run_method("name", self.id, self.name)
 
     def _material(self) -> None:
-        self.scene.run_method('material', self.id, self.color, self.opacity, self.side_)
+        self.scene.run_method("material", self.id, self.color, self.opacity, self.side_)
 
     def _move(self) -> None:
-        self.scene.run_method('move', self.id, self.x, self.y, self.z)
+        self.scene.run_method("move", self.id, self.x, self.y, self.z)
 
     def _rotate(self) -> None:
-        self.scene.run_method('rotate', self.id, self.R)
+        self.scene.run_method("rotate", self.id, self.R)
 
     def _scale(self) -> None:
-        self.scene.run_method('scale', self.id, self.sx, self.sy, self.sz)
+        self.scene.run_method("scale", self.id, self.sx, self.sy, self.sz)
 
     def _visible(self) -> None:
-        self.scene.run_method('visible', self.id, self.visible_)
+        self.scene.run_method("visible", self.id, self.visible_)
 
     def _draggable(self) -> None:
-        self.scene.run_method('draggable', self.id, self.draggable_)
+        self.scene.run_method("draggable", self.id, self.draggable_)
 
     def _delete(self) -> None:
-        self.scene.run_method('delete', self.id)
+        self.scene.run_method("delete", self.id)
 
-    def material(self, color: str = '#ffffff', opacity: float = 1.0, side: Literal['front', 'back', 'both'] = 'front') -> Self:
+    def material(
+        self,
+        color: str = "#ffffff",
+        opacity: float = 1.0,
+        side: Literal["front", "back", "both"] = "front",
+    ) -> Self:
         """Set the color and opacity of the object.
 
         - color: CSS color string (default: '#ffffff')
@@ -116,7 +121,9 @@ class Object3D:
         return self
 
     @staticmethod
-    def rotation_matrix_from_euler(r_x: float, r_y: float, r_z: float) -> List[List[float]]:
+    def rotation_matrix_from_euler(
+        r_x: float, r_y: float, r_z: float
+    ) -> List[List[float]]:
         """Create a rotation matrix from Euler angles.
 
         - r_x: rotation around the x axis in radians
@@ -151,7 +158,9 @@ class Object3D:
             self._rotate()
         return self
 
-    def scale(self, sx: float = 1.0, sy: Optional[float] = None, sz: Optional[float] = None) -> Self:
+    def scale(
+        self, sx: float = 1.0, sy: Optional[float] = None, sz: Optional[float] = None
+    ) -> Self:
         """Scale the object.
 
         - sx: scale factor for the x axis
@@ -191,7 +200,9 @@ class Object3D:
 
     def delete(self) -> None:
         """Delete the object."""
-        children = [object for object in self.scene.objects.values() if object.parent == self]
+        children = [
+            object for object in self.scene.objects.values() if object.parent == self
+        ]
         for child in children:
             child.delete()
         del self.scene.objects[self.id]

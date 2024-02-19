@@ -22,24 +22,27 @@ class Avatar(BackgroundColorElement, TextColorElement):
     See Also:
         - [QAvatar Component Documentation](https://quasar.dev/vue-components/avatar)
     """
-    TEXT_COLOR_PROP = 'text-color'
 
-    def __init__(self,
-                 icon: Optional[str] = None, *,
-                 color: Optional[str] = 'primary',
-                 text_color: Optional[str] = None,
-                 size: Optional[str] = None,
-                 font_size: Optional[str] = None,
-                 square: bool = False,
-                 rounded: bool = False,
-                 ) -> None:
+    TEXT_COLOR_PROP = "text-color"
+
+    def __init__(
+        self,
+        icon: Optional[str] = None,
+        *,
+        color: Optional[str] = "primary",
+        text_color: Optional[str] = None,
+        size: Optional[str] = None,
+        font_size: Optional[str] = None,
+        square: bool = False,
+        rounded: bool = False,
+    ) -> None:
         """Avatar
-        
+
         A avatar element wrapping Quasar's
         [QAvatar ](https://quasar.dev/vue-components/avatar) component.
 
         Args:
-        
+
             - icon (Optional[str]): The name of the icon or image path with "img:" prefix.
             - color (Optional[str]): The background color of the avatar.
             - text_color (Optional[str]): The color name for the text content of the avatar.
@@ -48,15 +51,15 @@ class Avatar(BackgroundColorElement, TextColorElement):
             - square (bool): If True, removes the border-radius so the borders are squared.
             - rounded (bool): If True, applies a small standard border-radius for a squared shape of the component.
         """
-        super().__init__(tag='q-avatar', background_color=color, text_color=text_color)
+        super().__init__(tag="q-avatar", background_color=color, text_color=text_color)
 
         if icon is not None:
-            self._props['icon'] = icon
-        self._props['square'] = square
-        self._props['rounded'] = rounded
+            self._props["icon"] = icon
+        self._props["square"] = square
+        self._props["rounded"] = rounded
 
         if size is not None:
-            self._props['size'] = size
+            self._props["size"] = size
 
         if font_size is not None:
-            self._props['font-size'] = font_size
+            self._props["font-size"] = font_size

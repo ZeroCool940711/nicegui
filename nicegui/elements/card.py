@@ -38,8 +38,8 @@ class Card(Element):
         method. If you want the padding and borders for nested children, move the children
         into another container.
         """
-        super().__init__('q-card')
-        self._classes.append('nicegui-card')
+        super().__init__("q-card")
+        self._classes.append("nicegui-card")
 
     def tight(self) -> Self:
         """
@@ -54,7 +54,7 @@ class Card(Element):
         card.tight()
         ```
         """
-        return self.classes('nicegui-card-tight')
+        return self.classes("nicegui-card-tight")
 
 
 class CardSection(Element):
@@ -75,6 +75,7 @@ class CardSection(Element):
         section = CardSection()
         ```
     """
+
     def __init__(self) -> None:
         """
         Card Section
@@ -87,7 +88,7 @@ class CardSection(Element):
         Returns:
             None
         """
-        super().__init__('q-card-section')
+        super().__init__("q-card-section")
 
 
 class CardActions(Element):
@@ -106,6 +107,7 @@ class CardActions(Element):
         actions = CardActions()
         ```
     """
+
     def __init__(self) -> None:
         """Initialize a Card Actions element.
 
@@ -120,4 +122,4 @@ class CardActions(Element):
         Example:
             >>> card_actions = CardActions()
         """
-        super().__init__('q-card-actions')
+        super().__init__("q-card-actions")

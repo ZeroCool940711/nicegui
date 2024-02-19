@@ -29,10 +29,10 @@ def heavy_computation(q: Queue) -> str:
 
         # Update the progress bar through the queue
         q.put_nowait(i / n)
-    return 'Done!'
+    return "Done!"
 
 
-@ui.page('/')
+@ui.page("/")
 def main_page():
     """
     This function represents the main page of the application.
@@ -70,11 +70,16 @@ def main_page():
     # Create a queue to communicate with the heavy computation process
     queue = Manager().Queue()
     # Update the progress bar on the main process
-    ui.timer(0.1, callback=lambda: progressbar.set_value(queue.get() if not queue.empty() else progressbar.value))
+    ui.timer(
+        0.1,
+        callback=lambda: progressbar.set_value(
+            queue.get() if not queue.empty() else progressbar.value
+        ),
+    )
 
     # Create the UI
-    ui.button('compute', on_click=start_computation)
-    progressbar = ui.linear_progress(value=0).props('instant-feedback')
+    ui.button("compute", on_click=start_computation)
+    progressbar = ui.linear_progress(value=0).props("instant-feedback")
     progressbar.visible = False
 
 

@@ -41,8 +41,8 @@ def get_page(documentation: ModuleType) -> DocumentationPage:
         # Assuming 'my_module_documentation' exists in the registry
         page = get_page(my_module_documentation)
     """
-    target_name = _removesuffix(documentation.__name__.split('.')[-1], '_documentation')
-    assert target_name in registry, f'Documentation page {target_name} does not exist'
+    target_name = _removesuffix(documentation.__name__.split(".")[-1], "_documentation")
+    assert target_name in registry, f"Documentation page {target_name} does not exist"
     return registry[target_name]
 
 
@@ -64,9 +64,9 @@ def _get_current_page() -> DocumentationPage:
     frame = sys._getframe(2)  # pylint: disable=protected-access
     module = inspect.getmodule(frame)
     assert module is not None and module.__file__ is not None
-    name = _removesuffix(Path(module.__file__).stem, '_documentation')
-    if name == 'overview':
-        name = ''
+    name = _removesuffix(Path(module.__file__).stem, "_documentation")
+    if name == "overview":
+        name = ""
     if name not in registry:
         registry[name] = DocumentationPage(name=name)
     return registry[name]
@@ -102,32 +102,44 @@ def text(title_: str, description: str) -> None:
     Raises:
         None
     """
-    _get_current_page().parts.append(DocumentationPart(title=title_, description=description, description_format='md'))
+    _get_current_page().parts.append(
+        DocumentationPart(
+            title=title_, description=description, description_format="md"
+        )
+    )
 
 
 @overload
-def demo(title_: str,
-         description: str, /, *,
-         tab: Optional[Union[str, Callable]] = None,
-         lazy: bool = True,
-         ) -> Callable[[Callable], Callable]:
+def demo(
+    title_: str,
+    description: str,
+    /,
+    *,
+    tab: Optional[Union[str, Callable]] = None,
+    lazy: bool = True,
+) -> Callable[[Callable], Callable]:
     ...
 
 
 @overload
-def demo(element: type, /,
-         tab: Optional[Union[str, Callable]] = None,
-         lazy: bool = True,
-         ) -> Callable[[Callable], Callable]:
+def demo(
+    element: type,
+    /,
+    tab: Optional[Union[str, Callable]] = None,
+    lazy: bool = True,
+) -> Callable[[Callable], Callable]:
     ...
 
 
 @overload
-def demo(function: Callable, /,
-         tab: Optional[Union[str, Callable]] = None,
-         lazy: bool = True,
-         ) -> Callable[[Callable], Callable]:
+def demo(
+    function: Callable,
+    /,
+    tab: Optional[Union[str, Callable]] = None,
+    lazy: bool = True,
+) -> Callable[[Callable], Callable]:
     ...
+
 
 def demo(*args, **kwargs) -> Callable[[Callable], Callable]:
     """
@@ -161,7 +173,7 @@ def demo(*args, **kwargs) -> Callable[[Callable], Callable]:
     else:
         element = args[0]
         doc = element.__init__.__doc__ if isinstance(element, type) else element.__doc__  # type: ignore
-        title_, description = doc.split('\n', 1)
+        title_, description = doc.split("\n", 1)
         is_markdown = False
 
     description = remove_indentation(description)
@@ -172,16 +184,23 @@ def demo(*args, **kwargs) -> Callable[[Callable], Callable]:
             ui_name = _find_attribute(nicegui_ui, element.__name__)
             app_name = _find_attribute(nicegui_app, element.__name__)
             if ui_name:
-                page.title = f'ui.*{ui_name}*'
+                page.title = f"ui.*{ui_name}*"
             if app_name:
-                page.title = f'app.*{app_name}*'
-        page.parts.append(DocumentationPart(
-            title=title_,
-            description=description,
-            description_format='md' if is_markdown else 'rst',
-            demo=Demo(function=function, lazy=kwargs.get('lazy', True), tab=kwargs.get('tab')),
-        ))
+                page.title = f"app.*{app_name}*"
+        page.parts.append(
+            DocumentationPart(
+                title=title_,
+                description=description,
+                description_format="md" if is_markdown else "rst",
+                demo=Demo(
+                    function=function,
+                    lazy=kwargs.get("lazy", True),
+                    tab=kwargs.get("tab"),
+                ),
+            )
+        )
         return function
+
     return decorator
 
 
@@ -233,9 +252,11 @@ def intro(documentation: types.ModuleType) -> None:
     current_page.parts.append(part)
 
 
-def reference(element: type, *,
-              title: str = 'Reference',  # pylint: disable=redefined-outer-name
-              ) -> None:
+def reference(
+    element: type,
+    *,
+    title: str = "Reference",  # pylint: disable=redefined-outer-name
+) -> None:
     """
     Add a reference section to the current documentation page.
 
@@ -254,6 +275,7 @@ def reference(element: type, *,
         reference(MyClass, title='MyClass Reference')
     """
     _get_current_page().parts.append(DocumentationPart(title=title, reference=element))
+
 
 def extra_column(function: Callable) -> Callable:
     """
@@ -301,7 +323,7 @@ def _find_attribute(obj: Any, name: str) -> Optional[str]:
         Optional[str]: The name of the matching attribute, or None if no match is found.
     """
     for attr in dir(obj):
-        if attr.lower().replace('_', '') == name.lower().replace('_', ''):
+        if attr.lower().replace("_", "") == name.lower().replace("_", ""):
             return attr
     return None
 
@@ -327,5 +349,5 @@ def _removesuffix(string: str, suffix: str) -> str:
 
     """
     if string.endswith(suffix):
-        return string[:-len(suffix)]
+        return string[: -len(suffix)]
     return string

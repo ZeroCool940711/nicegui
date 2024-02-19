@@ -3,7 +3,7 @@ from typing import Callable, Dict, Union
 from nicegui import background_tasks, helpers, ui
 
 
-class RouterFrame(ui.element, component='router_frame.js'):
+class RouterFrame(ui.element, component="router_frame.js"):
     """
     Represents a frame that acts as a router in a single-page application.
 
@@ -19,9 +19,11 @@ class RouterFrame(ui.element, component='router_frame.js'):
     Example:
         router_frame = RouterFrame()
     """
+
     pass
 
-class Router():
+
+class Router:
     """
     A class that represents a router for a single-page application.
 
@@ -70,9 +72,11 @@ class Router():
             def contact():
                 ui.html('<h1>Contact Us</h1><p>Get in touch with us.</p>')
         """
+
         def decorator(func: Callable):
             self.routes[path] = func
             return func
+
         return decorator
 
     def open(self, target: Union[Callable, str]) -> None:
@@ -97,14 +101,17 @@ class Router():
 
         async def build() -> None:
             with self.content:
-                ui.run_javascript(f'''
+                ui.run_javascript(
+                    f"""
                     if (window.location.pathname !== "{path}") {{
                         history.pushState({{page: "{path}"}}, "", "{path}");
                     }}
-                ''')
+                """
+                )
                 result = builder()
                 if helpers.is_coroutine_function(builder):
                     await result
+
         self.content.clear()
         background_tasks.create(build())
 
@@ -119,5 +126,5 @@ class Router():
             content_frame = router.frame()
             ui.render(content_frame)
         """
-        self.content = RouterFrame().on('open', lambda e: self.open(e.args))
+        self.content = RouterFrame().on("open", lambda e: self.open(e.args))
         return self.content

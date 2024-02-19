@@ -15,11 +15,10 @@ class Html(ContentElement):
         html_element = Html('<h1>Hello, World!</h1>')
     """
 
-    def __init__(self, content: str = '') -> None:
+    def __init__(self, content: str = "") -> None:
         """Initializes a new instance of the Html class.
 
         Args:
             content (str, optional): The HTML code to be displayed. Defaults to an empty string.
         """
-        super().__init__(tag='div', content=content)
-        
+        super().__init__(tag="div", content=content)

@@ -1,11 +1,13 @@
 from .mixins.content_element import ContentElement
 
 
-class Mermaid(ContentElement,
-              component='mermaid.js',
-              exposed_libraries=['lib/mermaid/mermaid.esm.min.mjs'],
-              extra_libraries=['lib/mermaid/*.js']):
-    CONTENT_PROP = 'content'
+class Mermaid(
+    ContentElement,
+    component="mermaid.js",
+    exposed_libraries=["lib/mermaid/mermaid.esm.min.mjs"],
+    extra_libraries=["lib/mermaid/*.js"],
+):
+    CONTENT_PROP = "content"
 
     def __init__(self, content: str) -> None:
         """Mermaid Diagrams
@@ -19,4 +21,4 @@ class Mermaid(ContentElement,
 
     def _handle_content_change(self, content: str) -> None:
         self._props[self.CONTENT_PROP] = content.strip()
-        self.run_method('update', content.strip())
+        self.run_method("update", content.strip())

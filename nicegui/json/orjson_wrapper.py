@@ -7,6 +7,7 @@ from fastapi import Response
 
 try:
     import numpy as np
+
     has_numpy = True
 except ImportError:
     has_numpy = False
@@ -14,7 +15,9 @@ except ImportError:
 ORJSON_OPTS = orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_NON_STR_KEYS
 
 
-def dumps(obj: Any, sort_keys: bool = False, separators: Optional[Tuple[str, str]] = None):
+def dumps(
+    obj: Any, sort_keys: bool = False, separators: Optional[Tuple[str, str]] = None
+):
     """Serializes a Python object to a JSON-encoded string.
 
     By default, this function supports serializing NumPy arrays, which Python's json module does not.
@@ -23,9 +26,10 @@ def dumps(obj: Any, sort_keys: bool = False, separators: Optional[Tuple[str, str
     """
     # note that parameters `sort_keys` and `separators` are required by AsyncServer's
     # internal calls, which match Python's default `json.dumps` API.
-    assert separators is None or separators == (',', ':'), \
-        'NiceGUI JSON serializer only supports Python''s default ' +\
-        f'JSON separators "," and ":", but got {separators} instead.'
+    assert separators is None or separators == (",", ":"), (
+        "NiceGUI JSON serializer only supports Python"
+        "s default " + f'JSON separators "," and ":", but got {separators} instead.'
+    )
 
     opts = ORJSON_OPTS
 
@@ -33,7 +37,7 @@ def dumps(obj: Any, sort_keys: bool = False, separators: Optional[Tuple[str, str
     if sort_keys:
         opts |= orjson.OPT_SORT_KEYS
 
-    return orjson.dumps(obj, option=opts, default=_orjson_converter).decode('utf-8')
+    return orjson.dumps(obj, option=opts, default=_orjson_converter).decode("utf-8")
 
 
 def loads(value: str) -> Any:
@@ -50,7 +54,7 @@ def _orjson_converter(obj):
         return obj.tolist()
     if isinstance(obj, Decimal):
         return float(obj)
-    raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
+    raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 
 
 class NiceGUIJSONResponse(Response):
@@ -58,7 +62,8 @@ class NiceGUIJSONResponse(Response):
 
     Uses package `orjson` internally.
     """
-    media_type = 'application/json'
+
+    media_type = "application/json"
 
     def render(self, content: Any) -> bytes:
         return orjson.dumps(content, option=ORJSON_OPTS, default=_orjson_converter)

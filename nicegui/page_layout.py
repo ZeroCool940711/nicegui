@@ -6,17 +6,17 @@ from .elements.mixins.value_element import ValueElement
 from .functions.html import add_body_html
 from .logging import log
 
-DrawerSides = Literal['left', 'right']
+DrawerSides = Literal["left", "right"]
 
 PageStickyPositions = Literal[
-    'top-right',
-    'top-left',
-    'bottom-right',
-    'bottom-left',
-    'top',
-    'right',
-    'bottom',
-    'left',
+    "top-right",
+    "top-left",
+    "bottom-right",
+    "bottom-left",
+    "top",
+    "right",
+    "bottom",
+    "left",
 ]
 
 
@@ -51,14 +51,16 @@ class Header(ValueElement):
         hide(): Hides the header.
     """
 
-    def __init__(self, *,
-                 value: bool = True,
-                 fixed: bool = True,
-                 bordered: bool = False,
-                 elevated: bool = False,
-                 wrap: bool = True,
-                 add_scroll_padding: bool = True,
-                 ) -> None:
+    def __init__(
+        self,
+        *,
+        value: bool = True,
+        fixed: bool = True,
+        bordered: bool = False,
+        elevated: bool = False,
+        wrap: bool = True,
+        add_scroll_padding: bool = True,
+    ) -> None:
         """
         Initializes a new instance of the Header class.
 
@@ -72,20 +74,21 @@ class Header(ValueElement):
         """
         _check_current_slot(self)
         with context.get_client().layout:
-            super().__init__(tag='q-header', value=value, on_value_change=None)
-        self._classes.append('nicegui-header')
-        self._props['bordered'] = bordered
-        self._props['elevated'] = elevated
+            super().__init__(tag="q-header", value=value, on_value_change=None)
+        self._classes.append("nicegui-header")
+        self._props["bordered"] = bordered
+        self._props["elevated"] = elevated
         if wrap:
-            self._classes.append('wrap')
-        code = list(self.client.layout._props['view'])
-        code[1] = 'H' if fixed else 'h'
-        self.client.layout._props['view'] = ''.join(code)
+            self._classes.append("wrap")
+        code = list(self.client.layout._props["view"])
+        code[1] = "H" if fixed else "h"
+        self.client.layout._props["view"] = "".join(code)
 
         self.move(target_index=0)
 
         if add_scroll_padding:
-            add_body_html(f'''
+            add_body_html(
+                f"""
                 <script>
                     window.onload = () => {{
                         const header = getElement({self.id}).$el;
@@ -94,7 +97,8 @@ class Header(ValueElement):
                         }}).observe(header);
                     }};
                 </script>
-            ''')
+            """
+            )
 
     def toggle(self):
         """
@@ -116,14 +120,17 @@ class Header(ValueElement):
 
 
 class Drawer(Element):
-    def __init__(self,
-                 side: DrawerSides, *,
-                 value: Optional[bool] = None,
-                 fixed: bool = True,
-                 bordered: bool = False,
-                 elevated: bool = False,
-                 top_corner: bool = False,
-                 bottom_corner: bool = False) -> None:
+    def __init__(
+        self,
+        side: DrawerSides,
+        *,
+        value: Optional[bool] = None,
+        fixed: bool = True,
+        bordered: bool = False,
+        elevated: bool = False,
+        top_corner: bool = False,
+        bottom_corner: bool = False,
+    ) -> None:
         """Drawer
         This element is based on Quasar's [QDrawer](https://quasar.dev/layout/drawer) component.
         Note: Depending on the side, the drawer is automatically placed above or below the main page container in the DOM to improve accessibility.
@@ -138,65 +145,71 @@ class Drawer(Element):
         """
         _check_current_slot(self)
         with context.get_client().layout:
-            super().__init__('q-drawer')
+            super().__init__("q-drawer")
         if value is None:
-            self._props['show-if-above'] = True
+            self._props["show-if-above"] = True
         else:
-            self._props['model-value'] = value
-        self._props['side'] = side
-        self._props['bordered'] = bordered
-        self._props['elevated'] = elevated
-        self._classes.append('nicegui-drawer')
-        code = list(self.client.layout._props['view'])
-        code[0 if side == 'left' else 2] = side[0].lower() if top_corner else 'h'
-        code[4 if side == 'left' else 6] = side[0].upper() if fixed else side[0].lower()
-        code[8 if side == 'left' else 10] = side[0].lower() if bottom_corner else 'f'
-        self.client.layout._props['view'] = ''.join(code)
+            self._props["model-value"] = value
+        self._props["side"] = side
+        self._props["bordered"] = bordered
+        self._props["elevated"] = elevated
+        self._classes.append("nicegui-drawer")
+        code = list(self.client.layout._props["view"])
+        code[0 if side == "left" else 2] = side[0].lower() if top_corner else "h"
+        code[4 if side == "left" else 6] = side[0].upper() if fixed else side[0].lower()
+        code[8 if side == "left" else 10] = side[0].lower() if bottom_corner else "f"
+        self.client.layout._props["view"] = "".join(code)
 
-        page_container_index = self.client.layout.default_slot.children.index(self.client.page_container)
-        self.move(target_index=page_container_index if side == 'left' else page_container_index + 1)
+        page_container_index = self.client.layout.default_slot.children.index(
+            self.client.page_container
+        )
+        self.move(
+            target_index=page_container_index
+            if side == "left"
+            else page_container_index + 1
+        )
 
     def toggle(self) -> None:
-            """
-            Toggle the drawer.
+        """
+        Toggle the drawer.
 
-            This method is used to toggle the state of the drawer. When called, it will
-            either open or close the drawer, depending on its current state.
+        This method is used to toggle the state of the drawer. When called, it will
+        either open or close the drawer, depending on its current state.
 
-            Usage:
-                To toggle the drawer, simply call the `toggle` method on an instance of
-                the `Drawer` class.
+        Usage:
+            To toggle the drawer, simply call the `toggle` method on an instance of
+            the `Drawer` class.
 
-            Returns:
-                None
-            """
-            self.run_method('toggle')
-  
+        Returns:
+            None
+        """
+        self.run_method("toggle")
+
     def show(self) -> None:
-            """
-            Show the drawer.
+        """
+        Show the drawer.
 
-            This method is used to display the drawer. It executes the 'show' method internally.
+        This method is used to display the drawer. It executes the 'show' method internally.
 
-            Returns:
-                None
-            """
-            self.run_method('show')
+        Returns:
+            None
+        """
+        self.run_method("show")
 
     def hide(self) -> None:
-            """
-            Hide the drawer.
+        """
+        Hide the drawer.
 
-            This method hides the drawer component. It internally calls the 'hide' method
-            to perform the hiding operation.
+        This method hides the drawer component. It internally calls the 'hide' method
+        to perform the hiding operation.
 
-            Usage:
-                drawer.hide()
+        Usage:
+            drawer.hide()
 
-            Returns:
-                None
-            """
-            self.run_method('hide')
+        Returns:
+            None
+        """
+        self.run_method("hide")
 
 
 class LeftDrawer(Drawer):
@@ -222,13 +235,16 @@ class LeftDrawer(Drawer):
     :type bottom_corner: bool
     """
 
-    def __init__(self, *,
-                 value: Optional[bool] = None,
-                 fixed: bool = True,
-                 bordered: bool = False,
-                 elevated: bool = False,
-                 top_corner: bool = False,
-                 bottom_corner: bool = False) -> None:
+    def __init__(
+        self,
+        *,
+        value: Optional[bool] = None,
+        fixed: bool = True,
+        bordered: bool = False,
+        elevated: bool = False,
+        top_corner: bool = False,
+        bottom_corner: bool = False,
+    ) -> None:
         """
         Initializes a new instance of the LeftDrawer class.
 
@@ -245,13 +261,15 @@ class LeftDrawer(Drawer):
         - bottom_corner: Whether the drawer expands into the bottom corner (default: `False`).
         :type bottom_corner: bool
         """
-        super().__init__('left',
-                         value=value,
-                         fixed=fixed,
-                         bordered=bordered,
-                         elevated=elevated,
-                         top_corner=top_corner,
-                         bottom_corner=bottom_corner)
+        super().__init__(
+            "left",
+            value=value,
+            fixed=fixed,
+            bordered=bordered,
+            elevated=elevated,
+            top_corner=top_corner,
+            bottom_corner=bottom_corner,
+        )
 
 
 class RightDrawer(Drawer):
@@ -272,13 +290,16 @@ class RightDrawer(Drawer):
 
     """
 
-    def __init__(self, *,
-                 value: Optional[bool] = None,
-                 fixed: bool = True,
-                 bordered: bool = False,
-                 elevated: bool = False,
-                 top_corner: bool = False,
-                 bottom_corner: bool = False) -> None:
+    def __init__(
+        self,
+        *,
+        value: Optional[bool] = None,
+        fixed: bool = True,
+        bordered: bool = False,
+        elevated: bool = False,
+        top_corner: bool = False,
+        bottom_corner: bool = False,
+    ) -> None:
         """
         Initializes a new instance of the RightDrawer class.
 
@@ -293,13 +314,15 @@ class RightDrawer(Drawer):
         Returns:
             None
         """
-        super().__init__('right',
-                         value=value,
-                         fixed=fixed,
-                         bordered=bordered,
-                         elevated=elevated,
-                         top_corner=top_corner,
-                         bottom_corner=bottom_corner)
+        super().__init__(
+            "right",
+            value=value,
+            fixed=fixed,
+            bordered=bordered,
+            elevated=elevated,
+            top_corner=top_corner,
+            bottom_corner=bottom_corner,
+        )
 
 
 class Footer(ValueElement):
@@ -331,13 +354,21 @@ class Footer(ValueElement):
         hide(): Hides the footer.
     """
 
-    def __init__(self, *, value: bool = True, fixed: bool = True, bordered: bool = False, elevated: bool = False, wrap: bool = True) -> None:
+    def __init__(
+        self,
+        *,
+        value: bool = True,
+        fixed: bool = True,
+        bordered: bool = False,
+        elevated: bool = False,
+        wrap: bool = True,
+    ) -> None:
         """Footer
         This element is based on Quasar's `QFooter <https://quasar.dev/layout/header-and-footer#qfooter-api>`_ component.
         Note: The footer is automatically placed below other layout elements in the DOM to improve accessibility.
-        
+
         To change the order, use the `move` method.
-        
+
         - value: whether the footer is already opened (default: `True`)
         - fixed: whether the footer is fixed or scrolls with the content (default: `True`)
         - bordered: whether the footer should have a border (default: `False`)
@@ -346,15 +377,15 @@ class Footer(ValueElement):
         """
         _check_current_slot(self)
         with context.get_client().layout:
-            super().__init__(tag='q-footer', value=value, on_value_change=None)
-        self.classes('nicegui-footer')
-        self._props['bordered'] = bordered
-        self._props['elevated'] = elevated
+            super().__init__(tag="q-footer", value=value, on_value_change=None)
+        self.classes("nicegui-footer")
+        self._props["bordered"] = bordered
+        self._props["elevated"] = elevated
         if wrap:
-            self._classes.append('wrap')
-        code = list(self.client.layout._props['view'])
-        code[9] = 'F' if fixed else 'f'
-        self.client.layout._props['view'] = ''.join(code)
+            self._classes.append("wrap")
+        code = list(self.client.layout._props["view"])
+        code[9] = "F" if fixed else "f"
+        self.client.layout._props["view"] = "".join(code)
 
         self.move(target_index=-1)
 
@@ -430,7 +461,12 @@ class PageSticky(Element):
             Default is 0.
     """
 
-    def __init__(self, position: PageStickyPositions = 'bottom-right', x_offset: float = 0, y_offset: float = 0) -> None:
+    def __init__(
+        self,
+        position: PageStickyPositions = "bottom-right",
+        x_offset: float = 0,
+        y_offset: float = 0,
+    ) -> None:
         """Page Sticky
 
         Args:
@@ -441,9 +477,9 @@ class PageSticky(Element):
             - y_offset (float, optional): The vertical offset of the sticky element.
                 Defaults to 0.
         """
-        super().__init__('q-page-sticky')
-        self._props['position'] = position
-        self._props['offset'] = [x_offset, y_offset]
+        super().__init__("q-page-sticky")
+        self._props["position"] = position
+        self._props["offset"] = [x_offset, y_offset]
 
 
 def _check_current_slot(element: Element) -> None:
@@ -462,6 +498,8 @@ def _check_current_slot(element: Element) -> None:
     """
     parent = context.get_slot().parent
     if parent != parent.client.content:
-        log.warning(f'Found top level layout element "{element.__class__.__name__}" inside element "{parent.__class__.__name__}". '
-                    'Top level layout elements should not be nested but must be direct children of the page content. '
-                    'This will be raising an exception in NiceGUI 1.5')  # DEPRECATED
+        log.warning(
+            f'Found top level layout element "{element.__class__.__name__}" inside element "{parent.__class__.__name__}". '
+            "Top level layout elements should not be nested but must be direct children of the page content. "
+            "This will be raising an exception in NiceGUI 1.5"
+        )  # DEPRECATED

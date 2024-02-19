@@ -58,7 +58,10 @@ class Visibility:
     """
 
     visible = BindableProperty(
-        on_change=lambda sender, visible: cast(Self, sender)._handle_visibility_change(visible))  # pylint: disable=protected-access
+        on_change=lambda sender, visible: cast(Self, sender)._handle_visibility_change(
+            visible
+        )
+    )  # pylint: disable=protected-access
 
     def __init__(self, **kwargs: Any) -> None:
         """
@@ -108,88 +111,96 @@ class Visibility:
         """
         return not self.visible and self.ignores_events_when_hidden
 
-    def bind_visibility_to(self,
-                               target_object: Any,
-                               target_name: str = 'visible',
-                               forward: Callable[..., Any] = lambda x: x,
-                               ) -> Self:
-            """
-            Bind the visibility of this element to the target object's property.
+    def bind_visibility_to(
+        self,
+        target_object: Any,
+        target_name: str = "visible",
+        forward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
+        """
+        Bind the visibility of this element to the target object's property.
 
-            The binding works one way only, from this element to the target.
-            The update happens immediately and whenever a value changes.
+        The binding works one way only, from this element to the target.
+        The update happens immediately and whenever a value changes.
 
-            Args:
-            - target_object (Any): The object to bind to.
-            - target_name (str): The name of the property to bind to.
-            - forward (Callable[..., Any]): A function to apply to the value before applying it to the target.
+        Args:
+        - target_object (Any): The object to bind to.
+        - target_name (str): The name of the property to bind to.
+        - forward (Callable[..., Any]): A function to apply to the value before applying it to the target.
 
-            Returns:
-            - Self: The instance of the element.
+        Returns:
+        - Self: The instance of the element.
 
-            Example:
-            ```python
-            element.bind_visibility_to(target_object, target_name)
-            ```
+        Example:
+        ```python
+        element.bind_visibility_to(target_object, target_name)
+        ```
 
-            Note:
-            - The `target_object` must have a property with the name specified in `target_name`.
-            - The `forward` function can be used to transform the value before applying it to the target property.
+        Note:
+        - The `target_object` must have a property with the name specified in `target_name`.
+        - The `forward` function can be used to transform the value before applying it to the target property.
 
-            Raises:
-            - TypeError: If `target_object` is not of type `Any`.
-            - ValueError: If `target_name` is not a string.
-            """
-            bind_to(self, 'visible', target_object, target_name, forward)
-            return self
+        Raises:
+        - TypeError: If `target_object` is not of type `Any`.
+        - ValueError: If `target_name` is not a string.
+        """
+        bind_to(self, "visible", target_object, target_name, forward)
+        return self
 
-    def bind_visibility_from(self,
-                                                     target_object: Any,
-                                                     target_name: str = 'visible',
-                                                     backward: Callable[..., Any] = lambda x: x, *,
-                                                     value: Any = None) -> Self:
-            """
-            Bind the visibility of this element from the target object's property.
+    def bind_visibility_from(
+        self,
+        target_object: Any,
+        target_name: str = "visible",
+        backward: Callable[..., Any] = lambda x: x,
+        *,
+        value: Any = None,
+    ) -> Self:
+        """
+        Bind the visibility of this element from the target object's property.
 
-            The binding works one way only, from the target to this element.
-            The update happens immediately and whenever a value changes.
+        The binding works one way only, from the target to this element.
+        The update happens immediately and whenever a value changes.
 
-            Args:
-            - target_object (Any): The object to bind from.
-            - target_name (str, optional): The name of the property to bind from. Defaults to 'visible'.
-            - backward (Callable[..., Any], optional): A function to apply to the value before applying it to this element.
-                Defaults to lambda x: x.
-            - value (Any, optional): If specified, the element will be visible only when the target value is equal to this value.
-                Defaults to None.
+        Args:
+        - target_object (Any): The object to bind from.
+        - target_name (str, optional): The name of the property to bind from. Defaults to 'visible'.
+        - backward (Callable[..., Any], optional): A function to apply to the value before applying it to this element.
+            Defaults to lambda x: x.
+        - value (Any, optional): If specified, the element will be visible only when the target value is equal to this value.
+            Defaults to None.
 
-            Returns:
-            - Self: The instance of the element.
+        Returns:
+        - Self: The instance of the element.
 
-            Example:
-            ```python
-            element.bind_visibility_from(target_object, target_name)
-            ```
+        Example:
+        ```python
+        element.bind_visibility_from(target_object, target_name)
+        ```
 
-            Notes:
-            - The binding is one-way, meaning changes in the target object's property will update the visibility of this element,
-                but changes in the visibility of this element will not affect the target object's property.
-            - The `backward` function is applied to the value before it is applied to this element. It can be used to transform
-                the value to a different format if needed.
-            - If the `value` parameter is specified, the element will only be visible when the target value is equal to the specified value.
-            """
-            if value is not None:
-                    def backward(x):  # pylint: disable=function-redefined
-                            return x == value
-            bind_from(self, 'visible', target_object, target_name, backward)
-            return self
+        Notes:
+        - The binding is one-way, meaning changes in the target object's property will update the visibility of this element,
+            but changes in the visibility of this element will not affect the target object's property.
+        - The `backward` function is applied to the value before it is applied to this element. It can be used to transform
+            the value to a different format if needed.
+        - If the `value` parameter is specified, the element will only be visible when the target value is equal to the specified value.
+        """
+        if value is not None:
 
-    def bind_visibility(self,
-                        target_object: Any,
-                        target_name: str = 'visible', *,
-                        forward: Callable[..., Any] = lambda x: x,
-                        backward: Callable[..., Any] = lambda x: x,
-                        value: Any = None,
-                        ) -> Self:
+            def backward(x):  # pylint: disable=function-redefined
+                return x == value
+
+        bind_from(self, "visible", target_object, target_name, backward)
+        return self
+
+    def bind_visibility(
+        self,
+        target_object: Any,
+        target_name: str = "visible",
+        *,
+        forward: Callable[..., Any] = lambda x: x,
+        backward: Callable[..., Any] = lambda x: x,
+        value: Any = None,
+    ) -> Self:
         """
         Bind the visibility of this element to the target object's property.
 
@@ -220,9 +231,18 @@ class Visibility:
         - The initial synchronization between the element and the target property is performed using the `backward` function.
         """
         if value is not None:
+
             def backward(x):  # pylint: disable=function-redefined
                 return x == value
-        bind(self, 'visible', target_object, target_name, forward=forward, backward=backward)
+
+        bind(
+            self,
+            "visible",
+            target_object,
+            target_name,
+            forward=forward,
+            backward=backward,
+        )
         return self
 
     def set_visibility(self, visible: bool) -> None:
@@ -262,7 +282,7 @@ class Visibility:
         Called when the visibility of this element changes.
 
         Args:
-            visible (str): A string indicating whether the element should be visible or hidden. 
+            visible (str): A string indicating whether the element should be visible or hidden.
                 Valid values are 'visible' and 'hidden'.
 
         Returns:
@@ -272,13 +292,13 @@ class Visibility:
             None
 
         Notes:
-            This method is responsible for handling the visibility change of an element. 
+            This method is responsible for handling the visibility change of an element.
             It updates the element's classes based on the visibility value and triggers an update.
 
-            If the element is set to be visible and the 'hidden' class is present in its classes, 
+            If the element is set to be visible and the 'hidden' class is present in its classes,
             the 'hidden' class will be removed and the element will be updated.
 
-            If the element is set to be hidden and the 'hidden' class is not present in its classes, 
+            If the element is set to be hidden and the 'hidden' class is not present in its classes,
             the 'hidden' class will be added and the element will be updated.
 
         Example:
@@ -291,11 +311,11 @@ class Visibility:
             # Set the visibility to 'hidden'
             element._handle_visibility_change('hidden')
         """
-        element: Element = cast('Element', self)
+        element: Element = cast("Element", self)
         classes = element._classes  # pylint: disable=protected-access, no-member
-        if visible and 'hidden' in classes:
-            classes.remove('hidden')
+        if visible and "hidden" in classes:
+            classes.remove("hidden")
             element.update()  # pylint: disable=no-member
-        if not visible and 'hidden' not in classes:
-            classes.append('hidden')
+        if not visible and "hidden" not in classes:
+            classes.append("hidden")
             element.update()  # pylint: disable=no-member

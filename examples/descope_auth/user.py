@@ -6,7 +6,7 @@ from descope import AuthException, DescopeClient
 
 from nicegui import Client, app, helpers, ui
 
-DESCOPE_ID = os.environ.get('DESCOPE_PROJECT_ID', '')
+DESCOPE_ID = os.environ.get("DESCOPE_PROJECT_ID", "")
 
 try:
     descope_client = DescopeClient(project_id=DESCOPE_ID)
@@ -29,9 +29,17 @@ def login_form() -> ui.element:
         form = login_form()
         # Add the form to a parent UI element or render it to the screen
     """
-    with ui.card().classes('w-96 mx-auto'):
-        return ui.element('descope-wc').props(f'project-id="{DESCOPE_ID}" flow-id="sign-up-or-in"') \
-            .on('success', lambda e: app.storage.user.update({'descope': e.args['detail']['user']}))
+    with ui.card().classes("w-96 mx-auto"):
+        return (
+            ui.element("descope-wc")
+            .props(f'project-id="{DESCOPE_ID}" flow-id="sign-up-or-in"')
+            .on(
+                "success",
+                lambda e: app.storage.user.update(
+                    {"descope": e.args["detail"]["user"]}
+                ),
+            )
+        )
 
 
 def about() -> Dict[str, Any]:
@@ -52,7 +60,8 @@ def about() -> Dict[str, Any]:
         >>> print(profile)
         {'name': 'John Doe', 'email': 'johndoe@example.com', 'age': 30}
     """
-    return app.storage.user['descope']
+    return app.storage.user["descope"]
+
 
 async def logout() -> None:
     """Logout the user.
@@ -75,12 +84,12 @@ async def logout() -> None:
     Example:
         await logout()
     """
-    result = await ui.run_javascript('return await sdk.logout()')
-    if result['code'] == 200:
-        app.storage.user['descope'] = None
+    result = await ui.run_javascript("return await sdk.logout()")
+    if result["code"] == 200:
+        app.storage.user["descope"] = None
     else:
-        logging.error(f'Logout failed: {result}')
-        ui.notify('Logout failed', type='negative')
+        logging.error(f"Logout failed: {result}")
+        ui.notify("Logout failed", type="negative")
     ui.open(page.LOGIN_PATH)
 
 
@@ -109,8 +118,9 @@ class page(ui.page):
         6. Use the `ui.timer` method to schedule the session token refresh.
         7. Use the `ui.run_javascript` method to execute JavaScript code.
     """
+
     SESSION_TOKEN_REFRESH_INTERVAL = 30
-    LOGIN_PATH = '/login'
+    LOGIN_PATH = "/login"
 
     def __call__(self, func: Callable[..., Any]) -> Callable[..., Any]:
         """Decorator that wraps a function with Descope authentication logic.
@@ -139,20 +149,27 @@ class page(ui.page):
                     # Redirect to login page
 
         """
+
         async def content(client: Client):
-            ui.add_head_html('<script src="https://unpkg.com/@descope/web-component@latest/dist/index.js"></script>')
-            ui.add_head_html('<script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>')
-            ui.add_body_html(f'''
+            ui.add_head_html(
+                '<script src="https://unpkg.com/@descope/web-component@latest/dist/index.js"></script>'
+            )
+            ui.add_head_html(
+                '<script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>'
+            )
+            ui.add_body_html(
+                f"""
                 <script>
                     const sdk = Descope({{ projectId: '{DESCOPE_ID}', persistTokens: true, autoRefresh: true }});
                     const sessionToken = sdk.getSessionToken()
                 </script>                 
-            ''')
+            """
+            )
             await client.connected()
             if await self._is_logged_in():
                 if self.path == self.LOGIN_PATH:
                     self._refresh()
-                    ui.open('/')
+                    ui.open("/")
                     return
             else:
                 if self.path != self.LOGIN_PATH:
@@ -169,31 +186,33 @@ class page(ui.page):
 
     @staticmethod
     async def _is_logged_in() -> bool:
-            """
-            Check if the user is logged in.
+        """
+        Check if the user is logged in.
 
-            This function checks if the user is logged in by validating the session token.
-            It first checks if the 'descope' key exists in the user storage. If not, it returns False.
-            Then, it retrieves the session token from the UI using JavaScript and checks if it is valid.
-            If the token is valid, it attempts to validate the session using the 'descope_client' object.
-            If the session validation fails, an AuthException is raised and False is returned.
-            If the session validation succeeds, True is returned.
+        This function checks if the user is logged in by validating the session token.
+        It first checks if the 'descope' key exists in the user storage. If not, it returns False.
+        Then, it retrieves the session token from the UI using JavaScript and checks if it is valid.
+        If the token is valid, it attempts to validate the session using the 'descope_client' object.
+        If the session validation fails, an AuthException is raised and False is returned.
+        If the session validation succeeds, True is returned.
 
-            Returns:
-                bool: True if the user is logged in, False otherwise.
-            """
-            if not app.storage.user.get('descope'):
-                return False
-            token = await ui.run_javascript('return sessionToken && !sdk.isJwtExpired(sessionToken) ? sessionToken : null;')
-            if not token:
-                return False
-            try:
-                descope_client.validate_session(session_token=token)
-                return True
-            except AuthException:
-                logging.exception('Could not validate user session.')
-                ui.notify('Wrong username or password', type='negative')
-                return False
+        Returns:
+            bool: True if the user is logged in, False otherwise.
+        """
+        if not app.storage.user.get("descope"):
+            return False
+        token = await ui.run_javascript(
+            "return sessionToken && !sdk.isJwtExpired(sessionToken) ? sessionToken : null;"
+        )
+        if not token:
+            return False
+        try:
+            descope_client.validate_session(session_token=token)
+            return True
+        except AuthException:
+            logging.exception("Could not validate user session.")
+            ui.notify("Wrong username or password", type="negative")
+            return False
 
     @staticmethod
     def _refresh() -> None:
@@ -206,7 +225,7 @@ class page(ui.page):
         Returns:
             None
         """
-        ui.run_javascript('sdk.refresh()')
+        ui.run_javascript("sdk.refresh()")
 
 
 def login_page(func: Callable[..., Any]) -> Callable[..., Any]:

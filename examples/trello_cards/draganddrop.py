@@ -22,6 +22,7 @@ class Item(Protocol):
         task = Task("Finish project")
         print(task.title)  # Output: Finish project
     """
+
     title: str
 
 
@@ -51,27 +52,29 @@ class column(ui.column):
         my_column = column("To Do", on_drop=on_drop_callback)
     """
 
-    def __init__(self, name: str, on_drop: Optional[Callable[[Item, str], None]] = None) -> None:
+    def __init__(
+        self, name: str, on_drop: Optional[Callable[[Item, str], None]] = None
+    ) -> None:
         super().__init__()
-        with self.classes('bg-blue-grey-2 w-60 p-4 rounded shadow-2'):
-            ui.label(name).classes('text-bold ml-1')
+        with self.classes("bg-blue-grey-2 w-60 p-4 rounded shadow-2"):
+            ui.label(name).classes("text-bold ml-1")
         self.name = name
-        self.on('dragover.prevent', self.highlight)
-        self.on('dragleave', self.unhighlight)
-        self.on('drop', self.move_card)
+        self.on("dragover.prevent", self.highlight)
+        self.on("dragleave", self.unhighlight)
+        self.on("drop", self.move_card)
         self.on_drop = on_drop
 
     def highlight(self) -> None:
         """
         Highlights the column when a card is being dragged over it.
         """
-        self.classes(remove='bg-blue-grey-2', add='bg-blue-grey-3')
+        self.classes(remove="bg-blue-grey-2", add="bg-blue-grey-3")
 
     def unhighlight(self) -> None:
         """
         Removes the highlight from the column when a card is dragged away from it.
         """
-        self.classes(remove='bg-blue-grey-3', add='bg-blue-grey-2')
+        self.classes(remove="bg-blue-grey-3", add="bg-blue-grey-2")
 
     def move_card(self) -> None:
         """
@@ -101,9 +104,9 @@ class card(ui.card):
     def __init__(self, item: Item) -> None:
         super().__init__()
         self.item = item
-        with self.props('draggable').classes('w-full cursor-pointer bg-grey-1'):
+        with self.props("draggable").classes("w-full cursor-pointer bg-grey-1"):
             ui.label(item.title)
-        self.on('dragstart', self.handle_dragstart)
+        self.on("dragstart", self.handle_dragstart)
 
     def handle_dragstart(self) -> None:
         """

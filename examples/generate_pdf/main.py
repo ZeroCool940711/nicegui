@@ -28,7 +28,8 @@ def generate_svg() -> str:
     surface = cairo.SVGSurface(output, 300, 200)
     draw(surface)
     surface.finish()
-    return output.getvalue().decode('utf-8')
+    return output.getvalue().decode("utf-8")
+
 
 def generate_pdf() -> bytes:
     """
@@ -72,7 +73,7 @@ def draw(surface: cairo.Surface) -> None:
         3. The function will draw text on the surface using the specified font, size, and position.
     """
     context = cairo.Context(surface)
-    context.select_font_face('Arial', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+    context.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
     context.set_font_size(20)
     context.move_to(10, 40)
     context.show_text(name.value)
@@ -95,10 +96,14 @@ def update() -> None:
 
 with ui.row():
     with ui.column():
-        name = ui.input('Name', placeholder='Enter your name', on_change=update)
-        email = ui.input('E-Mail', placeholder='Enter your E-Mail address', on_change=update)
-    preview = ui.html().classes('border-2 border-gray-500')
+        name = ui.input("Name", placeholder="Enter your name", on_change=update)
+        email = ui.input(
+            "E-Mail", placeholder="Enter your E-Mail address", on_change=update
+        )
+    preview = ui.html().classes("border-2 border-gray-500")
     update()
-    ui.button('PDF', on_click=lambda: ui.download(generate_pdf(), 'output.pdf')).bind_visibility_from(name, 'value')
+    ui.button(
+        "PDF", on_click=lambda: ui.download(generate_pdf(), "output.pdf")
+    ).bind_visibility_from(name, "value")
 
 ui.run()

@@ -54,62 +54,67 @@ class ValueElement(Element):
             Converts the value to an event value.
     """
 
-    VALUE_PROP: str = 'model-value'
+    VALUE_PROP: str = "model-value"
     LOOPBACK: bool = True
     value = BindableProperty(
-        on_change=lambda sender, value: cast(Self, sender)._handle_value_change(value))  # pylint: disable=protected-access
+        on_change=lambda sender, value: cast(Self, sender)._handle_value_change(value)
+    )  # pylint: disable=protected-access
 
-    def __init__(self, *,
-                 value: Any,
-                 on_value_change: Optional[Callable[..., Any]],
-                 throttle: float = 0,
-                 **kwargs: Any,
-                 ) -> None:
-            """
-            Initializes a ValueElement object.
+    def __init__(
+        self,
+        *,
+        value: Any,
+        on_value_change: Optional[Callable[..., Any]],
+        throttle: float = 0,
+        **kwargs: Any,
+    ) -> None:
+        """
+        Initializes a ValueElement object.
 
-            Args:
-                value (Any): The initial value of the element.
-                on_value_change (Optional[Callable[..., Any]]): A callback function that will be called when the value of the element changes.
-                throttle (float, optional): The time in seconds to throttle the value change events. Defaults to 0.
-                **kwargs (Any): Additional keyword arguments to be passed to the parent class.
+        Args:
+            value (Any): The initial value of the element.
+            on_value_change (Optional[Callable[..., Any]]): A callback function that will be called when the value of the element changes.
+            throttle (float, optional): The time in seconds to throttle the value change events. Defaults to 0.
+            **kwargs (Any): Additional keyword arguments to be passed to the parent class.
 
-            Returns:
-                None
+        Returns:
+            None
 
-            Notes:
-                - This method initializes a ValueElement object with the given value and callback function.
-                - The `value` argument represents the initial value of the element.
-                - The `on_value_change` argument is an optional callback function that will be called whenever the value of the element changes.
-                - The `throttle` argument specifies the time in seconds to throttle the value change events. A value of 0 means no throttling.
-                - Additional keyword arguments can be passed to the parent class using the `**kwargs` syntax.
+        Notes:
+            - This method initializes a ValueElement object with the given value and callback function.
+            - The `value` argument represents the initial value of the element.
+            - The `on_value_change` argument is an optional callback function that will be called whenever the value of the element changes.
+            - The `throttle` argument specifies the time in seconds to throttle the value change events. A value of 0 means no throttling.
+            - Additional keyword arguments can be passed to the parent class using the `**kwargs` syntax.
 
-            Example:
-                # Create a ValueElement object with an initial value of 10 and a callback function
-                def handle_value_change(new_value):
-                    print(f"Value changed to: {new_value}")
+        Example:
+            # Create a ValueElement object with an initial value of 10 and a callback function
+            def handle_value_change(new_value):
+                print(f"Value changed to: {new_value}")
 
-                element = ValueElement(value=10, on_value_change=handle_value_change)
+            element = ValueElement(value=10, on_value_change=handle_value_change)
 
-            """
-            super().__init__(**kwargs)
+        """
+        super().__init__(**kwargs)
+        self._send_update_on_value_change = True
+        self.set_value(value)
+        self._props[self.VALUE_PROP] = self._value_to_model_value(value)
+        self._props["loopback"] = self.LOOPBACK
+        self._change_handler = on_value_change
+
+        def handle_change(e: GenericEventArguments) -> None:
+            self._send_update_on_value_change = self.LOOPBACK
+            self.set_value(self._event_args_to_value(e))
             self._send_update_on_value_change = True
-            self.set_value(value)
-            self._props[self.VALUE_PROP] = self._value_to_model_value(value)
-            self._props['loopback'] = self.LOOPBACK
-            self._change_handler = on_value_change
 
-            def handle_change(e: GenericEventArguments) -> None:
-                self._send_update_on_value_change = self.LOOPBACK
-                self.set_value(self._event_args_to_value(e))
-                self._send_update_on_value_change = True
-            self.on(f'update:{self.VALUE_PROP}', handle_change, [None], throttle=throttle)
+        self.on(f"update:{self.VALUE_PROP}", handle_change, [None], throttle=throttle)
 
-    def bind_value_to(self,
-                      target_object: Any,
-                      target_name: str = 'value',
-                      forward: Callable[..., Any] = lambda x: x,
-                      ) -> Self:
+    def bind_value_to(
+        self,
+        target_object: Any,
+        target_name: str = "value",
+        forward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the value of this element to a property of the target object.
         The binding is one-way, from this element to the target object.
@@ -127,14 +132,15 @@ class ValueElement(Element):
             >>> target = SomeObject()
             >>> element.bind_value_to(target, 'some_property')
         """
-        bind_to(self, 'value', target_object, target_name, forward)
+        bind_to(self, "value", target_object, target_name, forward)
         return self
 
-    def bind_value_from(self,
-                        target_object: Any,
-                        target_name: str = 'value',
-                        backward: Callable[..., Any] = lambda x: x,
-                        ) -> Self:
+    def bind_value_from(
+        self,
+        target_object: Any,
+        target_name: str = "value",
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the value of this element from a property of the target object.
         The binding is one-way, from the target object to this element.
@@ -152,15 +158,17 @@ class ValueElement(Element):
             >>> target = SomeObject()
             >>> element.bind_value_from(target, 'some_property')
         """
-        bind_from(self, 'value', target_object, target_name, backward)
+        bind_from(self, "value", target_object, target_name, backward)
         return self
 
-    def bind_value(self,
-                   target_object: Any,
-                   target_name: str = 'value', *,
-                   forward: Callable[..., Any] = lambda x: x,
-                   backward: Callable[..., Any] = lambda x: x,
-                   ) -> Self:
+    def bind_value(
+        self,
+        target_object: Any,
+        target_name: str = "value",
+        *,
+        forward: Callable[..., Any] = lambda x: x,
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the value of this element to a property of the target object.
         The binding is two-way, allowing updates in both directions.
@@ -179,39 +187,46 @@ class ValueElement(Element):
             >>> target = SomeObject()
             >>> element.bind_value(target, 'some_property')
         """
-        bind(self, 'value', target_object, target_name, forward=forward, backward=backward)
+        bind(
+            self,
+            "value",
+            target_object,
+            target_name,
+            forward=forward,
+            backward=backward,
+        )
         return self
 
     def set_value(self, value: Any) -> None:
-            """
-            Sets the value of this element.
+        """
+        Sets the value of this element.
 
-            This method allows you to set the value of the element to a specified value.
+        This method allows you to set the value of the element to a specified value.
 
-            Args:
-                value (Any): The value to set.
+        Args:
+            value (Any): The value to set.
 
-            Example:
-                >>> element = ValueElement(value=10)
-                >>> element.set_value(20)
+        Example:
+            >>> element = ValueElement(value=10)
+            >>> element.set_value(20)
 
-            Note:
-                - The `value` parameter can be of any type.
-                - The new value will replace the existing value of the element.
-                - This method does not perform any validation on the value.
+        Note:
+            - The `value` parameter can be of any type.
+            - The new value will replace the existing value of the element.
+            - This method does not perform any validation on the value.
 
-            Raises:
-                None.
+        Raises:
+            None.
 
-            Returns:
-                None.
-            """
-            self.value = value
+        Returns:
+            None.
+        """
+        self.value = value
 
     def _handle_value_change(self, value: Any) -> None:
         """
         Handles the value change event and updates the element's properties and triggers the change handler.
-        
+
         This method is called internally and should not be called directly.
 
         Args:
@@ -234,25 +249,27 @@ class ValueElement(Element):
         self._props[self.VALUE_PROP] = self._value_to_model_value(value)
         if self._send_update_on_value_change:
             self.update()
-        args = ValueChangeEventArguments(sender=self, client=self.client, value=self._value_to_event_value(value))
+        args = ValueChangeEventArguments(
+            sender=self, client=self.client, value=self._value_to_event_value(value)
+        )
         handle_event(self._change_handler, args)
 
     def _event_args_to_value(self, e: GenericEventArguments) -> Any:
-            """
-            Converts the event arguments to a value.
+        """
+        Converts the event arguments to a value.
 
-            This method is called internally and should not be called directly.
+        This method is called internally and should not be called directly.
 
-            Args:
-                e (GenericEventArguments): The event arguments.
+        Args:
+            e (GenericEventArguments): The event arguments.
 
-            Returns:
-                Any: The converted value.
+        Returns:
+            Any: The converted value.
 
-            Raises:
-                None.
-            """
-            return e.args
+        Raises:
+            None.
+        """
+        return e.args
 
     def _value_to_model_value(self, value: Any) -> Any:
         """

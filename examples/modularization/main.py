@@ -8,7 +8,7 @@ from nicegui import app, ui
 
 
 # here we use our custom page decorator directly and just put the content creation into a separate function
-@ui.page('/')
+@ui.page("/")
 def index_page() -> None:
     """
     Renders the index page of the website.
@@ -23,7 +23,7 @@ def index_page() -> None:
     Returns:
         None
     """
-    with theme.frame('Homepage'):
+    with theme.frame("Homepage"):
         home_page.content()
 
 
@@ -33,4 +33,4 @@ example_pages.create()
 # we can also use the APIRouter as described in https://nicegui.io/documentation/page#modularize_with_apirouter
 app.include_router(example_c.router)
 
-ui.run(title='Modularization Example')
+ui.run(title="Modularization Example")

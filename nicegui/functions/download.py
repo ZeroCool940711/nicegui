@@ -4,7 +4,9 @@ from typing import Optional, Union
 from .. import context, core, helpers
 
 
-def download(src: Union[str, Path, bytes], filename: Optional[str] = None, media_type: str = '') -> None:
+def download(
+    src: Union[str, Path, bytes], filename: Optional[str] = None, media_type: str = ""
+) -> None:
     """Download
 
     Function to trigger the download of a file, URL or bytes.

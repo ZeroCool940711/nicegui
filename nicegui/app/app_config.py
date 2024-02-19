@@ -63,21 +63,23 @@ class AppConfig:
 
     """
 
-    endpoint_documentation: Literal['none', 'internal', 'page', 'all'] = 'none'
+    endpoint_documentation: Literal["none", "internal", "page", "all"] = "none"
     socket_io_js_query_params: Dict = field(default_factory=dict)
     socket_io_js_extra_headers: Dict = field(default_factory=dict)
-    socket_io_js_transports: List[Literal['websocket', 'polling']] = \
-        field(default_factory=lambda: ['websocket', 'polling'])  # NOTE: we favor websocket
-    quasar_config: Dict = \
-        field(default_factory=lambda: {
-            'brand': {
-                'primary': '#5898d4',
+    socket_io_js_transports: List[Literal["websocket", "polling"]] = field(
+        default_factory=lambda: ["websocket", "polling"]
+    )  # NOTE: we favor websocket
+    quasar_config: Dict = field(
+        default_factory=lambda: {
+            "brand": {
+                "primary": "#5898d4",
             },
-            'loadingBar': {
-                'color': 'primary',
-                'skipHijack': False,
+            "loadingBar": {
+                "color": "primary",
+                "skipHijack": False,
             },
-        })
+        }
+    )
 
     reload: bool = field(init=False)
     title: str = field(init=False)
@@ -92,20 +94,21 @@ class AppConfig:
     show_welcome_message: bool = field(init=False)
     _has_run_config: bool = False
 
-    def add_run_config(self,
-                       *,
-                       reload: bool,
-                       title: str,
-                       viewport: str,
-                       favicon: Optional[Union[str, Path]],
-                       dark: Optional[bool],
-                       language: Language,
-                       binding_refresh_interval: float,
-                       reconnect_timeout: float,
-                       tailwind: bool,
-                       prod_js: bool,
-                       show_welcome_message: bool,
-                       ) -> None:
+    def add_run_config(
+        self,
+        *,
+        reload: bool,
+        title: str,
+        viewport: str,
+        favicon: Optional[Union[str, Path]],
+        dark: Optional[bool],
+        language: Language,
+        binding_refresh_interval: float,
+        reconnect_timeout: float,
+        tailwind: bool,
+        prod_js: bool,
+        show_welcome_message: bool,
+    ) -> None:
         """Add the run config to the app config.
 
         This method allows you to add a run configuration to the app config.

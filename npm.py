@@ -21,8 +21,8 @@ from pathlib import Path
 import requests
 
 parser = ArgumentParser()
-parser.add_argument('path', default='.', help='path to the root of the repository')
-parser.add_argument('--name', nargs='*', help='filter library updates by name')
+parser.add_argument("path", default=".", help="path to the root of the repository")
+parser.add_argument("--name", nargs="*", help="filter library updates by name")
 args = parser.parse_args()
 root_path = Path(args.path)
 names = args.name or None
@@ -85,7 +85,7 @@ def url_to_filename(url: str) -> str:
         >>> url_to_filename('https://example.com/file?param=value')
         'https_example_com_file_param_value'
     """
-    return re.sub(r'[^a-zA-Z0-9]', '_', url)
+    return re.sub(r"[^a-zA-Z0-9]", "_", url)
 
 
 def download_buffered(url: str) -> Path:
@@ -108,75 +108,81 @@ def download_buffered(url: str) -> Path:
         - The function uses the 'User-Agent' header 'Mozilla/5.0' for the request.
         - The function has a timeout of 3 seconds for the request.
     """
-    path = Path('/tmp/nicegui_dependencies')
+    path = Path("/tmp/nicegui_dependencies")
     path.mkdir(exist_ok=True)
     filepath = path / url_to_filename(url)
     if not filepath.exists():
-        response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=3)
+        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=3)
         filepath.write_bytes(response.content)
     return filepath
 
 
-DEPENDENCIES = (root_path / 'DEPENDENCIES.md').open('w')
-DEPENDENCIES.write('# Included Web Dependencies\n\n')
+DEPENDENCIES = (root_path / "DEPENDENCIES.md").open("w")
+DEPENDENCIES.write("# Included Web Dependencies\n\n")
 KNOWN_LICENSES = {
-    'MIT': 'https://opensource.org/licenses/MIT',
-    'ISC': 'https://opensource.org/licenses/ISC',
-    'Apache-2.0': 'https://opensource.org/licenses/Apache-2.0',
-    'BSD-2-Clause': 'https://opensource.org/licenses/BSD-2-Clause',
+    "MIT": "https://opensource.org/licenses/MIT",
+    "ISC": "https://opensource.org/licenses/ISC",
+    "Apache-2.0": "https://opensource.org/licenses/Apache-2.0",
+    "BSD-2-Clause": "https://opensource.org/licenses/BSD-2-Clause",
 }
 
 # Create a hidden folder to work in.
-tmp = cleanup(root_path / '.npm')
+tmp = cleanup(root_path / ".npm")
 
-dependencies: dict[str, dict] = json.loads((root_path / 'npm.json').read_text())
+dependencies: dict[str, dict] = json.loads((root_path / "npm.json").read_text())
 for key, dependency in dependencies.items():
     if names is not None and key not in names:
         continue
 
     # Reset destination folder.
-    destination = prepare(root_path / dependency['destination'] / key)
+    destination = prepare(root_path / dependency["destination"] / key)
 
     # Get package info from NPM.
-    package_name = dependency.get('package', key)
-    npm_data = json.loads(download_buffered(f'https://registry.npmjs.org/{package_name}').read_text())
-    npm_version = dependency.get('version') or dependency.get('version', npm_data['dist-tags']['latest'])
-    npm_tarball = npm_data['versions'][npm_version]['dist']['tarball']
-    license_ = npm_data['versions'][npm_version]['license']
-    print(f'{key}: {npm_version} - {npm_tarball} ({license_})')
-    DEPENDENCIES.write(f'- {key}: {npm_version} ([{license_}]({KNOWN_LICENSES.get(license_, license_)}))\n')
+    package_name = dependency.get("package", key)
+    npm_data = json.loads(
+        download_buffered(f"https://registry.npmjs.org/{package_name}").read_text()
+    )
+    npm_version = dependency.get("version") or dependency.get(
+        "version", npm_data["dist-tags"]["latest"]
+    )
+    npm_tarball = npm_data["versions"][npm_version]["dist"]["tarball"]
+    license_ = npm_data["versions"][npm_version]["license"]
+    print(f"{key}: {npm_version} - {npm_tarball} ({license_})")
+    DEPENDENCIES.write(
+        f"- {key}: {npm_version} ([{license_}]({KNOWN_LICENSES.get(license_, license_)}))\n"
+    )
 
     # Handle the special case of tailwind. Hopefully remove this soon.
-    if 'download' in dependency:
-        download_path = download_buffered(dependency['download'])
+    if "download" in dependency:
+        download_path = download_buffered(dependency["download"])
         content = download_path.read_text()
         MSG = (
             'console.warn("cdn.tailwindcss.com should not be used in production. '
-            'To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: '
+            "To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: "
             'https://tailwindcss.com/docs/installation");'
         )
         if MSG not in content:
             raise ValueError(f'Expected to find "{MSG}" in {download_path}')
-        content = content.replace(MSG, '')
-        prepare(destination / dependency['rename']).write_text(content)
+        content = content.replace(MSG, "")
+        prepare(destination / dependency["rename"]).write_text(content)
 
     # Download and extract.
-    tgz_file = prepare(Path(tmp, key, f'{key}.tgz'))
+    tgz_file = prepare(Path(tmp, key, f"{key}.tgz"))
     tgz_download = download_buffered(npm_tarball)
     shutil.copyfile(tgz_download, tgz_file)
     with tarfile.open(tgz_file) as archive:
         to_be_extracted: list[tarfile.TarInfo] = []
         for tarinfo in archive.getmembers():
-            for keep in dependency['keep']:
-                if re.match(f'^{keep}$', tarinfo.name):
+            for keep in dependency["keep"]:
+                if re.match(f"^{keep}$", tarinfo.name):
                     to_be_extracted.append(tarinfo)  # TODO: simpler?
 
         archive.extractall(members=to_be_extracted, path=Path(tmp, key))
 
         for extracted in to_be_extracted:
             filename: str = extracted.name
-            for rename in dependency['rename']:
-                filename = filename.replace(rename, dependency['rename'][rename])
+            for rename in dependency["rename"]:
+                filename = filename.replace(rename, dependency["rename"][rename])
 
             newfile = prepare(Path(destination, filename))
             Path(tmp, key, extracted.name).rename(newfile)

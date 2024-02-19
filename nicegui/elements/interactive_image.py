@@ -12,23 +12,26 @@ from .mixins.source_element import SourceElement
 
 try:
     from PIL.Image import Image as PIL_Image
-    optional_features.register('pillow')
+
+    optional_features.register("pillow")
 except ImportError:
     pass
 
 
-class InteractiveImage(SourceElement, ContentElement, component='interactive_image.js'):
-    CONTENT_PROP = 'content'
-    PIL_CONVERT_FORMAT = 'PNG'
+class InteractiveImage(SourceElement, ContentElement, component="interactive_image.js"):
+    CONTENT_PROP = "content"
+    PIL_CONVERT_FORMAT = "PNG"
 
-    def __init__(self,
-                 source: Union[str, Path, 'PIL_Image'] = '', *,
-                 content: str = '',
-                 size: Optional[Tuple[float, float]] = None,
-                 on_mouse: Optional[Callable[..., Any]] = None,
-                 events: List[str] = ['click'],
-                 cross: bool = False,
-                 ) -> None:
+    def __init__(
+        self,
+        source: Union[str, Path, "PIL_Image"] = "",
+        *,
+        content: str = "",
+        size: Optional[Tuple[float, float]] = None,
+        on_mouse: Optional[Callable[..., Any]] = None,
+        events: List[str] = ["click"],
+        cross: bool = False,
+    ) -> None:
         """Interactive Image
 
         Create an image with an SVG overlay that handles mouse events and yields image coordinates.
@@ -55,9 +58,9 @@ class InteractiveImage(SourceElement, ContentElement, component='interactive_ima
         - cross: whether to show crosshairs (default: `False`)
         """
         super().__init__(source=source, content=content)
-        self._props['events'] = events
-        self._props['cross'] = cross
-        self._props['size'] = size
+        self._props["events"] = events
+        self._props["cross"] = cross
+        self._props["size"] = size
 
         def handle_mouse(e: GenericEventArguments) -> None:
             if on_mouse is None:
@@ -66,25 +69,26 @@ class InteractiveImage(SourceElement, ContentElement, component='interactive_ima
             arguments = MouseEventArguments(
                 sender=self,
                 client=self.client,
-                type=args.get('mouse_event_type', ''),
-                image_x=args.get('image_x', 0.0),
-                image_y=args.get('image_y', 0.0),
-                button=args.get('button', 0),
-                buttons=args.get('buttons', 0),
-                alt=args.get('altKey', False),
-                ctrl=args.get('ctrlKey', False),
-                meta=args.get('metaKey', False),
-                shift=args.get('shiftKey', False),
+                type=args.get("mouse_event_type", ""),
+                image_x=args.get("image_x", 0.0),
+                image_y=args.get("image_y", 0.0),
+                button=args.get("button", 0),
+                buttons=args.get("buttons", 0),
+                alt=args.get("altKey", False),
+                ctrl=args.get("ctrlKey", False),
+                meta=args.get("metaKey", False),
+                shift=args.get("shiftKey", False),
             )
             handle_event(on_mouse, arguments)
-        self.on('mouse', handle_mouse)
 
-    def _set_props(self, source: Union[str, Path, 'PIL_Image']) -> None:
-        if optional_features.has('pillow') and isinstance(source, PIL_Image):
+        self.on("mouse", handle_mouse)
+
+    def _set_props(self, source: Union[str, Path, "PIL_Image"]) -> None:
+        if optional_features.has("pillow") and isinstance(source, PIL_Image):
             source = pil_to_base64(source, self.PIL_CONVERT_FORMAT)
         super()._set_props(source)
 
     def force_reload(self) -> None:
         """Force the image to reload from the source."""
-        self._props['t'] = time.time()
+        self._props["t"] = time.time()
         self.update()

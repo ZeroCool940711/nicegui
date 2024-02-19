@@ -1,16 +1,36 @@
 from nicegui import ui
 
-from . import (card_documentation, carousel_documentation, column_documentation, context_menu_documentation,
-               dialog_documentation, doc, expansion_documentation, grid_documentation, list_documentation,
-               menu_documentation, notification_documentation, notify_documentation, pagination_documentation,
-               row_documentation, scroll_area_documentation, separator_documentation, space_documentation,
-               splitter_documentation, stepper_documentation, tabs_documentation, timeline_documentation,
-               tooltip_documentation)
+from . import (
+    card_documentation,
+    carousel_documentation,
+    column_documentation,
+    context_menu_documentation,
+    dialog_documentation,
+    doc,
+    expansion_documentation,
+    grid_documentation,
+    list_documentation,
+    menu_documentation,
+    notification_documentation,
+    notify_documentation,
+    pagination_documentation,
+    row_documentation,
+    scroll_area_documentation,
+    separator_documentation,
+    space_documentation,
+    splitter_documentation,
+    stepper_documentation,
+    tabs_documentation,
+    timeline_documentation,
+    tooltip_documentation,
+)
 
-doc.title('Page *Layout*')
+doc.title("Page *Layout*")
 
 
-@doc.demo('Auto-context', '''
+@doc.demo(
+    "Auto-context",
+    """
     In order to allow writing intuitive UI descriptions, NiceGUI automatically tracks the context in which elements are created.
     This means that there is no explicit `parent` parameter.
     Instead the parent context is defined using a `with` statement.
@@ -22,12 +42,13 @@ doc.title('Page *Layout*')
 
     This design decision allows for easily creating modular components that keep working after moving them around in the UI.
     For example, you can move label and button somewhere else, maybe wrap them in another container, and the code will still work.
-''')
+""",
+)
 def auto_context_demo():
     with ui.card():
-        ui.label('Card content')
-        ui.button('Add label', on_click=lambda: ui.label('Click!'))
-        ui.timer(1.0, lambda: ui.label('Tick!'), once=True)
+        ui.label("Card content")
+        ui.button("Add label", on_click=lambda: ui.label("Click!"))
+        ui.timer(1.0, lambda: ui.label("Tick!"), once=True)
 
 
 doc.intro(card_documentation)
@@ -37,7 +58,9 @@ doc.intro(grid_documentation)
 doc.intro(list_documentation)
 
 
-@doc.demo('Clear Containers', '''
+@doc.demo(
+    "Clear Containers",
+    """
     To remove all elements from a row, column or card container, use can call
     ```py
     container.clear()
@@ -48,18 +71,22 @@ doc.intro(list_documentation)
     - `container.remove(element: Element)`,
     - `container.remove(index: int)`, or
     - `element.delete()`.
-''')
+""",
+)
 def clear_containers_demo():
     container = ui.row()
 
     def add_face():
         with container:
-            ui.icon('face')
+            ui.icon("face")
+
     add_face()
 
-    ui.button('Add', on_click=add_face)
-    ui.button('Remove', on_click=lambda: container.remove(0) if list(container) else None)
-    ui.button('Clear', on_click=container.clear)
+    ui.button("Add", on_click=add_face)
+    ui.button(
+        "Remove", on_click=lambda: container.remove(0) if list(container) else None
+    )
+    ui.button("Clear", on_click=container.clear)
 
 
 doc.intro(expansion_documentation)

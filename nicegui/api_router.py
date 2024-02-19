@@ -55,15 +55,18 @@ class APIRouter(fastapi.APIRouter):
         # Page logic goes here
         pass
     """
-    def page(self,
-             path: str, *,
-             title: Optional[str] = None,
-             viewport: Optional[str] = None,
-             favicon: Optional[Union[str, Path]] = None,
-             dark: Optional[bool] = ...,  # type: ignore
-             response_timeout: float = 3.0,
-             **kwargs,
-             ) -> Callable:
+
+    def page(
+        self,
+        path: str,
+        *,
+        title: Optional[str] = None,
+        viewport: Optional[str] = None,
+        favicon: Optional[Union[str, Path]] = None,
+        dark: Optional[bool] = ...,  # type: ignore
+        response_timeout: float = 3.0,
+        **kwargs,
+    ) -> Callable:
         """Page
 
         Creates a new page at the given route.
@@ -101,5 +104,5 @@ class APIRouter(fastapi.APIRouter):
             dark=dark,
             response_timeout=response_timeout,
             api_router=self,
-            **kwargs
+            **kwargs,
         )

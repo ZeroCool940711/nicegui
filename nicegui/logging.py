@@ -1,3 +1,3 @@
 import logging
 
-log: logging.Logger = logging.getLogger('nicegui')
+log: logging.Logger = logging.getLogger("nicegui")

@@ -7,13 +7,18 @@ from . import doc
 def main_demo() -> None:
     from datetime import datetime
 
-    log = ui.log(max_lines=10).classes('w-full h-20')
-    ui.button('Log time', on_click=lambda: log.push(datetime.now().strftime('%X.%f')[:-5]))
+    log = ui.log(max_lines=10).classes("w-full h-20")
+    ui.button(
+        "Log time", on_click=lambda: log.push(datetime.now().strftime("%X.%f")[:-5])
+    )
 
 
-@doc.demo('Attach to a logger', '''
+@doc.demo(
+    "Attach to a logger",
+    """
     You can attach a `ui.log` element to a Python logger object so that log messages are pushed to the log element.
-''')
+""",
+)
 def logger_handler():
     import logging
     from datetime import datetime
@@ -34,9 +39,12 @@ def logger_handler():
             except Exception:
                 self.handleError(record)
 
-    log = ui.log(max_lines=10).classes('w-full')
+    log = ui.log(max_lines=10).classes("w-full")
     logger.addHandler(LogElementHandler(log))
-    ui.button('Log time', on_click=lambda: logger.warning(datetime.now().strftime('%X.%f')[:-5]))
+    ui.button(
+        "Log time",
+        on_click=lambda: logger.warning(datetime.now().strftime("%X.%f")[:-5]),
+    )
 
 
 doc.reference(ui.log)

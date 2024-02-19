@@ -28,22 +28,22 @@ async def increment_counter_slowly(_):
 def test_observable_dict():
     reset_counter()
     data = ObservableDict(on_change=increment_counter)
-    data['a'] = 1
+    data["a"] = 1
     assert count == 1
-    del data['a']
+    del data["a"]
     assert count == 2
-    data.update({'b': 2, 'c': 3})
+    data.update({"b": 2, "c": 3})
     assert count == 3
-    data.pop('b')
+    data.pop("b")
     assert count == 4
     data.popitem()
     assert count == 5
     data.clear()
     assert count == 6
-    data.setdefault('a', 1)
+    data.setdefault("a", 1)
     assert count == 7
     if sys.version_info >= (3, 9):
-        data |= {'b': 2}
+        data |= {"b": 2}
         assert count == 8
 
 
@@ -111,35 +111,38 @@ def test_observable_set():
 
 def test_nested_observables():
     reset_counter()
-    data = ObservableDict({
-        'a': 1,
-        'b': [1, 2, 3, {'x': 1, 'y': 2, 'z': 3}],
-        'c': {'x': 1, 'y': 2, 'z': 3, 't': [1, 2, 3]},
-        'd': {1, 2, 3},
-    }, on_change=increment_counter)
-    data['a'] = 42
+    data = ObservableDict(
+        {
+            "a": 1,
+            "b": [1, 2, 3, {"x": 1, "y": 2, "z": 3}],
+            "c": {"x": 1, "y": 2, "z": 3, "t": [1, 2, 3]},
+            "d": {1, 2, 3},
+        },
+        on_change=increment_counter,
+    )
+    data["a"] = 42
     assert count == 1
-    data['b'].append(4)
+    data["b"].append(4)
     assert count == 2
-    data['b'][3].update(t=4)
+    data["b"][3].update(t=4)
     assert count == 3
-    data['c']['x'] = 2
+    data["c"]["x"] = 2
     assert count == 4
-    data['c']['t'].append(4)
+    data["c"]["t"].append(4)
     assert count == 5
-    data['d'].add(4)
+    data["d"].add(4)
     assert count == 6
 
 
 def test_async_handler(screen: Screen):
     reset_counter()
     data = ObservableList(on_change=increment_counter_slowly)
-    ui.button('Append 42', on_click=lambda: data.append(42))
+    ui.button("Append 42", on_click=lambda: data.append(42))
 
-    screen.open('/')
+    screen.open("/")
     assert count == 0
 
-    screen.click('Append 42')
+    screen.click("Append 42")
     screen.wait(0.5)
     assert count == 1
 

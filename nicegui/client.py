@@ -36,7 +36,7 @@ from .version import __version__
 if TYPE_CHECKING:
     from .page import page
 
-templates = Jinja2Templates(Path(__file__).parent / 'templates')
+templates = Jinja2Templates(Path(__file__).parent / "templates")
 
 
 class Client:
@@ -49,10 +49,10 @@ class Client:
     auto_index_client: Client
     """The client that is used to render the auto-index page."""
 
-    shared_head_html = ''
+    shared_head_html = ""
     """HTML to be inserted in the <head> of every page template."""
 
-    shared_body_html = ''
+    shared_body_html = ""
     """HTML to be inserted in the <body> of every page template."""
 
     def __init__(self, page: page, *, shared: bool = False) -> None:
@@ -71,17 +71,19 @@ class Client:
 
         self.outbox = Outbox(self)
 
-        with Element('q-layout', _client=self).props('view="hhh lpr fff"').classes('nicegui-layout') as self.layout:
-            with Element('q-page-container') as self.page_container:
-                with Element('q-page'):
-                    self.content = Element('div').classes('nicegui-content')
+        with Element("q-layout", _client=self).props('view="hhh lpr fff"').classes(
+            "nicegui-layout"
+        ) as self.layout:
+            with Element("q-page-container") as self.page_container:
+                with Element("q-page"):
+                    self.content = Element("div").classes("nicegui-content")
 
         self.waiting_javascript_commands: Dict[str, Any] = {}
 
         self.title: Optional[str] = None
 
-        self._head_html = ''
-        self._body_html = ''
+        self._head_html = ""
+        self._body_html = ""
 
         self.page = page
 
@@ -98,7 +100,7 @@ class Client:
     @property
     def ip(self) -> Optional[str]:
         """Return the IP address of the client, or None if the client is not connected."""
-        return self.environ['asgi.scope']['client'][0] if self.environ else None  # pylint: disable=unsubscriptable-object
+        return self.environ["asgi.scope"]["client"][0] if self.environ else None  # pylint: disable=unsubscriptable-object
 
     @property
     def has_socket_connection(self) -> bool:
@@ -124,52 +126,71 @@ class Client:
 
     def build_response(self, request: Request, status_code: int = 200) -> Response:
         """Build a FastAPI response for the client."""
-        prefix = request.headers.get('X-Forwarded-Prefix', request.scope.get('root_path', ''))
-        elements = json.dumps({
-            id: element._to_dict() for id, element in self.elements.items()  # pylint: disable=protected-access
-        })
-        socket_io_js_query_params = {**core.app.config.socket_io_js_query_params, 'client_id': self.id}
-        vue_html, vue_styles, vue_scripts, imports, js_imports = generate_resources(prefix, self.elements.values())
+        prefix = request.headers.get(
+            "X-Forwarded-Prefix", request.scope.get("root_path", "")
+        )
+        elements = json.dumps(
+            {
+                id: element._to_dict()
+                for id, element in self.elements.items()  # pylint: disable=protected-access
+            }
+        )
+        socket_io_js_query_params = {
+            **core.app.config.socket_io_js_query_params,
+            "client_id": self.id,
+        }
+        vue_html, vue_styles, vue_scripts, imports, js_imports = generate_resources(
+            prefix, self.elements.values()
+        )
         return templates.TemplateResponse(
             request=request,
-            name='index.html',
+            name="index.html",
             context={
-                'request': request,
-                'version': __version__,
-                'elements': elements.replace('&', '&amp;')
-                                    .replace('<', '&lt;')
-                                    .replace('>', '&gt;')
-                                    .replace('`', '&#96;')
-                                    .replace('$', '&#36;'),
-                'head_html': self.head_html,
-                'body_html': '<style>' + '\n'.join(vue_styles) + '</style>\n' + self.body_html + '\n' + '\n'.join(vue_html),
-                'vue_scripts': '\n'.join(vue_scripts),
-                'imports': json.dumps(imports),
-                'js_imports': '\n'.join(js_imports),
-                'quasar_config': json.dumps(core.app.config.quasar_config),
-                'title': self.page.resolve_title() if self.title is None else self.title,
-                'viewport': self.page.resolve_viewport(),
-                'favicon_url': get_favicon_url(self.page, prefix),
-                'dark': str(self.page.resolve_dark()),
-                'language': self.page.resolve_language(),
-                'prefix': prefix,
-                'tailwind': core.app.config.tailwind,
-                'prod_js': core.app.config.prod_js,
-                'socket_io_js_query_params': socket_io_js_query_params,
-                'socket_io_js_extra_headers': core.app.config.socket_io_js_extra_headers,
-                'socket_io_js_transports': core.app.config.socket_io_js_transports,
+                "request": request,
+                "version": __version__,
+                "elements": elements.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("`", "&#96;")
+                .replace("$", "&#36;"),
+                "head_html": self.head_html,
+                "body_html": "<style>"
+                + "\n".join(vue_styles)
+                + "</style>\n"
+                + self.body_html
+                + "\n"
+                + "\n".join(vue_html),
+                "vue_scripts": "\n".join(vue_scripts),
+                "imports": json.dumps(imports),
+                "js_imports": "\n".join(js_imports),
+                "quasar_config": json.dumps(core.app.config.quasar_config),
+                "title": self.page.resolve_title()
+                if self.title is None
+                else self.title,
+                "viewport": self.page.resolve_viewport(),
+                "favicon_url": get_favicon_url(self.page, prefix),
+                "dark": str(self.page.resolve_dark()),
+                "language": self.page.resolve_language(),
+                "prefix": prefix,
+                "tailwind": core.app.config.tailwind,
+                "prod_js": core.app.config.prod_js,
+                "socket_io_js_query_params": socket_io_js_query_params,
+                "socket_io_js_extra_headers": core.app.config.socket_io_js_extra_headers,
+                "socket_io_js_transports": core.app.config.socket_io_js_transports,
             },
             status_code=status_code,
-            headers={'Cache-Control': 'no-store', 'X-NiceGUI-Content': 'page'},
+            headers={"Cache-Control": "no-store", "X-NiceGUI-Content": "page"},
         )
 
-    async def connected(self, timeout: float = 3.0, check_interval: float = 0.1) -> None:
+    async def connected(
+        self, timeout: float = 3.0, check_interval: float = 0.1
+    ) -> None:
         """Block execution until the client is connected."""
         self.is_waiting_for_connection = True
         deadline = time.time() + timeout
         while not self.has_socket_connection:
             if time.time() > deadline:
-                raise TimeoutError(f'No connection after {timeout} seconds')
+                raise TimeoutError(f"No connection after {timeout} seconds")
             await asyncio.sleep(check_interval)
         self.is_waiting_for_connection = False
 
@@ -182,9 +203,14 @@ class Client:
             await asyncio.sleep(check_interval)
         self.is_waiting_for_disconnect = False
 
-    def run_javascript(self, code: str, *,
-                       respond: Optional[bool] = None,  # DEPRECATED
-                       timeout: float = 1.0, check_interval: float = 0.01) -> AwaitableResponse:
+    def run_javascript(
+        self,
+        code: str,
+        *,
+        respond: Optional[bool] = None,  # DEPRECATED
+        timeout: float = 1.0,
+        check_interval: float = 0.01,
+    ) -> AwaitableResponse:
         """Execute JavaScript on the client.
 
         The client connection must be established before this method is called.
@@ -200,39 +226,58 @@ class Client:
         :return: AwaitableResponse that can be awaited to get the result of the JavaScript code
         """
         if respond is True:
-            log.warning('The "respond" argument of run_javascript() has been removed. '
-                        'Now the method always returns an AwaitableResponse that can be awaited. '
-                        'Please remove the "respond=True" argument.')
+            log.warning(
+                'The "respond" argument of run_javascript() has been removed. '
+                "Now the method always returns an AwaitableResponse that can be awaited. "
+                'Please remove the "respond=True" argument.'
+            )
         if respond is False:
-            raise ValueError('The "respond" argument of run_javascript() has been removed. '
-                             'Now the method always returns an AwaitableResponse that can be awaited. '
-                             'Please remove the "respond=False" argument and call the method without awaiting.')
+            raise ValueError(
+                'The "respond" argument of run_javascript() has been removed. '
+                "Now the method always returns an AwaitableResponse that can be awaited. "
+                'Please remove the "respond=False" argument and call the method without awaiting.'
+            )
 
         request_id = str(uuid.uuid4())
         target_id = self._temporary_socket_id or self.id
 
         def send_and_forget():
-            self.outbox.enqueue_message('run_javascript', {'code': code}, target_id)
+            self.outbox.enqueue_message("run_javascript", {"code": code}, target_id)
 
         async def send_and_wait():
-            self.outbox.enqueue_message('run_javascript', {'code': code, 'request_id': request_id}, target_id)
+            self.outbox.enqueue_message(
+                "run_javascript", {"code": code, "request_id": request_id}, target_id
+            )
             deadline = time.time() + timeout
             while request_id not in self.waiting_javascript_commands:
                 if time.time() > deadline:
-                    raise TimeoutError(f'JavaScript did not respond within {timeout:.1f} s')
+                    raise TimeoutError(
+                        f"JavaScript did not respond within {timeout:.1f} s"
+                    )
                 await asyncio.sleep(check_interval)
             return self.waiting_javascript_commands.pop(request_id)
 
         return AwaitableResponse(send_and_forget, send_and_wait)
 
-    def open(self, target: Union[Callable[..., Any], str], new_tab: bool = False) -> None:
+    def open(
+        self, target: Union[Callable[..., Any], str], new_tab: bool = False
+    ) -> None:
         """Open a new page in the client."""
         path = target if isinstance(target, str) else self.page_routes[target]
-        self.outbox.enqueue_message('open', {'path': path, 'new_tab': new_tab}, self.id)
+        self.outbox.enqueue_message("open", {"path": path, "new_tab": new_tab}, self.id)
 
-    def download(self, src: Union[str, bytes], filename: Optional[str] = None, media_type: str = '') -> None:
+    def download(
+        self,
+        src: Union[str, bytes],
+        filename: Optional[str] = None,
+        media_type: str = "",
+    ) -> None:
         """Download a file from a given URL or raw bytes."""
-        self.outbox.enqueue_message('download', {'src': src, 'filename': filename, 'media_type': media_type}, self.id)
+        self.outbox.enqueue_message(
+            "download",
+            {"src": src, "filename": filename, "media_type": media_type},
+            self.id,
+        )
 
     def on_connect(self, handler: Union[Callable[..., Any], Awaitable]) -> None:
         """Register a callback to be called when the client connects."""
@@ -254,6 +299,7 @@ class Client:
 
     def handle_disconnect(self) -> None:
         """Wait for the browser to reconnect; invoke disconnect handlers if it doesn't."""
+
         async def handle_disconnect() -> None:
             if self.page.reconnect_timeout is not None:
                 delay = self.page.reconnect_timeout
@@ -266,37 +312,49 @@ class Client:
                 self.safe_invoke(t)
             if not self.shared:
                 self.delete()
+
         self._disconnect_task = background_tasks.create(handle_disconnect())
 
     def handle_event(self, msg: Dict) -> None:
         """Forward an event to the corresponding element."""
         with self:
-            sender = self.elements.get(msg['id'])
+            sender = self.elements.get(msg["id"])
             if sender is not None:
-                msg['args'] = [None if arg is None else json.loads(arg) for arg in msg.get('args', [])]
-                if len(msg['args']) == 1:
-                    msg['args'] = msg['args'][0]
+                msg["args"] = [
+                    None if arg is None else json.loads(arg)
+                    for arg in msg.get("args", [])
+                ]
+                if len(msg["args"]) == 1:
+                    msg["args"] = msg["args"][0]
                 sender._handle_event(msg)  # pylint: disable=protected-access
 
     def handle_javascript_response(self, msg: Dict) -> None:
         """Store the result of a JavaScript command."""
-        self.waiting_javascript_commands[msg['request_id']] = msg['result']
+        self.waiting_javascript_commands[msg["request_id"]] = msg["result"]
 
     def safe_invoke(self, func: Union[Callable[..., Any], Awaitable]) -> None:
         """Invoke the potentially async function in the client context and catch any exceptions."""
         try:
             if isinstance(func, Awaitable):
+
                 async def func_with_client():
                     with self:
                         await func
+
                 background_tasks.create(func_with_client())
             else:
                 with self:
-                    result = func(self) if len(inspect.signature(func).parameters) == 1 else func()
+                    result = (
+                        func(self)
+                        if len(inspect.signature(func).parameters) == 1
+                        else func()
+                    )
                 if helpers.is_coroutine_function(func):
+
                     async def result_with_client():
                         with self:
                             await result
+
                     background_tasks.create(result_with_client())
         except Exception as e:
             core.app.handle_exception(e)
@@ -344,11 +402,13 @@ class Client:
                 stale_clients = [
                     client
                     for client in cls.instances.values()
-                    if not client.shared and not client.has_socket_connection and client.created < time.time() - 60.0
+                    if not client.shared
+                    and not client.has_socket_connection
+                    and client.created < time.time() - 60.0
                 ]
                 for client in stale_clients:
                     client.delete()
             except Exception:
                 # NOTE: make sure the loop doesn't crash
-                log.exception('Error while pruning clients')
+                log.exception("Error while pruning clients")
             await asyncio.sleep(10)

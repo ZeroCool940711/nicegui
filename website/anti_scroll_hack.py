@@ -16,10 +16,13 @@ def setup() -> None:
         should be used with caution and may not be future-proof. It is recommended to keep an eye
         on updates to the NiceGUI library and adjust this code accordingly if necessary.
     """
+
     # HACK (issue #1404)
     # pylint: disable=protected-access
-    def _handle_value_change(sender, value, on_value_change=ui.dialog._handle_value_change) -> None:
-        ui.query('html').classes(**{'add' if value else 'remove': 'has-dialog'})
+    def _handle_value_change(
+        sender, value, on_value_change=ui.dialog._handle_value_change
+    ) -> None:
+        ui.query("html").classes(**{"add" if value else "remove": "has-dialog"})
         on_value_change(sender, value)
 
     # pylint: disable=method-assign

@@ -54,7 +54,7 @@ class ChatMessage(Element):
         Chat Message
 
         Args:
-        
+
             - text (Union[str, List[str]], optional): The message body. It can be a single string or a list of strings for multiple message parts. Defaults to ... (ellipsis).
             - name (Optional[str], optional): The name of the message author. Defaults to None.
             - label (Optional[str], optional): Renders a label header/section only. Defaults to None.
@@ -62,9 +62,9 @@ class ChatMessage(Element):
             - avatar (Optional[str], optional): URL to an avatar. Defaults to None.
             - sent (bool, optional): Renders the message as a sent message (from the current user). Defaults to False.
             - text_html (bool, optional): Renders the text as HTML. Defaults to False.
-            
+
         Returns:
-        
+
                 - None
         """
         super().__init__("q-chat-message")

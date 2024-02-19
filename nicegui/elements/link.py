@@ -5,13 +5,13 @@ from ..element import Element
 from .mixins.text_element import TextElement
 
 
-class Link(TextElement, component='link.js'):
-
-    def __init__(self,
-                 text: str = '',
-                 target: Union[Callable[..., Any], str, Element] = '#',
-                 new_tab: bool = False,
-                 ) -> None:
+class Link(TextElement, component="link.js"):
+    def __init__(
+        self,
+        text: str = "",
+        target: Union[Callable[..., Any], str, Element] = "#",
+        new_tab: bool = False,
+    ) -> None:
         """Link
 
         Create a hyperlink.
@@ -25,17 +25,16 @@ class Link(TextElement, component='link.js'):
         """
         super().__init__(text=text)
         if isinstance(target, str):
-            self._props['href'] = target
+            self._props["href"] = target
         elif isinstance(target, Element):
-            self._props['href'] = f'#c{target.id}'
+            self._props["href"] = f"#c{target.id}"
         elif callable(target):
-            self._props['href'] = Client.page_routes[target]
-        self._props['target'] = '_blank' if new_tab else '_self'
-        self._classes.append('nicegui-link')
+            self._props["href"] = Client.page_routes[target]
+        self._props["target"] = "_blank" if new_tab else "_self"
+        self._classes.append("nicegui-link")
 
 
 class LinkTarget(Element):
-
     def __init__(self, name: str) -> None:
         """Link target
 
@@ -43,5 +42,5 @@ class LinkTarget(Element):
 
         - name: target name
         """
-        super().__init__('a')
-        self._props['name'] = name
+        super().__init__("a")
+        self._props["name"] = name

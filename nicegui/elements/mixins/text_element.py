@@ -45,7 +45,8 @@ class TextElement(Element):
     """
 
     text = BindableProperty(
-        on_change=lambda sender, text: cast(Self, sender)._handle_text_change(text))  # pylint: disable=protected-access
+        on_change=lambda sender, text: cast(Self, sender)._handle_text_change(text)
+    )  # pylint: disable=protected-access
 
     def __init__(self, *, text: str, **kwargs: Any) -> None:
         """
@@ -70,11 +71,12 @@ class TextElement(Element):
         self.text = text
         self._text_to_model_text(text)
 
-    def bind_text_to(self,
-                     target_object: Any,
-                     target_name: str = 'text',
-                     forward: Callable[..., Any] = lambda x: x,
-                     ) -> Self:
+    def bind_text_to(
+        self,
+        target_object: Any,
+        target_name: str = "text",
+        forward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Bind the text of this element to the target object's target_name property.
 
@@ -90,14 +92,15 @@ class TextElement(Element):
         - Self: The instance of the TextElement.
 
         """
-        bind_to(self, 'text', target_object, target_name, forward)
+        bind_to(self, "text", target_object, target_name, forward)
         return self
 
-    def bind_text_from(self,
-                       target_object: Any,
-                       target_name: str = 'text',
-                       backward: Callable[..., Any] = lambda x: x,
-                       ) -> Self:
+    def bind_text_from(
+        self,
+        target_object: Any,
+        target_name: str = "text",
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Bind the text of this element from the target object's target_name property.
 
@@ -113,15 +116,17 @@ class TextElement(Element):
         - Self: The instance of the TextElement.
 
         """
-        bind_from(self, 'text', target_object, target_name, backward)
+        bind_from(self, "text", target_object, target_name, backward)
         return self
 
-    def bind_text(self,
-                  target_object: Any,
-                  target_name: str = 'text', *,
-                  forward: Callable[..., Any] = lambda x: x,
-                  backward: Callable[..., Any] = lambda x: x,
-                  ) -> Self:
+    def bind_text(
+        self,
+        target_object: Any,
+        target_name: str = "text",
+        *,
+        forward: Callable[..., Any] = lambda x: x,
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Bind the text of this element to the target object's target_name property.
 
@@ -139,37 +144,39 @@ class TextElement(Element):
         - Self: The instance of the TextElement.
 
         """
-        bind(self, 'text', target_object, target_name, forward=forward, backward=backward)
+        bind(
+            self, "text", target_object, target_name, forward=forward, backward=backward
+        )
         return self
 
     def set_text(self, text: str) -> None:
-            """
-            Set the text of this element.
+        """
+        Set the text of this element.
 
-            Args:
-                text (str): The new text to be set.
+        Args:
+            text (str): The new text to be set.
 
-            Returns:
-                None
+        Returns:
+            None
 
-            Raises:
-                None
+        Raises:
+            None
 
-            Examples:
-                >>> element = TextElement()
-                >>> element.set_text("Hello, World!")
-                >>> element.text
-                'Hello, World!'
+        Examples:
+            >>> element = TextElement()
+            >>> element.set_text("Hello, World!")
+            >>> element.text
+            'Hello, World!'
 
-            This method sets the text of the element to the specified value. The text can be any string.
-            After calling this method, the `text` attribute of the element will be updated with the new value.
+        This method sets the text of the element to the specified value. The text can be any string.
+        After calling this method, the `text` attribute of the element will be updated with the new value.
 
-            Note:
-                This method does not perform any validation or formatting of the text. It simply assigns the
-                provided value to the `text` attribute.
+        Note:
+            This method does not perform any validation or formatting of the text. It simply assigns the
+            provided value to the `text` attribute.
 
-            """
-            self.text = text
+        """
+        self.text = text
 
     def _handle_text_change(self, text: str) -> None:
         """

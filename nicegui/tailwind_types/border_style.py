@@ -1,10 +1,10 @@
 from typing import Literal
 
 BorderStyle = Literal[
-    'solid',
-    'dashed',
-    'dotted',
-    'double',
-    'hidden',
-    'none',
+    "solid",
+    "dashed",
+    "dotted",
+    "double",
+    "hidden",
+    "none",
 ]

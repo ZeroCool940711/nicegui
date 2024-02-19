@@ -28,32 +28,34 @@ class ChoiceElement(ValueElement):
 
     """
 
-    def __init__(self, *,
-                     tag: Optional[str] = None,
-                     options: Union[List, Dict],
-                     value: Any,
-                     on_change: Optional[Callable[..., Any]] = None,
-                     ) -> None:
-            """
-            Choice Element
+    def __init__(
+        self,
+        *,
+        tag: Optional[str] = None,
+        options: Union[List, Dict],
+        value: Any,
+        on_change: Optional[Callable[..., Any]] = None,
+    ) -> None:
+        """
+        Choice Element
 
-            Args:
-                - tag (Optional[str]): An optional tag for the element.
-                - options (Union[List, Dict]): The options for the choice element. It can be a list or a dictionary.
-                - value (Any): The initial value for the choice element.
-                - on_change (Optional[Callable[..., Any]]): An optional callback function to be called when the value of the
-                    choice element changes.
+        Args:
+            - tag (Optional[str]): An optional tag for the element.
+            - options (Union[List, Dict]): The options for the choice element. It can be a list or a dictionary.
+            - value (Any): The initial value for the choice element.
+            - on_change (Optional[Callable[..., Any]]): An optional callback function to be called when the value of the
+                choice element changes.
 
-            Raises:
-                - TypeError: If the options parameter is not a list or a dictionary.
+        Raises:
+            - TypeError: If the options parameter is not a list or a dictionary.
 
-            """
-            self.options = options
-            self._values: List[str] = []
-            self._labels: List[str] = []
-            self._update_values_and_labels()
-            super().__init__(tag=tag, value=value, on_value_change=on_change)
-            self._update_options()
+        """
+        self.options = options
+        self._values: List[str] = []
+        self._labels: List[str] = []
+        self._update_values_and_labels()
+        super().__init__(tag=tag, value=value, on_value_change=on_change)
+        self._update_options()
 
     def _update_values_and_labels(self) -> None:
         """
@@ -70,8 +72,16 @@ class ChoiceElement(ValueElement):
         Returns:
             None
         """
-        self._values = self.options if isinstance(self.options, list) else list(self.options.keys())
-        self._labels = self.options if isinstance(self.options, list) else list(self.options.values())
+        self._values = (
+            self.options
+            if isinstance(self.options, list)
+            else list(self.options.keys())
+        )
+        self._labels = (
+            self.options
+            if isinstance(self.options, list)
+            else list(self.options.values())
+        )
 
     def _update_options(self) -> None:
         """
@@ -95,7 +105,10 @@ class ChoiceElement(ValueElement):
         :return: None
         """
         before_value = self.value
-        self._props['options'] = [{'value': index, 'label': option} for index, option in enumerate(self._labels)]
+        self._props["options"] = [
+            {"value": index, "label": option}
+            for index, option in enumerate(self._labels)
+        ]
         if not isinstance(before_value, list):
             self._props[self.VALUE_PROP] = self._value_to_model_value(before_value)
             self.value = before_value if before_value in self._values else None

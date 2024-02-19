@@ -18,12 +18,13 @@ def create() -> None:
     Returns:
     None
     """
-    @ui.page('/a')
-    def example_page_a():
-        with theme.frame('- Example A -'):
-            message('Example A')
 
-    @ui.page('/b')
+    @ui.page("/a")
+    def example_page_a():
+        with theme.frame("- Example A -"):
+            message("Example A")
+
+    @ui.page("/b")
     def example_page_b():
-        with theme.frame('- Example B -'):
-            message('Example B')
+        with theme.frame("- Example B -"):
+            message("Example B")

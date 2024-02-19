@@ -4291,13 +4291,27 @@ SIGNAL_CELLULAR_ALT_1_BAR = "signal_cellular_alt_1_bar"
 SIGNAL_CELLULAR_ALT_1_BAR = "signal_cellular_alt_1_bar"
 SIGNAL_CELLULAR_ALT_2_BAR = "signal_cellular_alt_2_bar"
 SIGNAL_CELLULAR_ALT_2_BAR = "signal_cellular_alt_2_bar"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR = "signal_cellular_connected_no_internet_0_bar"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR = "signal_cellular_connected_no_internet_0_bar"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_1_BAR = "signal_cellular_connected_no_internet_1_bar"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_2_BAR = "signal_cellular_connected_no_internet_2_bar"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_3_BAR = "signal_cellular_connected_no_internet_3_bar"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR = "signal_cellular_connected_no_internet_4_bar"
-SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR = "signal_cellular_connected_no_internet_4_bar"
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR = (
+    "signal_cellular_connected_no_internet_0_bar"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_0_BAR = (
+    "signal_cellular_connected_no_internet_0_bar"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_1_BAR = (
+    "signal_cellular_connected_no_internet_1_bar"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_2_BAR = (
+    "signal_cellular_connected_no_internet_2_bar"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_3_BAR = (
+    "signal_cellular_connected_no_internet_3_bar"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR = (
+    "signal_cellular_connected_no_internet_4_bar"
+)
+SIGNAL_CELLULAR_CONNECTED_NO_INTERNET_4_BAR = (
+    "signal_cellular_connected_no_internet_4_bar"
+)
 SIGNAL_CELLULAR_NO_SIM = "signal_cellular_no_sim"
 SIGNAL_CELLULAR_NODATA = "signal_cellular_nodata"
 SIGNAL_CELLULAR_NODATA = "signal_cellular_nodata"
@@ -4331,11 +4345,21 @@ SIGNAL_WIFI_STATUSBAR_1_BAR = "signal_wifi_statusbar_1_bar"
 SIGNAL_WIFI_STATUSBAR_2_BAR = "signal_wifi_statusbar_2_bar"
 SIGNAL_WIFI_STATUSBAR_3_BAR = "signal_wifi_statusbar_3_bar"
 SIGNAL_WIFI_STATUSBAR_4_BAR = "signal_wifi_statusbar_4_bar"
-SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET = "signal_wifi_statusbar_connected_no_internet"
-SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_1 = "signal_wifi_statusbar_connected_no_internet_1"
-SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_2 = "signal_wifi_statusbar_connected_no_internet_2"
-SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_3 = "signal_wifi_statusbar_connected_no_internet_3"
-SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4 = "signal_wifi_statusbar_connected_no_internet_4"
+SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET = (
+    "signal_wifi_statusbar_connected_no_internet"
+)
+SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_1 = (
+    "signal_wifi_statusbar_connected_no_internet_1"
+)
+SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_2 = (
+    "signal_wifi_statusbar_connected_no_internet_2"
+)
+SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_3 = (
+    "signal_wifi_statusbar_connected_no_internet_3"
+)
+SIGNAL_WIFI_STATUSBAR_CONNECTED_NO_INTERNET_4 = (
+    "signal_wifi_statusbar_connected_no_internet_4"
+)
 SIGNAL_WIFI_STATUSBAR_NOT_CONNECTED = "signal_wifi_statusbar_not_connected"
 SIGNAL_WIFI_STATUSBAR_NOT_CONNECTED = "signal_wifi_statusbar_not_connected"
 SIGNAL_WIFI_STATUSBAR_NULL = "signal_wifi_statusbar_null"

@@ -5,7 +5,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
-@app.get('/')
+@app.get("/")
 def read_root():
     """
     Returns a dictionary with a simple 'Hello' message.
@@ -20,10 +20,12 @@ def read_root():
         >>> read_root()
         {'Hello': 'World'}
     """
-    return {'Hello': 'World'}
+    return {"Hello": "World"}
 
 
 frontend.init(app)
 
-if __name__ == '__main__':
-    print('Please start the app with the "uvicorn" command as shown in the start.sh script')
+if __name__ == "__main__":
+    print(
+        'Please start the app with the "uvicorn" command as shown in the start.sh script'
+    )

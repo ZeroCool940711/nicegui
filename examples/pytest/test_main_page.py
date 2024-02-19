@@ -20,8 +20,8 @@ def test_markdown_message(screen: Screen) -> None:
     """
     main_page()
 
-    screen.open('/')
-    screen.should_contain('Try running')
+    screen.open("/")
+    screen.should_contain("Try running")
 
 
 def test_button_click(screen: Screen) -> None:
@@ -43,6 +43,6 @@ def test_button_click(screen: Screen) -> None:
     """
     main_page()
 
-    screen.open('/')
-    screen.click('Click me')
-    screen.should_contain('Button clicked!')
+    screen.open("/")
+    screen.click("Click me")
+    screen.should_contain("Button clicked!")

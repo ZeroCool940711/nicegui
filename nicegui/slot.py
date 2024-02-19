@@ -30,9 +30,10 @@ class Slot:
     """
 
     stacks: Dict[int, List[Slot]] = {}
-    
 
-    def __init__(self, parent: Element, name: str, template: Optional[str] = None) -> None:
+    def __init__(
+        self, parent: Element, name: str, template: Optional[str] = None
+    ) -> None:
         """
         Initializes a Slot object.
 
@@ -47,7 +48,7 @@ class Slot:
         self.template = template
         self.children: List[Element] = []
 
-    def __enter__(self) -> 'Slot':
+    def __enter__(self) -> "Slot":
         """
         Enters the context of the slot.
 
@@ -77,7 +78,7 @@ class Slot:
         return iter(self.children)
 
     @classmethod
-    def get_stack(cls) -> List['Slot']:
+    def get_stack(cls) -> List["Slot"]:
         """
         Returns the slot stack of the current asyncio task.
 
@@ -110,13 +111,19 @@ class Slot:
         """
         while True:
             try:
-                running = [id(task) for task in asyncio.tasks.all_tasks() if not task.done() and not task.cancelled()]
-                stale_ids = [task_id for task_id in cls.stacks if task_id not in running]
+                running = [
+                    id(task)
+                    for task in asyncio.tasks.all_tasks()
+                    if not task.done() and not task.cancelled()
+                ]
+                stale_ids = [
+                    task_id for task_id in cls.stacks if task_id not in running
+                ]
                 for task_id in stale_ids:
                     del cls.stacks[task_id]
             except Exception:
                 # NOTE: make sure the loop doesn't crash
-                log.exception('Error while pruning slot stacks')
+                log.exception("Error while pruning slot stacks")
             await asyncio.sleep(10)
 
 

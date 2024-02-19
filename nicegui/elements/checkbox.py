@@ -24,7 +24,13 @@ class Checkbox(TextElement, ValueElement, DisableableElement):
         '<q-checkbox v-model="value" label="Enable" @change="handle_checkbox_change"></q-checkbox>'
     """
 
-    def __init__(self, text: str = '', *, value: bool = False, on_change: Optional[Callable[..., Any]] = None) -> None:
+    def __init__(
+        self,
+        text: str = "",
+        *,
+        value: bool = False,
+        on_change: Optional[Callable[..., Any]] = None,
+    ) -> None:
         """Checkbox
 
         This element is based on Quasar's [QCheckbox ](https://quasar.dev/vue-components/checkbox) component.
@@ -33,4 +39,6 @@ class Checkbox(TextElement, ValueElement, DisableableElement):
         - value: whether it should be checked initially (default: `False`)
         - on_change: callback to execute when value changes
         """
-        super().__init__(tag='q-checkbox', text=text, value=value, on_value_change=on_change)
+        super().__init__(
+            tag="q-checkbox", text=text, value=value, on_value_change=on_change
+        )

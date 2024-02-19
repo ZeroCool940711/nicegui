@@ -32,12 +32,14 @@ class ObservableCollection(abc.ABC):
 
     """
 
-    def __init__(self, *,
-                 factory: Callable,
-                 data: Optional[Collection],
-                 on_change: Optional[Callable],
-                 _parent: Optional[ObservableCollection],
-                 ) -> None:
+    def __init__(
+        self,
+        *,
+        factory: Callable,
+        data: Optional[Collection],
+        on_change: Optional[Callable],
+        _parent: Optional[ObservableCollection],
+    ) -> None:
         """
         Initializes a new instance of the ObservableCollection class.
 
@@ -72,7 +74,9 @@ class ObservableCollection(abc.ABC):
 
         """
         for handler in self.change_handlers:
-            events.handle_event(handler, events.ObservableChangeEventArguments(sender=self))
+            events.handle_event(
+                handler, events.ObservableChangeEventArguments(sender=self)
+            )
 
     def on_change(self, handler: Callable) -> None:
         """
@@ -105,13 +109,13 @@ class ObservableCollection(abc.ABC):
 
 
 class ObservableDict(ObservableCollection, dict):
-
-    def __init__(self,
-                 data: Dict = None,  # type: ignore
-                 *,
-                 on_change: Optional[Callable] = None,
-                 _parent: Optional[ObservableCollection] = None,
-                 ) -> None:
+    def __init__(
+        self,
+        data: Dict = None,  # type: ignore
+        *,
+        on_change: Optional[Callable] = None,
+        _parent: Optional[ObservableCollection] = None,
+    ) -> None:
         super().__init__(factory=dict, data=data, on_change=on_change, _parent=_parent)
         for key, value in self.items():
             super().__setitem__(key, self._observe(value))
@@ -158,157 +162,159 @@ class ObservableDict(ObservableCollection, dict):
 
 class ObservableList(ObservableCollection, list):
     """
-        A dictionary subclass that provides observation capabilities.
+    A dictionary subclass that provides observation capabilities.
 
-        This class extends the functionality of the built-in `dict` class by adding observation capabilities.
-        It inherits from the `ObservableCollection` class, which provides the observation functionality.
+    This class extends the functionality of the built-in `dict` class by adding observation capabilities.
+    It inherits from the `ObservableCollection` class, which provides the observation functionality.
 
-        Usage:
-        - Create an instance of `ObservableDict` by passing an optional initial `data` dictionary.
-        - Specify an optional `on_change` callback function to be called whenever the dictionary changes.
-        - The `_parent` parameter is used internally and should not be set manually.
+    Usage:
+    - Create an instance of `ObservableDict` by passing an optional initial `data` dictionary.
+    - Specify an optional `on_change` callback function to be called whenever the dictionary changes.
+    - The `_parent` parameter is used internally and should not be set manually.
 
-        Example:
-        ```
-        def handle_change():
-            print("Dictionary changed!")
+    Example:
+    ```
+    def handle_change():
+        print("Dictionary changed!")
 
-        my_dict = ObservableDict(on_change=handle_change)
-        my_dict["key1"] = "value1"  # Triggers the `on_change` callback
-        my_dict.update({"key2": "value2"})  # Triggers the `on_change` callback
-        ```
+    my_dict = ObservableDict(on_change=handle_change)
+    my_dict["key1"] = "value1"  # Triggers the `on_change` callback
+    my_dict.update({"key2": "value2"})  # Triggers the `on_change` callback
+    ```
 
-        Methods:
-        - `pop(k: Any, d: Any = None) -> Any`: Remove and return the value associated with key `k`. If `k` is not found, return `d` (default to `None`).
-        - `popitem() -> Any`: Remove and return an arbitrary `(key, value)` pair from the dictionary.
-        - `update(*args: Any, **kwargs: Any) -> None`: Update the dictionary with the key/value pairs from `*args` and `**kwargs`.
-        - `clear() -> None`: Remove all items from the dictionary.
-        - `setdefault(__key: Any, __default: Any = None) -> Any`: If `__key` is in the dictionary, return its value. If not, insert `__key` with a value of `__default` and return `__default`.
-        - `__setitem__(__key: Any, __value: Any) -> None`: Set the value of `__key` to `__value`.
-        - `__delitem__(__key: Any) -> None`: Remove `__key` from the dictionary.
-        - `__or__(other: Any) -> Any`: Return the union of the dictionary and `other`.
-        - `__ior__(other: Any) -> Any`: Update the dictionary with the union of itself and `other`.
+    Methods:
+    - `pop(k: Any, d: Any = None) -> Any`: Remove and return the value associated with key `k`. If `k` is not found, return `d` (default to `None`).
+    - `popitem() -> Any`: Remove and return an arbitrary `(key, value)` pair from the dictionary.
+    - `update(*args: Any, **kwargs: Any) -> None`: Update the dictionary with the key/value pairs from `*args` and `**kwargs`.
+    - `clear() -> None`: Remove all items from the dictionary.
+    - `setdefault(__key: Any, __default: Any = None) -> Any`: If `__key` is in the dictionary, return its value. If not, insert `__key` with a value of `__default` and return `__default`.
+    - `__setitem__(__key: Any, __value: Any) -> None`: Set the value of `__key` to `__value`.
+    - `__delitem__(__key: Any) -> None`: Remove `__key` from the dictionary.
+    - `__or__(other: Any) -> Any`: Return the union of the dictionary and `other`.
+    - `__ior__(other: Any) -> Any`: Update the dictionary with the union of itself and `other`.
 
-        Note:
-        - The observation capabilities are provided by the `ObservableCollection` base class.
-        - The `ObservableDict` class overrides certain methods to ensure that changes to the dictionary trigger the `on_change` callback.
-        """
-    def __init__(self,
-                 data: List = None,  # type: ignore
-                 *,
-                 on_change: Optional[Callable] = None,
-                 _parent: Optional[ObservableCollection] = None,
-                 ) -> None:
+    Note:
+    - The observation capabilities are provided by the `ObservableCollection` base class.
+    - The `ObservableDict` class overrides certain methods to ensure that changes to the dictionary trigger the `on_change` callback.
+    """
+
+    def __init__(
+        self,
+        data: List = None,  # type: ignore
+        *,
+        on_change: Optional[Callable] = None,
+        _parent: Optional[ObservableCollection] = None,
+    ) -> None:
         super().__init__(factory=list, data=data, on_change=on_change, _parent=_parent)
         for i, item in enumerate(self):
             super().__setitem__(i, self._observe(item))
 
     def append(self, item: Any) -> None:
-            """
-            Appends an item to the observable list.
+        """
+        Appends an item to the observable list.
 
-            Args:
-                item (Any): The item to be appended.
+        Args:
+            item (Any): The item to be appended.
 
-            Returns:
-                None
+        Returns:
+            None
 
-            Raises:
-                None
-            """
-            super().append(self._observe(item))
-            self._handle_change()
+        Raises:
+            None
+        """
+        super().append(self._observe(item))
+        self._handle_change()
 
     def extend(self, iterable: Iterable) -> None:
-            """
-            Extends the observable list by appending elements from the given iterable.
+        """
+        Extends the observable list by appending elements from the given iterable.
 
-            Args:
-                iterable (Iterable): An iterable containing elements to be appended to the list.
+        Args:
+            iterable (Iterable): An iterable containing elements to be appended to the list.
 
-            Returns:
-                None
+        Returns:
+            None
 
-            Raises:
-                None
-            """
-            super().extend(self._observe(list(iterable)))
-            self._handle_change()
+        Raises:
+            None
+        """
+        super().extend(self._observe(list(iterable)))
+        self._handle_change()
 
     def insert(self, index: SupportsIndex, obj: Any) -> None:
-            """
-            Inserts the given object at the specified index in the observable list.
+        """
+        Inserts the given object at the specified index in the observable list.
 
-            Args:
-                index (SupportsIndex): The index at which the object should be inserted.
-                obj (Any): The object to be inserted.
+        Args:
+            index (SupportsIndex): The index at which the object should be inserted.
+            obj (Any): The object to be inserted.
 
-            Returns:
-                None
+        Returns:
+            None
 
-            Raises:
-                TypeError: If the index is not a valid index type.
-            
-            Notes:
-                - This method internally observes the inserted object using the `_observe` method.
-                - After inserting the object, it calls the `_handle_change` method to notify any observers of the change.
-            """
-            super().insert(index, self._observe(obj))
-            self._handle_change()
+        Raises:
+            TypeError: If the index is not a valid index type.
+
+        Notes:
+            - This method internally observes the inserted object using the `_observe` method.
+            - After inserting the object, it calls the `_handle_change` method to notify any observers of the change.
+        """
+        super().insert(index, self._observe(obj))
+        self._handle_change()
 
     def remove(self, value: Any) -> None:
-            """
-            Removes the specified value from the observable list.
+        """
+        Removes the specified value from the observable list.
 
-            Args:
-                value (Any): The value to be removed.
+        Args:
+            value (Any): The value to be removed.
 
-            Returns:
-                None
+        Returns:
+            None
 
-            Raises:
-                None
+        Raises:
+            None
 
-            Notes:
-                This method removes the specified value from the observable list.
-                After removing the value, it triggers the `_handle_change` method
-                to notify any observers of the change.
-            """
-            super().remove(value)
-            self._handle_change()
+        Notes:
+            This method removes the specified value from the observable list.
+            After removing the value, it triggers the `_handle_change` method
+            to notify any observers of the change.
+        """
+        super().remove(value)
+        self._handle_change()
 
     def pop(self, index: SupportsIndex = -1) -> Any:
-            """
-            Remove and return an item from the observable list.
+        """
+        Remove and return an item from the observable list.
 
-            Args:
-                index (Optional): The index of the item to remove. Defaults to -1, which removes the last item.
+        Args:
+            index (Optional): The index of the item to remove. Defaults to -1, which removes the last item.
 
-            Returns:
-                Any: The removed item.
+        Returns:
+            Any: The removed item.
 
-            Raises:
-                IndexError: If the index is out of range.
+        Raises:
+            IndexError: If the index is out of range.
 
-            This method removes and returns an item from the observable list. It also triggers a change event to notify
-            any observers of the list that a change has occurred.
-            """
-            item = super().pop(index)
-            self._handle_change()
-            return item
+        This method removes and returns an item from the observable list. It also triggers a change event to notify
+        any observers of the list that a change has occurred.
+        """
+        item = super().pop(index)
+        self._handle_change()
+        return item
 
     def clear(self) -> None:
-            """
-            Clears the observable object.
+        """
+        Clears the observable object.
 
-            This method clears the observable object by calling the `clear` method of the base class
-            and then triggers the `_handle_change` method to notify any observers of the change.
+        This method clears the observable object by calling the `clear` method of the base class
+        and then triggers the `_handle_change` method to notify any observers of the change.
 
-            Returns:
-                None
-            """
-            super().clear()
-            self._handle_change()
+        Returns:
+            None
+        """
+        super().clear()
+        self._handle_change()
 
     def sort(self, **kwargs: Any) -> None:
         """
@@ -387,12 +393,13 @@ class ObservableSet(ObservableCollection, set):
     - __ixor__(other: Any) -> Any: Updates the set with the symmetric difference of itself and another set.
     """
 
-    def __init__(self,
-                 data: set = None,  # type: ignore
-                 *,
-                 on_change: Optional[Callable] = None,
-                 _parent: Optional[ObservableCollection] = None,
-                 ) -> None:
+    def __init__(
+        self,
+        data: set = None,  # type: ignore
+        *,
+        on_change: Optional[Callable] = None,
+        _parent: Optional[ObservableCollection] = None,
+    ) -> None:
         """
         Initialize an ObservableSet.
 

@@ -14,8 +14,8 @@ class GenericLayer(Layer):
 
     def to_dict(self) -> Dict:
         return {
-            'type': self.name,
-            'args': self.args,
+            "type": self.name,
+            "args": self.args,
         }
 
 
@@ -26,8 +26,8 @@ class TileLayer(Layer):
 
     def to_dict(self) -> Dict:
         return {
-            'type': 'tileLayer',
-            'args': [self.url_template, self.options],
+            "type": "tileLayer",
+            "args": [self.url_template, self.options],
         }
 
 
@@ -38,13 +38,13 @@ class Marker(Layer):
 
     def to_dict(self) -> Dict:
         return {
-            'type': 'marker',
-            'args': [{'lat': self.latlng[0], 'lng': self.latlng[1]}, self.options],
+            "type": "marker",
+            "args": [{"lat": self.latlng[0], "lng": self.latlng[1]}, self.options],
         }
 
     def draggable(self, value: bool = True) -> Self:
         """Make the marker draggable."""
-        self.options['draggable'] = value
+        self.options["draggable"] = value
         return self
 
     def move(self, lat: float, lng: float) -> None:
@@ -54,4 +54,4 @@ class Marker(Layer):
         - lng: longitude
         """
         self.latlng = (lat, lng)
-        self.run_method('setLatLng', (lat, lng))
+        self.run_method("setLatLng", (lat, lng))

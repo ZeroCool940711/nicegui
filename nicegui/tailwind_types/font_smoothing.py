@@ -1,6 +1,6 @@
 from typing import Literal
 
 FontSmoothing = Literal[
-    'antialiased',
-    'subpixel-antialiased',
+    "antialiased",
+    "subpixel-antialiased",
 ]

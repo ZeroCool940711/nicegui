@@ -5,9 +5,9 @@ from . import doc
 
 @doc.demo(ui.separator)
 def main_demo() -> None:
-    ui.label('text above')
+    ui.label("text above")
     ui.separator()
-    ui.label('text below')
+    ui.label("text below")
 
 
 doc.reference(ui.separator)

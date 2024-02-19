@@ -13,6 +13,7 @@ class User(models.Model):
     Usage:
         user = User(id=1, name="John Doe", age=25)
     """
+
     id = fields.IntField(pk=True)
     name = fields.CharField(max_length=255)
     age = fields.IntField()

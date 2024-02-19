@@ -33,9 +33,12 @@ class FilterElement(Element):
         **kwargs: Additional keyword arguments to be passed to the base class constructor.
     """
 
-    FILTER_PROP = 'filter'
+    FILTER_PROP = "filter"
     filter = BindableProperty(
-        on_change=lambda sender, filter: cast(Self, sender)._handle_filter_change(filter))  # pylint: disable=protected-access
+        on_change=lambda sender, filter: cast(Self, sender)._handle_filter_change(
+            filter
+        )
+    )  # pylint: disable=protected-access
 
     def __init__(self, *, filter: Optional[str] = None, **kwargs: Any) -> None:  # pylint: disable=redefined-builtin
         """
@@ -49,11 +52,12 @@ class FilterElement(Element):
         self.filter = filter
         self._props[self.FILTER_PROP] = filter
 
-    def bind_filter_to(self,
-                       target_object: Any,
-                       target_name: str = 'filter',
-                       forward: Callable[..., Any] = lambda x: x,
-                       ) -> Self:
+    def bind_filter_to(
+        self,
+        target_object: Any,
+        target_name: str = "filter",
+        forward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the filter of this element to the target object's property.
 
@@ -68,14 +72,15 @@ class FilterElement(Element):
         Returns:
             Self: The current instance of the FilterElement.
         """
-        bind_to(self, 'filter', target_object, target_name, forward)
+        bind_to(self, "filter", target_object, target_name, forward)
         return self
 
-    def bind_filter_from(self,
-                         target_object: Any,
-                         target_name: str = 'filter',
-                         backward: Callable[..., Any] = lambda x: x,
-                         ) -> Self:
+    def bind_filter_from(
+        self,
+        target_object: Any,
+        target_name: str = "filter",
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the filter of this element from the target object's property.
 
@@ -90,15 +95,17 @@ class FilterElement(Element):
         Returns:
             Self: The current instance of the FilterElement.
         """
-        bind_from(self, 'filter', target_object, target_name, backward)
+        bind_from(self, "filter", target_object, target_name, backward)
         return self
 
-    def bind_filter(self,
-                    target_object: Any,
-                    target_name: str = 'filter', *,
-                    forward: Callable[..., Any] = lambda x: x,
-                    backward: Callable[..., Any] = lambda x: x,
-                    ) -> Self:
+    def bind_filter(
+        self,
+        target_object: Any,
+        target_name: str = "filter",
+        *,
+        forward: Callable[..., Any] = lambda x: x,
+        backward: Callable[..., Any] = lambda x: x,
+    ) -> Self:
         """
         Binds the filter of this element to the target object's property.
 
@@ -115,7 +122,14 @@ class FilterElement(Element):
         Returns:
             Self: The current instance of the FilterElement.
         """
-        bind(self, 'filter', target_object, target_name, forward=forward, backward=backward)
+        bind(
+            self,
+            "filter",
+            target_object,
+            target_name,
+            forward=forward,
+            backward=backward,
+        )
         return self
 
     def set_filter(self, filter_: str) -> None:

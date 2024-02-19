@@ -5,9 +5,13 @@ from ..awaitable_response import AwaitableResponse
 from ..logging import log
 
 
-def run_javascript(code: str, *,
-                   respond: Optional[bool] = None,  # DEPRECATED
-                   timeout: float = 1.0, check_interval: float = 0.01) -> AwaitableResponse:
+def run_javascript(
+    code: str,
+    *,
+    respond: Optional[bool] = None,  # DEPRECATED
+    timeout: float = 1.0,
+    check_interval: float = 0.01,
+) -> AwaitableResponse:
     """Run JavaScript
 
     This function runs arbitrary JavaScript code on a page that is executed in the browser.
@@ -24,12 +28,18 @@ def run_javascript(code: str, *,
     :return: AwaitableResponse that can be awaited to get the result of the JavaScript code
     """
     if respond is True:
-        log.warning('The "respond" argument of run_javascript() has been removed. '
-                    'Now the function always returns an AwaitableResponse that can be awaited. '
-                    'Please remove the "respond=True" argument.')
+        log.warning(
+            'The "respond" argument of run_javascript() has been removed. '
+            "Now the function always returns an AwaitableResponse that can be awaited. "
+            'Please remove the "respond=True" argument.'
+        )
     if respond is False:
-        raise ValueError('The "respond" argument of run_javascript() has been removed. '
-                         'Now the function always returns an AwaitableResponse that can be awaited. '
-                         'Please remove the "respond=False" argument and call the function without awaiting.')
+        raise ValueError(
+            'The "respond" argument of run_javascript() has been removed. '
+            "Now the function always returns an AwaitableResponse that can be awaited. "
+            'Please remove the "respond=False" argument and call the function without awaiting.'
+        )
 
-    return context.get_client().run_javascript(code, timeout=timeout, check_interval=check_interval)
+    return context.get_client().run_javascript(
+        code, timeout=timeout, check_interval=check_interval
+    )

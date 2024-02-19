@@ -3,15 +3,18 @@ from typing import Any, Callable, Dict, Optional, Union
 from .input import Input
 
 
-class Textarea(Input, component='input.js'):
-
-    def __init__(self,
-                 label: Optional[str] = None, *,
-                 placeholder: Optional[str] = None,
-                 value: str = '',
-                 on_change: Optional[Callable[..., Any]] = None,
-                 validation: Optional[Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]] = None,
-                 ) -> None:
+class Textarea(Input, component="input.js"):
+    def __init__(
+        self,
+        label: Optional[str] = None,
+        *,
+        placeholder: Optional[str] = None,
+        value: str = "",
+        on_change: Optional[Callable[..., Any]] = None,
+        validation: Optional[
+            Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]
+        ] = None,
+    ) -> None:
         """Textarea
 
         This element is based on Quasar's [QInput ](https://quasar.dev/vue-components/input) component.
@@ -28,5 +31,11 @@ class Textarea(Input, component='input.js'):
         - on_change: callback to execute when the value changes
         - validation: dictionary of validation rules or a callable that returns an optional error message
         """
-        super().__init__(label, placeholder=placeholder, value=value, on_change=on_change, validation=validation)
-        self._props['type'] = 'textarea'
+        super().__init__(
+            label,
+            placeholder=placeholder,
+            value=value,
+            on_change=on_change,
+            validation=validation,
+        )
+        self._props["type"] = "textarea"

@@ -1,4 +1,3 @@
-
 ACCENT = "#9C27B0"
 AMBER = "amber"
 AMBER100 = "#fef3c7"

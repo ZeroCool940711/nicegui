@@ -19,10 +19,10 @@ def login():
     login()
 
     """
-    user.login_form().on('success', lambda: ui.open('/'))
+    user.login_form().on("success", lambda: ui.open("/"))
 
 
-@user.page('/')
+@user.page("/")
 def home():
     """
     Renders the home page of the application.
@@ -34,20 +34,20 @@ def home():
         - Call this function to render the home page of the application.
 
     """
-    ui.code(json.dumps(user.about(), indent=2), language='json')
-    ui.button('Logout', on_click=user.logout)
+    ui.code(json.dumps(user.about(), indent=2), language="json")
+    ui.button("Logout", on_click=user.logout)
 
 
-@user.page('/async')
+@user.page("/async")
 async def async_page():
     """
     This is an async page function that demonstrates the usage of NiceGUI library.
-    
+
     When called, it waits for the 'Wait for it...' button to be clicked and then displays a label.
     This function should be used within a NiceGUI application to create an asynchronous page.
     """
-    await ui.button('Wait for it...').clicked()
-    ui.label('This is an async page')
+    await ui.button("Wait for it...").clicked()
+    ui.label("This is an async page")
 
 
-ui.run(storage_secret='THIS_NEEDS_TO_BE_CHANGED')
+ui.run(storage_secret="THIS_NEEDS_TO_BE_CHANGED")

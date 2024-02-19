@@ -27,9 +27,12 @@ class colorful_label(ui.label):
     """
 
     background = BindableProperty(
-        on_change=lambda sender, value: cast(Self, sender)._handle_background_change(value))
+        on_change=lambda sender, value: cast(Self, sender)._handle_background_change(
+            value
+        )
+    )
 
-    def __init__(self, text: str = '') -> None:
+    def __init__(self, text: str = "") -> None:
         """Initialize the colorful_label object.
 
         Args:
@@ -48,23 +51,41 @@ class colorful_label(ui.label):
         Args:
             bg_class (str): The new background class to be applied to the label.
         """
-        self._classes = [c for c in self._classes if not c.startswith('bg-')]
+        self._classes = [c for c in self._classes if not c.startswith("bg-")]
         self._classes.append(bg_class)
         self.update()
 
 
-temperatures = {'Berlin': 5, 'New York': 15, 'Tokio': 25}
-ui.button(icon='refresh', on_click=lambda: temperatures.update({city: random.randint(0, 30) for city in temperatures}))
+temperatures = {"Berlin": 5, "New York": 15, "Tokio": 25}
+ui.button(
+    icon="refresh",
+    on_click=lambda: temperatures.update(
+        {city: random.randint(0, 30) for city in temperatures}
+    ),
+)
 
 
 for city in temperatures:
-    label = colorful_label().classes('w-48 text-center') \
-        .bind_text_from(temperatures, city, backward=lambda t, city=city: f'{city} ({t}°C)')
+    label = (
+        colorful_label()
+        .classes("w-48 text-center")
+        .bind_text_from(
+            temperatures, city, backward=lambda t, city=city: f"{city} ({t}°C)"
+        )
+    )
     # Bind background color from temperature.
     # There is also a bind_to method which would propagate changes from the label to the temperatures dictionary
     # and a bind method which would propagate changes both ways.
-    bind_from(self_obj=label, self_name='background',
-              other_obj=temperatures, other_name=city,
-              backward=lambda t: 'bg-green' if t < 10 else 'bg-yellow' if t < 20 else 'bg-orange')
+    bind_from(
+        self_obj=label,
+        self_name="background",
+        other_obj=temperatures,
+        other_name=city,
+        backward=lambda t: "bg-green"
+        if t < 10
+        else "bg-yellow"
+        if t < 20
+        else "bg-orange",
+    )
 
 ui.run()

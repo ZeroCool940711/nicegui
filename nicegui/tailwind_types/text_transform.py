@@ -1,8 +1,8 @@
 from typing import Literal
 
 TextTransform = Literal[
-    'uppercase',
-    'lowercase',
-    'capitalize',
-    'normal-case',
+    "uppercase",
+    "lowercase",
+    "capitalize",
+    "normal-case",
 ]

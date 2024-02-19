@@ -33,7 +33,7 @@ async def _run(executor: Any, callback: Callable, *args: Any, **kwargs: Any) -> 
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(executor, partial(callback, *args, **kwargs))
     except RuntimeError as e:
-        if 'cannot schedule new futures after shutdown' not in str(e):
+        if "cannot schedule new futures after shutdown" not in str(e):
             raise
     except asyncio.exceptions.CancelledError:
         pass
@@ -104,6 +104,6 @@ def tear_down() -> None:
         return
     for p in process_pool._processes.values():  # pylint: disable=protected-access
         p.kill()
-    kwargs = {'cancel_futures': True} if sys.version_info >= (3, 9) else {}
+    kwargs = {"cancel_futures": True} if sys.version_info >= (3, 9) else {}
     process_pool.shutdown(wait=True, **kwargs)
     thread_pool.shutdown(wait=False, **kwargs)

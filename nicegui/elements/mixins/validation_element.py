@@ -45,16 +45,22 @@ class ValidationElement(ValueElement):
 
     """
 
-    def __init__(self, validation: Optional[Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]], **kwargs: Any) -> None:
+    def __init__(
+        self,
+        validation: Optional[
+            Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]
+        ],
+        **kwargs: Any,
+    ) -> None:
         """
         Initialize a ValidationElement object.
 
         Args:
-            validation (Optional[Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]]): 
+            validation (Optional[Union[Callable[..., Optional[str]], Dict[str, Callable[..., bool]]]]):
                 A validation function or a dictionary of validation functions.
                 If a validation function is provided, it should take the form of `Callable[..., Optional[str]]`,
                 where the arguments are the values to be validated and the return value is an optional error message.
-                If a dictionary of validation functions is provided, it should have string keys representing the 
+                If a dictionary of validation functions is provided, it should have string keys representing the
                 validation names and values as the corresponding validation functions.
             **kwargs (Any): Additional keyword arguments to be passed to the parent class constructor.
 
@@ -119,32 +125,32 @@ class ValidationElement(ValueElement):
         if self._error == error:
             return
         self._error = error
-        self._props['error'] = error is not None
-        self._props['error-message'] = error
+        self._props["error"] = error is not None
+        self._props["error-message"] = error
         self.update()
 
     def validate(self) -> bool:
-            """
-            Validate the current value and set the error message if necessary.
+        """
+        Validate the current value and set the error message if necessary.
 
-            This method validates the current value of the element based on the defined validation rules.
-            If the validation is successful, the error message is set to None.
-            If the validation fails, the error message is set to the corresponding error message defined in the validation rules.
+        This method validates the current value of the element based on the defined validation rules.
+        If the validation is successful, the error message is set to None.
+        If the validation fails, the error message is set to the corresponding error message defined in the validation rules.
 
-            Return:
-                - True if the value is valid, False otherwise
-            """
-            if callable(self.validation):
-                self.error = self.validation(self.value)
-                return self.error is None
+        Return:
+            - True if the value is valid, False otherwise
+        """
+        if callable(self.validation):
+            self.error = self.validation(self.value)
+            return self.error is None
 
-            for message, check in self.validation.items():
-                if not check(self.value):
-                    self.error = message
-                    return False
+        for message, check in self.validation.items():
+            if not check(self.value):
+                self.error = message
+                return False
 
-            self.error = None
-            return True
+        self.error = None
+        return True
 
     def _handle_value_change(self, value: Any) -> None:
         super()._handle_value_change(value)

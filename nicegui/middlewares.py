@@ -34,7 +34,9 @@ class RedirectWithPrefixMiddleware(BaseHTTPMiddleware):
     - BaseHTTPMiddleware: The base class for HTTP middleware in the application.
     """
 
-    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
         """
         Dispatch method called for each incoming request.
 
@@ -50,9 +52,11 @@ class RedirectWithPrefixMiddleware(BaseHTTPMiddleware):
 
         This method intercepts the response and modifies the Location header by adding the prefix before the original URL.
         """
-        prefix = request.headers.get('X-Forwarded-Prefix', '')
+        prefix = request.headers.get("X-Forwarded-Prefix", "")
         response = await call_next(request)
-        if 'Location' in response.headers and response.headers['Location'].startswith('/'):
-            new_location = prefix + response.headers['Location']
-            response.headers['Location'] = new_location
+        if "Location" in response.headers and response.headers["Location"].startswith(
+            "/"
+        ):
+            new_location = prefix + response.headers["Location"]
+            response.headers["Location"] = new_location
         return response

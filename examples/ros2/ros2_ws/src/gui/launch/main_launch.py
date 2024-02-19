@@ -14,17 +14,19 @@ def generate_launch_description():
     Returns:
         A LaunchDescription object containing the configuration for launching the GUI and simulator nodes.
     """
-    return LaunchDescription([
-        Node(
-            package='gui',
-            executable='nicegui_node',
-            name='example_gui',
-            output='screen',
-        ),
-        Node(
-            package='simulator',
-            executable='simulator_node',
-            name='example_simulator',
-            output='screen',
-        ),
-    ])
+    return LaunchDescription(
+        [
+            Node(
+                package="gui",
+                executable="nicegui_node",
+                name="example_gui",
+                output="screen",
+            ),
+            Node(
+                package="simulator",
+                executable="simulator_node",
+                name="example_simulator",
+                output="screen",
+            ),
+        ]
+    )

@@ -4,7 +4,7 @@ from nicegui.element import Element
 from nicegui.events import UiEventArguments, handle_event
 
 
-class IntersectionObserver(Element, component='intersection_observer.js'):
+class IntersectionObserver(Element, component="intersection_observer.js"):
     """
     IntersectionObserver is a class that allows you to observe when an element enters or exits the viewport.
 
@@ -26,7 +26,7 @@ class IntersectionObserver(Element, component='intersection_observer.js'):
         super().__init__()
         self.on_intersection = on_intersection
         self.active = True
-        self.on('intersection', self.handle_intersection, [])
+        self.on("intersection", self.handle_intersection, [])
 
     def handle_intersection(self, _) -> None:
         """
@@ -38,7 +38,9 @@ class IntersectionObserver(Element, component='intersection_observer.js'):
         Returns:
             None
         """
-        self.run_method('stop')
+        self.run_method("stop")
         if self.active:
-            handle_event(self.on_intersection, UiEventArguments(sender=self, client=self.client))
+            handle_event(
+                self.on_intersection, UiEventArguments(sender=self, client=self.client)
+            )
             self.active = False
