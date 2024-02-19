@@ -50,7 +50,7 @@ def get_range_response(file: Path, request: Request, chunk_size: int) -> Respons
     start = 0
     end = file_size - 1
     status_code = 200
-    e_tag = md5((str(last_modified_time) + str(file_size)).encode()).hexdigest()
+    e_tag = hashlib.md5((str(last_modified_time) + str(file_size)).encode()).hexdigest()
     if_match_header = request.headers.get("If-None-Match")
     if if_match_header and if_match_header == e_tag:
         return Response(status_code=304)  # Not Modified
