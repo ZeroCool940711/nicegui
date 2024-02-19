@@ -1,0 +1,39 @@
+name: Scheduled Merge Remote Action
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "0 0 * * *"
+    # scheduled for 00:00 every day
+
+jobs:
+  merge-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: main # set the branch to merge to
+          fetch-depth: 0
+      - name: Merge Upstream
+        uses: exions/merge-upstream@v1
+        with:
+          upstream: zauberzeug/nicegui # set the upstream repo
+          upstream-branch: main # set the upstream branch to merge from
+          branch: main # set the branch to merge to
+
+#   # set up another job to merge another branch
+#   merge-upstream-another-branch:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2
+#         with:
+#           ref: another-branch       # set the branch to merge to
+#           fetch-depth: 0
+#       - name: Merge Upstream
+#         uses: exions/merge-upstream@v1
+#         with:
+#           upstream: zauberzeug/nicegui              # set the upstream repo
+#           upstream-branch: another-branch   # set the upstream branch to merge from
+#           branch: another-branch            # set the branch to merge to
