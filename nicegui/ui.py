@@ -20,6 +20,7 @@ __all__ = [
     'colors',
     'column',
     'context_menu',
+    'copy_to_clipboard',
     'dark_mode',
     'date',
     'dialog',
@@ -202,6 +203,7 @@ from .elements.tree import Tree as tree
 from .elements.upload import Upload as upload
 from .elements.video import Video as video
 from .functions.back import back
+from .functions.clipboard import copy_to_clipboard
 from .functions.download import download
 from .functions.forward import forward
 from .functions.html import add_body_html, add_head_html
