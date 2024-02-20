@@ -7,7 +7,13 @@
   "settings": {
     "files.associations": {
       "*.html": "jinja-html"
-    }
+    },
+    "vsintellicode.features.python.deepLearning": "default",
+    "autoHide.mode": "auto",
+    "github-actions.workflows.pinned.workflows": [
+      ".github/workflows/merge-upstream.yml",
+      ".github/workflows/test.yml"
+    ]
   },
   "extensions": {
     "recommendations": [
