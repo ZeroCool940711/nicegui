@@ -441,6 +441,8 @@ class Element(Visibility):
 
         :param text: text of the tooltip
         """
+        from .elements.tooltip import Tooltip
+
         with self:
             Tooltip(text)
         return self
