@@ -110,6 +110,7 @@ class CircularProgress(ValueElement, TextColorElement):
         color: Optional[str] = "primary",
         center_color: Optional[str] = "transparent",
         track_color: Optional[str] = "grey-4",
+        text_color: Optional[str] = "white",
         indeterminate: bool = False,
         reverse: bool = False,
         instant_feedback: bool = False,
@@ -173,4 +174,6 @@ class CircularProgress(ValueElement, TextColorElement):
 
         if show_value:
             with self:
-                label().classes("absolute-center text-xs").bind_text_from(self, "value")
+                label().classes(
+                    f"absolute-center text-xs text-{text_color}"
+                ).bind_text_from(self, "value")
