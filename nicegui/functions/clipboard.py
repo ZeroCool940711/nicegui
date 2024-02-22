@@ -1,20 +1,42 @@
 from .javascript import run_javascript
 
 
-def copy_to_clipboard(text: str):
+def read():
     """
-    Copies the specified text to the clipboard.
+    Read the data from the clipboard.
+    """
 
-    Parameters:
-    text (str): The text to be copied to the clipboard.
+    return run_javascript('navigator.clipboard.read()')
+
+
+def readText():
+    """
+    Reads the text from the clipboard.
 
     Returns:
-    None
+        str: The text from the clipboard.
+    """
+    return run_javascript('navigator.clipboard.readText()')
 
-    Raises:
-    None
+
+def write(data):
+    """
+    Writes the specified data to the clipboard.
+
+    Parameters:
+        data: The data to be written to the clipboard.
+    """
+    run_javascript(f'navigator.clipboard.write(`{data}`)')
+
+
+def writeText(text):
+    """
+    Writes the specified text to the clipboard.
+
+    Parameters:
+        text (str): The text to be written to the clipboard.
 
     Example:
-    >>> ui.copy_to_clipboard("Hello, world!")
+    >>> ui.clipboard.writeText("Hello, world!")
     """
-    run_javascript(f"navigator.clipboard.writeText({text})")
+    run_javascript(f'navigator.clipboard.writeText(`{text}`)')
