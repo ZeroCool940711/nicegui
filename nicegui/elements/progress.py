@@ -6,7 +6,7 @@ from .mixins.value_element import ValueElement
 
 
 class LinearProgress(ValueElement, TextColorElement):
-    VALUE_PROP = "value"
+    VALUE_PROP = 'value'
 
     def __init__(
         self,
