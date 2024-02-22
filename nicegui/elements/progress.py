@@ -20,6 +20,7 @@ class LinearProgress(ValueElement, TextColorElement):
         reverse: bool = False,
         buffer: Optional[float] = None,
         track_color=None,
+        text_color: Optional[str] = "white",
         dark: bool = False,
         rounded: bool = False,
         animation_speed: int = 2100,
@@ -91,7 +92,7 @@ class LinearProgress(ValueElement, TextColorElement):
                     backward=lambda v=value: int(v * max).__round__(0)
                     if max > 1.0
                     else float(v * max),
-                )
+                ).tailwind.text_color(text_color)
 
 
 class CircularProgress(ValueElement, TextColorElement):
@@ -121,7 +122,7 @@ class CircularProgress(ValueElement, TextColorElement):
         """Circular Progress
 
         A circular progress bar wrapping Quasar's
-        [QCircularProgress ](https://quasar.dev/vue-components/circular-progress).
+        `QCircularProgress <https://quasar.dev/vue-components/circular-progress>`_.
 
         :param value: the initial value of the field
         :param min: the minimum value (default: 0.0)
@@ -164,6 +165,7 @@ class CircularProgress(ValueElement, TextColorElement):
         ] = True  # NOTE always activate the default slot because this is expected by ui.element
 
         self._props["track-color"] = track_color
+        self._props["text-color"] = text_color
         self._props["center-color"] = center_color
         self._props["indeterminate"] = indeterminate
         self._props["reverse"] = reverse
@@ -174,6 +176,6 @@ class CircularProgress(ValueElement, TextColorElement):
 
         if show_value:
             with self:
-                label().classes(
-                    f"absolute-center text-xs text-{text_color}"
-                ).bind_text_from(self, "value")
+                label().classes("absolute-center text-xs").bind_text_from(
+                    self, "value"
+                ).tailwind.text_color(text_color)
