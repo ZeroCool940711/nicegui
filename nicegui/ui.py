@@ -13,7 +13,6 @@ __all__ = [
     'chart',
     'chat_message',
     'checkbox',
-    'clipboard',
     'code',
     'color_input',
     'color_picker',
@@ -51,6 +50,7 @@ __all__ = [
     'menu',
     'menu_item',
     'mermaid',
+    'navigate',
     'notification',
     'number',
     'pagination',
@@ -111,7 +111,7 @@ __all__ = [
     'run',
     'run_with',
 ]
-from . import alignment
+
 from .element import Element as element
 from .elements.aggrid import AgGrid as aggrid
 from .elements.audio import Audio as audio
@@ -201,10 +201,10 @@ from .elements.tooltip import Tooltip as tooltip
 from .elements.tree import Tree as tree
 from .elements.upload import Upload as upload
 from .elements.video import Video as video
-from .functions import clipboard, navigate
 from .functions.download import download
 from .functions.html import add_body_html, add_head_html
 from .functions.javascript import run_javascript
+from .functions.navigate import Navigate as navigate
 from .functions.notify import notify
 from .functions.on import on
 from .functions.open import open  # pylint: disable=redefined-builtin
@@ -218,6 +218,5 @@ from .page_layout import Header as header
 from .page_layout import LeftDrawer as left_drawer
 from .page_layout import PageSticky as page_sticky
 from .page_layout import RightDrawer as right_drawer
-from .style import Style
 from .ui_run import run
 from .ui_run_with import run_with

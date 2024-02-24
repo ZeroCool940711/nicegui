@@ -10,94 +10,35 @@ messages: List[Tuple[str, str, str, str]] = []
 
 @ui.refreshable
 def chat_messages(own_id: str) -> None:
-    """
-    Display chat messages in the UI.
-
-    This function iterates over the `messages` list and displays each message in the UI using the `ui.chat_message`
-    function. It also scrolls the chat window to the bottom using JavaScript.
-
-    Parameters:
-        own_id (str): The ID of the user who is viewing the chat messages.
-
-    Returns:
-        None
-    """
     for user_id, avatar, text, stamp in messages:
         ui.chat_message(text=text, stamp=stamp, avatar=avatar, sent=own_id == user_id)
-    ui.run_javascript("window.scrollTo(0, document.body.scrollHeight)")
+    ui.run_javascript('window.scrollTo(0, document.body.scrollHeight)')
 
 
-@ui.page("/")
+@ui.page('/')
 async def main(client: Client):
-    """
-    Entry point for the chat application.
-
-    Args:
-        client (Client): The client object used for communication with the server.
-
-    Returns:
-        None
-
-    Description:
-        This function sets up the chat application UI and handles user interactions.
-        It creates a unique user ID and generates an avatar image URL using the user ID.
-        The function adds custom CSS styles to the UI and creates the UI components for the chat app.
-        It also connects to the server using the provided client object.
-
-        The user can enter messages in the input field and press Enter to send the message.
-        The sent messages are stored in a list along with the user ID, avatar, message text, and timestamp.
-        The chat messages are displayed in a UI component called `chat_messages`.
-
-        Note:
-            - The `chat_messages` function is assumed to be defined elsewhere.
-            - The `Client` class is assumed to be imported and instantiated before calling this function.
-
-        Example:
-            client = Client()
-            await main(client)
-    """
-
     def send() -> None:
-        """
-        Sends a message in the chat app.
-
-        This function adds a new message to the chat, including the user ID, avatar, message text, and timestamp.
-        After sending the message, it clears the input field and refreshes the chat messages.
-
-        Returns:
-            None
-        """
-        stamp = datetime.utcnow().strftime("%X")
+        stamp = datetime.utcnow().strftime('%X')
         messages.append((user_id, avatar, text.value, stamp))
-        text.value = ""
+        text.value = ''
         chat_messages.refresh()
 
     user_id = str(uuid4())
-    avatar = f"https://robohash.org/{user_id}?bgset=bg2"
+    avatar = f'https://robohash.org/{user_id}?bgset=bg2'
 
-    anchor_style = r"a:link, a:visited {color: inherit !important; text-decoration: none; font-weight: 500}"
-    ui.add_head_html(f"<style>{anchor_style}</style>")
-    with ui.footer().classes("bg-white"), ui.column().classes(
-        "w-full max-w-3xl mx-auto my-6"
-    ):
-        with ui.row().classes("w-full no-wrap items-center"):
-            with ui.avatar().on("click", lambda: ui.open(main)):
+    anchor_style = r'a:link, a:visited {color: inherit !important; text-decoration: none; font-weight: 500}'
+    ui.add_head_html(f'<style>{anchor_style}</style>')
+    with ui.footer().classes('bg-white'), ui.column().classes('w-full max-w-3xl mx-auto my-6'):
+        with ui.row().classes('w-full no-wrap items-center'):
+            with ui.avatar().on('click', lambda: ui.navigate.to(main)):
                 ui.image(avatar)
-            text = (
-                ui.input(placeholder="message")
-                .on("keydown.enter", send)
-                .props("rounded outlined input-class=mx-3")
-                .classes("flex-grow")
-            )
-        ui.markdown("simple chat app built with [NiceGUI](https://nicegui.io)").classes(
-            "text-xs self-end mr-8 m-[-1em] text-primary"
-        )
+            text = ui.input(placeholder='message').on('keydown.enter', send) \
+                .props('rounded outlined input-class=mx-3').classes('flex-grow')
+        ui.markdown('simple chat app built with [NiceGUI](https://nicegui.io)') \
+            .classes('text-xs self-end mr-8 m-[-1em] text-primary')
 
-    await (
-        client.connected()
-    )  # chat_messages(...) uses run_javascript which is only possible after connecting
-    with ui.column().classes("w-full max-w-2xl mx-auto items-stretch"):
+    await client.connected()  # chat_messages(...) uses run_javascript which is only possible after connecting
+    with ui.column().classes('w-full max-w-2xl mx-auto items-stretch'):
         chat_messages(user_id)
-
 
 ui.run()
