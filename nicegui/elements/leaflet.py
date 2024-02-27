@@ -89,6 +89,13 @@ class Leaflet(Element, component="leaflet.js"):
         await self.client.connected()
         await event.wait()
 
+    async def initialized(self) -> None:
+        """Wait until the map is initialized."""
+        event = asyncio.Event()
+        self.on('init', event.set, [])
+        await self.client.connected()
+        await event.wait()
+
     def _handle_moveend(self, e: GenericEventArguments) -> None:
         self.center = e.args["center"]
 

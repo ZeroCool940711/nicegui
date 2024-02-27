@@ -13,7 +13,8 @@ class EventListener:
     element_id: int
     type: str
     args: Sequence[Optional[Sequence[str]]]
-    handler: Callable
+    handler: Optional[Callable]
+    js_handler: Optional[str]
     throttle: float
     leading_events: bool
     trailing_events: bool
@@ -24,23 +25,20 @@ class EventListener:
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a dictionary representation of the event listener."""
-        words = self.type.split(".")
+        words = self.type.split('.')
         type_ = words.pop(0)
-        specials = [w for w in words if w in {"capture", "once", "passive"}]
-        modifiers = [
-            w
-            for w in words
-            if w in {"stop", "prevent", "self", "ctrl", "shift", "alt", "meta"}
-        ]
+        specials = [w for w in words if w in {'capture', 'once', 'passive'}]
+        modifiers = [w for w in words if w in {'stop', 'prevent', 'self', 'ctrl', 'shift', 'alt', 'meta'}]
         keys = [w for w in words if w not in specials + modifiers]
         return {
-            "listener_id": self.id,
-            "type": type_,
-            "specials": specials,
-            "modifiers": modifiers,
-            "keys": keys,
-            "args": self.args,
-            "throttle": self.throttle,
-            "leading_events": self.leading_events,
-            "trailing_events": self.trailing_events,
+            'listener_id': self.id,
+            'type': type_,
+            'specials': specials,
+            'modifiers': modifiers,
+            'keys': keys,
+            'args': self.args,
+            'throttle': self.throttle,
+            'leading_events': self.leading_events,
+            'trailing_events': self.trailing_events,
+            'js_handler': self.js_handler,
         }

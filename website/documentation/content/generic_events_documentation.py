@@ -2,12 +2,10 @@ from nicegui import context, ui
 
 from . import doc
 
-doc.title("Generic Events")
+doc.title('Generic Events')
 
 
-@doc.demo(
-    "Generic Events",
-    """
+@doc.demo('Generic Events', '''
     Most UI elements come with predefined events.
     For example, a `ui.button` like "A" in the demo has an `on_click` parameter that expects a coroutine or function.
     But you can also use the `on` method to register a generic event handler like for "B".
@@ -25,25 +23,20 @@ doc.title("Generic Events")
 
     - https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement#events for HTML elements
     - https://quasar.dev/vue-components for Quasar-based elements (see the "Events" tab on the individual component page)
-""",
-)
+''')
 def generic_events_demo() -> None:
     with ui.row():
-        ui.button("A", on_click=lambda: ui.notify("You clicked the button A."))
-        ui.button("B").on("click", lambda: ui.notify("You clicked the button B."))
+        ui.button('A', on_click=lambda: ui.notify('You clicked the button A.'))
+        ui.button('B').on('click', lambda: ui.notify('You clicked the button B.'))
     with ui.row():
-        ui.button("C").on("mousemove", lambda: ui.notify("You moved on button C."))
-        ui.button("D").on(
-            "mousemove", lambda: ui.notify("You moved on button D."), throttle=0.5
-        )
+        ui.button('C').on('mousemove', lambda: ui.notify('You moved on button C.'))
+        ui.button('D').on('mousemove', lambda: ui.notify('You moved on button D.'), throttle=0.5)
     with ui.row():
-        ui.button("E").on("mousedown", lambda e: ui.notify(e))
-        ui.button("F").on("mousedown", lambda e: ui.notify(e), ["ctrlKey", "shiftKey"])
+        ui.button('E').on('mousedown', lambda e: ui.notify(e))
+        ui.button('F').on('mousedown', lambda e: ui.notify(e), ['ctrlKey', 'shiftKey'])
 
 
-@doc.demo(
-    "Specifying event attributes",
-    """
+@doc.demo('Specifying event attributes', '''
     **A list of strings** names the attributes of the JavaScript event object:
     ```py
     ui.button().on('click', handle_click, ['clientX', 'clientY'])
@@ -80,52 +73,39 @@ def generic_events_demo() -> None:
     Note that by default all JSON-serializable attributes of all arguments are sent.
     This is to simplify registering for new events and discovering their attributes.
     If bandwidth is an issue, the arguments should be limited to what is actually needed on the server.
-""",
-)
+''')
 def event_attributes() -> None:
     columns = [
-        {"name": "name", "label": "Name", "field": "name"},
-        {"name": "age", "label": "Age", "field": "age"},
+        {'name': 'name', 'label': 'Name', 'field': 'name'},
+        {'name': 'age', 'label': 'Age', 'field': 'age'},
     ]
     rows = [
-        {"name": "Alice", "age": 42},
-        {"name": "Bob", "age": 23},
+        {'name': 'Alice', 'age': 42},
+        {'name': 'Bob', 'age': 23},
     ]
-    ui.table(columns, rows, "name").on("rowClick", ui.notify, [[], ["name"], None])
+    ui.table(columns, rows, 'name').on('rowClick', ui.notify, [[], ['name'], None])
 
 
-@doc.demo(
-    "Modifiers",
-    """
+@doc.demo('Modifiers', '''
     You can also include [key modifiers](https://vuejs.org/guide/essentials/event-handling.html#key-modifiers>) (shown in input "A"),
     modifier combinations (shown in input "B"),
     and [event modifiers](https://vuejs.org/guide/essentials/event-handling.html#mouse-button-modifiers>) (shown in input "C").
-""",
-)
+''')
 def modifiers() -> None:
     with ui.row():
-        ui.input("A").classes("w-12").on(
-            "keydown.space", lambda: ui.notify("You pressed space.")
-        )
-        ui.input("B").classes("w-12").on(
-            "keydown.y.shift", lambda: ui.notify("You pressed Shift+Y")
-        )
-        ui.input("C").classes("w-12").on(
-            "keydown.once", lambda: ui.notify("You started typing.")
-        )
+        ui.input('A').classes('w-12').on('keydown.space', lambda: ui.notify('You pressed space.'))
+        ui.input('B').classes('w-12').on('keydown.y.shift', lambda: ui.notify('You pressed Shift+Y'))
+        ui.input('C').classes('w-12').on('keydown.once', lambda: ui.notify('You started typing.'))
 
 
-@doc.demo(
-    "Custom events",
-    """
+@doc.demo('Custom events', '''
     It is fairly easy to emit custom events from JavaScript with `emitEvent(...)` which can be listened to with `ui.on(...)`.
     This can be useful if you want to call Python code when something happens in JavaScript.
     In this example we are listening to the `visibilitychange` event of the browser tab.
-""",
-)
+''')
 async def custom_events() -> None:
-    tabwatch = ui.checkbox("Watch browser tab re-entering")
-    ui.on("tabvisible", lambda: ui.notify("Welcome back!") if tabwatch.value else None)
+    tabwatch = ui.checkbox('Watch browser tab re-entering')
+    ui.on('tabvisible', lambda: ui.notify('Welcome back!') if tabwatch.value else None)
     # ui.add_head_html('''
     #     <script>
     #     document.addEventListener('visibilitychange', () => {
@@ -137,12 +117,22 @@ async def custom_events() -> None:
     # ''')
     # END OF DEMO
     await context.get_client().connected()
-    ui.run_javascript(
-        """
+    ui.run_javascript('''
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
                 emitEvent('tabvisible');
             }
         });
-    """
-    )
+    ''')
+
+
+@doc.demo('Pure JavaScript events', '''
+    You can also use the `on` method to register a pure JavaScript event handler.
+    This can be useful if you want to call JavaScript code without sending any data to the server.
+    In this example we are using the `navigator.clipboard` API to copy a string to the clipboard.
+''')
+def pure_javascript() -> None:
+    ui.button('Copy to clipboard') \
+        .on('click', js_handler='''() => {
+            navigator.clipboard.writeText("Hello, NiceGUI!");
+        }''')
