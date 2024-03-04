@@ -2294,13 +2294,13 @@ files = [
 
 [[package]]
 name = "pywebview"
-version = "4.4.1"
+version = "5.0.3"
 description = "Build GUI for your Python program with JavaScript, HTML, and CSS"
 optional = true
 python-versions = ">=3.7"
 files = [
-    {file = "pywebview-4.4.1-py3-none-any.whl", hash = "sha256:575b1362953349104b6ec08eed115c5a51d0d8b8e029b35335458cfa759ced1b"},
-    {file = "pywebview-4.4.1.tar.gz", hash = "sha256:ea4c517e9265fadfd77937facb67787c07425d303b00b9d5c3a401bbb4576941"},
+    {file = "pywebview-5.0.3-py3-none-any.whl", hash = "sha256:bae3d529382b512b8b3aa228dc8e13a869ebd36e93ea119084ca4e5788babc3e"},
+    {file = "pywebview-5.0.3.tar.gz", hash = "sha256:b7fe887dc9cffd5cb7f5ed6bb56220007ad74d1e7f8b9dfd052897bbf346aec2"},
 ]
 
 [package.dependencies]
@@ -2315,6 +2315,7 @@ QtPy = {version = "*", markers = "sys_platform == \"openbsd6\""}
 typing-extensions = "*"
 
 [package.extras]
+android = ["jnius", "kivy"]
 cef = ["cefpython3"]
 gtk = ["PyGObject", "PyGObject-stubs"]
 pyside2 = ["PySide2", "QtPy"]
@@ -3157,4 +3158,4 @@ plotly = ["plotly"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "01709bf8f028ec8f166fc885862031c9b771dfd1244cdb316d0f5c7a0bfbcacd"
+content-hash = "b9f731bbbbd86dda92c9f4335bb7729842a98df1cbd85b68d0449e678bfaff47"
