@@ -1996,6 +1996,26 @@ files = [
 pyobjc-core = ">=10.1"
 
 [[package]]
+name = "pyobjc-framework-quartz"
+version = "10.1"
+description = "Wrappers for the Quartz frameworks on macOS"
+optional = true
+python-versions = ">=3.8"
+files = [
+    {file = "pyobjc-framework-Quartz-10.1.tar.gz", hash = "sha256:b7439c0a3be9590d261cd2d340ba8dd24a75877b0be3ebce56e022a19cc05738"},
+    {file = "pyobjc_framework_Quartz-10.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:69db14ac9814839471e3cf5a8d81fb5edd1b762739ad806d3cf244836dac0154"},
+    {file = "pyobjc_framework_Quartz-10.1-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:2ddcd18e96511e618ce43e288a043e25524c131f5e6d58775db7aaf15553d849"},
+    {file = "pyobjc_framework_Quartz-10.1-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:c4257a2fb5580e5ebe927a66cf36a11749685a4681a30f90e954a3f08894cb62"},
+    {file = "pyobjc_framework_Quartz-10.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:28315ca6e04a08ae9e4eaf35b364ee77e081605d5865021018217626097c5e80"},
+    {file = "pyobjc_framework_Quartz-10.1-cp38-cp38-macosx_11_0_universal2.whl", hash = "sha256:9cb859a2fd7e15f2de85c16b028148dea06002d1a4142922b3441d3802fab372"},
+    {file = "pyobjc_framework_Quartz-10.1-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:993c71009e6374e57205e6aeaa577b7af2df245a5d1d2feff0f88ca0fa7b8626"},
+]
+
+[package.dependencies]
+pyobjc-core = ">=10.1"
+pyobjc-framework-Cocoa = ">=10.1"
+
+[[package]]
 name = "pyobjc-framework-security"
 version = "10.1"
 description = "Wrappers for the framework Security on macOS"
@@ -2315,13 +2335,13 @@ files = [
 
 [[package]]
 name = "pywebview"
-version = "5.1"
+version = "5.2"
 description = "Build GUI for your Python program with JavaScript, HTML, and CSS"
 optional = true
 python-versions = ">=3.7"
 files = [
-    {file = "pywebview-5.1-py3-none-any.whl", hash = "sha256:e352f587f82c173b28981fa0c893fab6124eb40d18c312e2bebf5346ab9f9f2c"},
-    {file = "pywebview-5.1.tar.gz", hash = "sha256:87eb60c299de5f20269aa18588ca6dd0d79580df5adc6edf8ac1e184fbe4885c"},
+    {file = "pywebview-5.2-py3-none-any.whl", hash = "sha256:07acceb74bfeed2b5bf19b9535f23ed68330ec6488ae63aea4d35290941cad7f"},
+    {file = "pywebview-5.2.tar.gz", hash = "sha256:634c6e4547ef3f4de2a35cdaed59464b60fb61247f3f6017d6de4ddc1a2dadc2"},
 ]
 
 [package.dependencies]
@@ -2329,6 +2349,7 @@ bottle = "*"
 proxy-tools = "*"
 pyobjc-core = {version = "*", markers = "sys_platform == \"darwin\""}
 pyobjc-framework-Cocoa = {version = "*", markers = "sys_platform == \"darwin\""}
+pyobjc-framework-Quartz = {version = "*", markers = "sys_platform == \"darwin\""}
 pyobjc-framework-security = {version = "*", markers = "sys_platform == \"darwin\""}
 pyobjc-framework-WebKit = {version = "*", markers = "sys_platform == \"darwin\""}
 pythonnet = {version = "*", markers = "sys_platform == \"win32\""}
