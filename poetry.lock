@@ -1947,13 +1947,13 @@ typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
 name = "pyecharts"
-version = "2.0.6"
+version = "2.0.7"
 description = "Python options, make charting easier"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pyecharts-2.0.6-py3-none-any.whl", hash = "sha256:1413f66d63b94ec9818095180c679dd83fe043b69fc97235afc6a0797a93a6fb"},
-    {file = "pyecharts-2.0.6.tar.gz", hash = "sha256:4d7f8dcbee1525a6eeecab589efcdbe939feee4c46930d90b2734bff04077ecc"},
+    {file = "pyecharts-2.0.7-py3-none-any.whl", hash = "sha256:fc5594925deaaa498a38665e0c406b0d824e1bb59fe8386a6ba83a39e0322866"},
+    {file = "pyecharts-2.0.7.tar.gz", hash = "sha256:e98bc7983345c38c925929e1586dfef2c0788999ebc4660165822c1aed05eef6"},
 ]
 
 [package.dependencies]
