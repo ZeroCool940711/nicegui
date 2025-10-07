@@ -2560,15 +2560,15 @@ files = [
 
 [[package]]
 name = "pywebview"
-version = "5.4"
+version = "6.0"
 description = "Build GUI for your Python program with JavaScript, HTML, and CSS"
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
 markers = "extra == \"native\""
 files = [
-    {file = "pywebview-5.4-py3-none-any.whl", hash = "sha256:0559c47db543556498dd38604a2a0479896c320f86c9b23499b8e580b58b699d"},
-    {file = "pywebview-5.4.tar.gz", hash = "sha256:b5e2c6c7502aaf72a9ae6034daf83785f5fad874fac7fa82bf4fcf854f1f083a"},
+    {file = "pywebview-6.0-py3-none-any.whl", hash = "sha256:6164b2a3debc416eeba15f3a48b1febd0b9483a6674c933c7c9b59fb4b11f474"},
+    {file = "pywebview-6.0.tar.gz", hash = "sha256:05c339ace3ee1c11391aa9ae8c4645c67239e769c91228f63196d8d120a9feb8"},
 ]
 
 [package.dependencies]
@@ -2586,13 +2586,13 @@ typing_extensions = "*"
 [package.extras]
 android = ["jnius", "kivy"]
 cef = ["cefpython3"]
-gtk = ["PyGObject", "PyGObject-stubs"]
+gtk = ["PyGObject (==3.50.0)", "PyGObject-stubs"]
 pyside2 = ["PySide2", "QtPy"]
 pyside6 = ["PySide6", "QtPy"]
 qt = ["PyQt6", "PyQt6-WebEngine", "QtPy"]
 qt5 = ["PyQt5", "QtPy", "pyqtwebengine"]
 qt6 = ["PyQt6", "PyQt6-WebEngine", "QtPy"]
-ssl = ["crpytography"]
+ssl = ["cryptography"]
 
 [[package]]
 name = "pyyaml"
@@ -3492,4 +3492,4 @@ plotly = ["plotly"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.8"
-content-hash = "6ae5cb924bca93a050e37f66487a5957443586666a794124af37d28f656bf26e"
+content-hash = "3fe67e2a4d8585850e36dc1eb9ae21c9e426818edc3e209d8c20cdbed866a142"
