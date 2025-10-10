@@ -2097,14 +2097,14 @@ typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
 name = "pyecharts"
-version = "2.0.8"
+version = "2.0.9"
 description = "Python options, make charting easier"
 optional = false
 python-versions = "*"
 groups = ["dev"]
 files = [
-    {file = "pyecharts-2.0.8-py3-none-any.whl", hash = "sha256:8b711ba139f39f89bc1b2a869d7adda89dc74c910d158a1f9063109fe66bc985"},
-    {file = "pyecharts-2.0.8.tar.gz", hash = "sha256:908dbd939862dd3c76bb53697bdb41d3cdd0b5ba48ca69a76a6085d0aa27dbdf"},
+    {file = "pyecharts-2.0.9-py3-none-any.whl", hash = "sha256:c2adada56931c29669bcf3a972137231625136337f874dbd617ccd752f1477b8"},
+    {file = "pyecharts-2.0.9.tar.gz", hash = "sha256:7b4e8620809c22e32a19d613542f47ea6efa02f1189e00f91134cb5225e8f3ec"},
 ]
 
 [package.dependencies]
