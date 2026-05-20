@@ -1044,7 +1044,7 @@ description = "Read resources from Python packages"
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"matplotlib\" and python_version < \"3.10\""
+markers = "python_version == \"3.8\" and (extra == \"matplotlib\" or extra == \"native\") or python_version == \"3.9\" and extra == \"matplotlib\""
 files = [
     {file = "importlib_resources-6.1.2-py3-none-any.whl", hash = "sha256:9a0a862501dc38b68adebc82970140c9e4209fc99601782925178f8386339938"},
     {file = "importlib_resources-6.1.2.tar.gz", hash = "sha256:308abf8474e2dba5f867d279237cd4076482c3de7104a40b41426370e891549b"},
@@ -2594,34 +2594,35 @@ files = [
 
 [[package]]
 name = "pywebview"
-version = "6.1"
+version = "6.2.1"
 description = "Build GUI for your Python program with JavaScript, HTML, and CSS"
 optional = true
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 groups = ["main"]
 markers = "extra == \"native\""
 files = [
-    {file = "pywebview-6.1-py3-none-any.whl", hash = "sha256:2b552a340557e76a740b045a25937f72dae751e0985d5f5d9556f697ba622ec5"},
-    {file = "pywebview-6.1.tar.gz", hash = "sha256:f0b95047860caf3d921581f9e16b4edb1a125b23e2ce691c4da2968f8b160ff2"},
+    {file = "pywebview-6.2.1-py3-none-any.whl", hash = "sha256:9d07275f53894ab4d5e2e0e996227193e7187dec276d9b624dccbce029216b46"},
+    {file = "pywebview-6.2.1.tar.gz", hash = "sha256:71b7136752e40824655304d938efb62014218d1a90bd8e87e1cbdb1ce9c466af"},
 ]
 
 [package.dependencies]
 bottle = "*"
+importlib_resources = {version = "*", markers = "python_version < \"3.9\""}
 proxy_tools = "*"
-pyobjc-core = {version = "*", markers = "sys_platform == \"darwin\""}
-pyobjc-framework-Cocoa = {version = "*", markers = "sys_platform == \"darwin\""}
-pyobjc-framework-Quartz = {version = "*", markers = "sys_platform == \"darwin\""}
-pyobjc-framework-security = {version = "*", markers = "sys_platform == \"darwin\""}
-pyobjc-framework-UniformTypeIdentifiers = {version = "*", markers = "sys_platform == \"darwin\""}
-pyobjc-framework-WebKit = {version = "*", markers = "sys_platform == \"darwin\""}
+pyobjc-core = {version = ">=9.0", markers = "sys_platform == \"darwin\""}
+pyobjc-framework-Cocoa = {version = ">=9.0", markers = "sys_platform == \"darwin\""}
+pyobjc-framework-Quartz = {version = ">=9.0", markers = "sys_platform == \"darwin\""}
+pyobjc-framework-security = {version = ">=9.0", markers = "sys_platform == \"darwin\""}
+pyobjc-framework-UniformTypeIdentifiers = {version = ">=9.0", markers = "sys_platform == \"darwin\""}
+pyobjc-framework-WebKit = {version = ">=9.0", markers = "sys_platform == \"darwin\""}
 pythonnet = {version = "*", markers = "sys_platform == \"win32\""}
 QtPy = {version = "*", markers = "sys_platform == \"openbsd6\""}
 typing_extensions = "*"
 
 [package.extras]
-android = ["jnius", "kivy"]
+android = ["jnius"]
 cef = ["cefpython3"]
-dev = ["pre-commit", "ruff"]
+dev = ["build", "pre-commit", "pytest", "ruff", "twine"]
 gtk = ["PyGObject (==3.50.0)", "PyGObject-stubs"]
 pyside2 = ["PySide2", "QtPy"]
 pyside6 = ["PySide6", "QtPy"]
@@ -3509,7 +3510,7 @@ description = "Backport of pathlib-compatible object wrapper for zip files"
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"matplotlib\" and python_version < \"3.10\""
+markers = "python_version == \"3.8\" and (extra == \"matplotlib\" or extra == \"native\") or python_version == \"3.9\" and extra == \"matplotlib\""
 files = [
     {file = "zipp-3.19.1-py3-none-any.whl", hash = "sha256:2828e64edb5386ea6a52e7ba7cdb17bb30a73a858f5eb6eb93d8d36f5ea26091"},
     {file = "zipp-3.19.1.tar.gz", hash = "sha256:35427f6d5594f4acf82d25541438348c26736fa9b3afa2754bcd63cdb99d8e8f"},
