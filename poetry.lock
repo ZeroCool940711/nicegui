@@ -3272,14 +3272,14 @@ files = [
 
 [[package]]
 name = "webdriver-manager"
-version = "4.1.1"
+version = "4.1.2"
 description = "Library provides the way to automatically manage drivers for different browsers"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
 files = [
-    {file = "webdriver_manager-4.1.1-py3-none-any.whl", hash = "sha256:4cedd217862e3fe324fadf7423fc9757c40af5979dda36493712c6c751224df1"},
-    {file = "webdriver_manager-4.1.1.tar.gz", hash = "sha256:3832f4ab2186c86496b5c0a6d362357a294ca8c2be9972b49d089b809e262687"},
+    {file = "webdriver_manager-4.1.2-py3-none-any.whl", hash = "sha256:552bbb4e6f95e6e8b772565d2023e7c0ec5ff1736db0b186922d0466fc78c3de"},
+    {file = "webdriver_manager-4.1.2.tar.gz", hash = "sha256:230515ff4dc4c2feff1add25306ca262421b31016d77ded305e8dd921266445f"},
 ]
 
 [package.dependencies]
