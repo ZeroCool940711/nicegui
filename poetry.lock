@@ -2539,14 +2539,14 @@ files = [
 
 [[package]]
 name = "python-socketio"
-version = "5.18.0"
+version = "5.18.1"
 description = "Socket.IO server and client for Python"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "python_socketio-5.18.0-py3-none-any.whl", hash = "sha256:b443bce375a9c6a1071b298ef85ddf11bcee102b3823d587315635a87db3a14f"},
-    {file = "python_socketio-5.18.0.tar.gz", hash = "sha256:81ec0fbc34b82009272834145a8fab82ccc36eb057eb2c3798dfe253fa47ed72"},
+    {file = "python_socketio-5.18.1-py3-none-any.whl", hash = "sha256:e768c473842be811f6dd24bd0a49cd0d4a0c994182e3eba23cc9d1489c7a697e"},
+    {file = "python_socketio-5.18.1.tar.gz", hash = "sha256:07ab0e7c94a52833a67af1dc05958ad6fb0de69adc87de9198a61b22588c40d4"},
 ]
 
 [package.dependencies]
